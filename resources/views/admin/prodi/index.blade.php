@@ -11,7 +11,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-lg">
+            <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-2xl">
                 <div class="mb-4 flex justify-between">
                     <h3 class="text-lg font-bold">Daftar Prodi</h3>
                     <x-prodi.modal
@@ -76,7 +76,9 @@
                                     {{ $p->nama_prodi }}
                                 </td>
                                 <td class="border p-2">
-                                    {{ $p->bobot_prioritas }}
+                                    <p class="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
+                                        {{ $p->bobot_prioritas }}
+                                    </p>
                                 </td>
                                 <td
                                     class="flex items-center justify-center space-x-2 border p-2"
