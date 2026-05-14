@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         // 1. Jalankan ProdiSeeder dulu (Pastikan sudah buat file ProdiSeeder sebelumnya)
         $this->call([
             ProdiSeeder::class,
+            MataKuliahSeeder::class,
         ]);
 
         // Ambil ID Prodi Sistem Informasi untuk akun prodi
