@@ -60,10 +60,10 @@
                 <table class="w-full border-collapse border border-gray-200">
                     <thead>
                         <tr class="bg-gray-300">
-                            <th class="border p-2">No</th>
-                            <th class="border p-2">Nama Prodi</th>
-                            <th class="border p-2">Bobot Prioritas</th>
-                            <th class="border p-2">Aksi</th>
+                            <th class="p-2">No</th>
+                            <th class="p-2">Nama Prodi</th>
+                            <th class="p-2">Bobot Prioritas</th>
+                            <th class="p-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,17 +71,17 @@
                             <tr
                                 class="text-center odd:bg-white even:bg-gray-100"
                             >
-                                <td class="border p-2">{{ $index + 1 }}</td>
-                                <td class="border p-2 text-left">
+                                <td class="p-2">{{ $index + 1 }}</td>
+                                <td class="p-2 text-left">
                                     {{ $p->nama_prodi }}
                                 </td>
-                                <td class="border p-2">
+                                <td class="p-2">
                                     <p class="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-800">
                                         {{ $p->bobot_prioritas }}
                                     </p>
                                 </td>
                                 <td
-                                    class="flex items-center justify-center space-x-2 border p-2"
+                                    class="flex items-center justify-center space-x-2 p-2"
                                 >
                                     <x-prodi.modal
                                         :action="route('admin.prodi.update', $p->id)"
