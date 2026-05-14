@@ -80,7 +80,7 @@
                 </form>
             </div>
 
-            <div class="overflow-hidden rounded-2xl bg-white shadow-sm">
+            <div class="w-full overflow-x-auto rounded-2xl bg-white shadow-sm">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -110,7 +110,7 @@
                                 Spek
                             </th>
                             <th
-                                class="px-6 py-3 text-right text-xs font-bold uppercase text-gray-500"
+                                class="px-6 py-3 text-center text-xs font-bold uppercase text-gray-500"
                             >
                                 Aksi
                             </th>
@@ -151,7 +151,128 @@
                                         >
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-right">
+                                <td
+                                    class="flex items-center justify-center gap-2 px-6 py-6 text-right"
+                                >
+                                    <x-prodi.modal
+                                        :action="route('admin.matakuliah.update', $mk->id)"
+                                        method="PUT"
+                                        title="Edit Mata Kuliah"
+                                        :triggerAttributes="'text-md text-blue-600 hover:text-blue-800 font-semibold'"
+                                        :trigger="'Edit'"
+                                    >
+                                        <div class="flex flex-col text-start">
+                                            <label
+                                                for="nama_mk"
+                                                class="mb-1 block text-sm font-medium text-gray-700"
+                                                >Nama Mata Kuliah</label
+                                            >
+                                            <input
+                                                type="text"
+                                                name="nama_mk"
+                                                id="nama_mk"
+                                                value="{{ $mk->nama_mk }}"
+                                                required
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                            />
+                                        </div>
+                                        <div class="flex flex-col text-start">
+                                            <label
+                                                for="prodi_id"
+                                                class="mb-1 block text-sm font-medium text-gray-700"
+                                                >Program Studi</label
+                                            >
+                                            <select
+                                                name="prodi_id"
+                                                id="prodi_id"
+                                                required
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                            >
+                                                <option value="">
+                                                    Pilih Program Studi
+                                                </option>
+                                                @foreach ($prodis as $prodi)
+                                                    <option
+                                                        value="{{ $prodi->id }}"
+                                                        {{
+                                                            $mk->prodi_id == $prodi->id
+                                                                ? "selected"
+                                                                : ""
+                                                        }}
+                                                    >
+                                                        {{ $prodi->nama_prodi }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="flex flex-col text-start">
+                                            <label
+                                                for="sks"
+                                                class="mb-1 block text-sm font-medium text-gray-700"
+                                                >SKS</label
+                                            >
+                                            <input
+                                                type="number"
+                                                name="sks"
+                                                id="sks"
+                                                value="{{ $mk->sks }}"
+                                                max="3"
+                                                required
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                            />
+                                        </div>
+                                        <div class="flex flex-col text-start">
+                                            <label
+                                                for="skor_prioritas"
+                                                class="mb-1 block text-sm font-medium text-gray-700"
+                                                >Skor Prioritas</label
+                                            >
+                                            <input
+                                                type="number"
+                                                name="skor_prioritas"
+                                                id="skor_prioritas"
+                                                value="{{ $mk->skor_prioritas }}"
+                                                max="100"
+                                                required
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                            />
+                                        </div>
+                                        <div class="flex flex-col text-start">
+                                            <label
+                                                for="spesifikasi"
+                                                class="mb-1 block text-sm font-medium text-gray-700"
+                                                >Spesifikasi</label
+                                            >
+                                            <select
+                                                name="spesifikasi"
+                                                id="spesifikasi"
+                                                required
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                            >
+                                                <option
+                                                    value="standar"
+                                                    {{
+                                                        $mk->spesifikasi == "standar"
+                                                            ? "selected"
+                                                            : ""
+                                                    }}
+                                                >
+                                                    Standar
+                                                </option>
+                                                <option
+                                                    value="tinggi"
+                                                    {{
+                                                        $mk->spesifikasi == "tinggi"
+                                                            ? "selected"
+                                                            : ""
+                                                    }}
+                                                >
+                                                    Tinggi
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </x-prodi.modal>
+                                    <div class="h-4 w-px bg-black"></div>
                                     <form
                                         action="{{ route('admin.matakuliah.destroy', $mk->id) }}"
                                         method="POST"
@@ -159,7 +280,7 @@
                                         @csrf
                                         @method ("DELETE")
                                         <button
-                                            class="text-sm font-bold text-red-500 hover:underline"
+                                            class="text-md font-bold text-red-500 hover:underline"
                                         >
                                             Hapus
                                         </button>

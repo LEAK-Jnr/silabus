@@ -32,6 +32,23 @@ class MataKuliahController extends Controller
         return redirect()->back()->with('success', 'Mata Kuliah berhasil ditambahkan!');
     }
 
+    public function update(Request $request, $id)
+    {
+        $matakuliah = MataKuliah::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama_mk' => 'required',
+            'prodi_id' => 'required|exists:prodis,id',
+            'sks' => 'required|integer',
+            'skor_prioritas' => 'required|integer|min:1|max:100',
+            'spesifikasi' => 'required|in:tinggi,standar',
+        ]);
+
+        $matakuliah->update($validated);
+
+        return redirect()->back()->with('success', 'Mata Kuliah berhasil diperbarui!');
+    }
+    
     public function destroy($id)
     {
         MataKuliah::findOrFail($id)->delete();

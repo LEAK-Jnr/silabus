@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/prodi/{prodi}', [ProdiController::class, 'destroy'])->name('admin.prodi.destroy');
         Route::get('/admin/matakuliah', [MataKuliahController::class, 'index'])->name('admin.matakuliah.index');
         Route::post('/admin/matakuliah', [MataKuliahController::class, 'store'])->name('admin.matakuliah.store');
+        Route::put('/admin/matakuliah/{id}', [MataKuliahController::class, 'update'])->name('admin.matakuliah.update');
         Route::delete('/admin/matakuliah/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matakuliah.destroy');
     });
 
