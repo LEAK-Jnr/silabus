@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Jalankan ProdiSeeder dulu (Pastikan sudah buat file ProdiSeeder sebelumnya)
         $this->call([
+            RuanganSeeder::class,
             ProdiSeeder::class,
             MataKuliahSeeder::class,
             KelasSeeder::class
