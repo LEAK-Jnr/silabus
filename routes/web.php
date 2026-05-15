@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProdiController as AdminProdiController;
 use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\RuanganController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +37,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/admin/matakuliah', [MataKuliahController::class, 'store'])->name('admin.matakuliah.store');
         Route::put('/admin/matakuliah/{id}', [MataKuliahController::class, 'update'])->name('admin.matakuliah.update');
         Route::delete('/admin/matakuliah/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matakuliah.destroy');
+        //ruangan :
+        Route::get('/admin/ruangan', [RuanganController::class, 'index'])->name('admin.ruangan.index');
+        Route::post('/admin/ruangan', [RuanganController::class, 'store'])->name('admin.ruangan.store');
+        Route::put('/admin/ruangan/{ruangan}', [RuanganController::class, 'update'])->name('admin.ruangan.update');
+        Route::delete('/admin/ruangan/{ruangan}', [RuanganController::class, 'destroy'])->name('admin.ruangan.destroy');
     });
 
     // --- KHUSUS ROLE: PRODI ---

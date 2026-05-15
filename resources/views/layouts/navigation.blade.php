@@ -25,6 +25,9 @@
                                 )
                             }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.ruangan.index')" :active="request()->routeIs('admin.ruangan.*')">
+                            Master Ruangan
+                        </x-nav-link>
                     @endif
 
                     @if (Auth::user()->role === "prodi")
