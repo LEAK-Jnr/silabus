@@ -11,84 +11,161 @@
                 <h3 class="mb-4 text-lg font-bold text-gray-700">
                     Tambah Mata Kuliah Baru
                 </h3>
-                <form
-                    action="{{ route('admin.matakuliah.store') }}"
-                    method="POST"
-                    class="grid grid-cols-1 gap-4 md:grid-cols-3"
-                >
-                    @csrf
-                    <input
-                        type="text"
-                        name="kode_mk"
-                        placeholder="Kode MK (ex: INF101)"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
-                    />
-                    <input
-                        type="text"
-                        name="nama_mk"
-                        placeholder="Nama Mata Kuliah"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
-                    />
-
-                    <select
-                        name="prodi_id"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
+                <div class="flex justify-end">
+                    <x-dashboard.modal
+                        :action="route('admin.matakuliah.store')"
+                        title="Tambah Mata Kuliah"
+                        :trigger="'Tambah Mata Kuliah'"
                     >
-                        <option value="">-- Pilih Prodi Pemilik --</option>
-                        @foreach ($prodis as $prodi)
-                            <option value="{{ $prodi->id }}">
-                                {{ $prodi->nama_prodi }}
-                            </option>
-                        @endforeach
-                    </select>
+                        <x-slot:trigger>
+                            + Tambah Mata Kuliah Baru
+                        </x-slot:trigger>
 
-                    <input
-                        type="number"
-                        name="sks"
-                        placeholder="SKS"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
-                    />
-                    <input
-                        type="number"
-                        name="semester"
-                        placeholder="Semester"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
-                    />
+                        <div class="space-y-4">
+                            <!-- Kode Mata Kuliah -->
+                            <div>
+                                <label
+                                    for="kode_mk"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >Kode Mata Kuliah</label
+                                >
+                                <input
+                                    type="text"
+                                    id="kode_mk"
+                                    name="kode_mk"
+                                    placeholder="Kode MK (ex: INF101)"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
 
-                    <select
-                        name="kategori"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
-                    >
-                        <option value="">-- Pilih Kategori --</option>
-                        <option value="teori">Teori</option>
-                        <option value="teori-praktik">Teori & Praktik</option>
-                        <option value="praktik">Praktik</option>
-                    </select>
+                            <!-- Nama Mata Kuliah -->
+                            <div>
+                                <label
+                                    for="nama_mk"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >Nama Mata Kuliah</label
+                                >
+                                <input
+                                    type="text"
+                                    id="nama_mk"
+                                    name="nama_mk"
+                                    placeholder="Nama Mata Kuliah"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
 
-                    <select
-                        name="spesifikasi"
-                        class="rounded-lg border-gray-300 focus:ring-blue-500"
-                        required
-                    >
-                        <option value="standar">Spesifikasi: Standar</option>
-                        <option value="tinggi">
-                            Spesifikasi: Tinggi (Lab 3)
-                        </option>
-                    </select>
+                            <!-- Program Studi -->
+                            <div>
+                                <label
+                                    for="prodi_id"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >Program Studi</label
+                                >
+                                <select
+                                    id="prodi_id"
+                                    name="prodi_id"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Prodi Pemilik --
+                                    </option>
+                                    @foreach ($prodis as $prodi)
+                                        <option value="{{ $prodi->id }}">
+                                            {{ $prodi->nama_prodi }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                    <button
-                        type="submit"
-                        class="rounded-lg bg-blue-600 py-2 font-bold text-white transition hover:bg-blue-700 md:col-span-3"
-                    >
-                        Simpan Mata Kuliah
-                    </button>
-                </form>
+                            <!-- SKS -->
+                            <div>
+                                <label
+                                    for="sks"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >SKS</label
+                                >
+                                <input
+                                    type="number"
+                                    id="sks"
+                                    name="sks"
+                                    placeholder="Jumlah SKS"
+                                    value="1"
+                                    min="1"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+
+                            <!-- Semester -->
+                            <div>
+                                <label
+                                    for="semester"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >Semester</label
+                                >
+                                <input
+                                    type="number"
+                                    id="semester"
+                                    value="1"
+                                    min="1"
+                                    name="semester"
+                                    placeholder="Semester"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+
+                            <!-- Kategori -->
+                            <div>
+                                <label
+                                    for="kategori"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >Kategori</label
+                                >
+                                <select
+                                    id="kategori"
+                                    name="kategori"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                >
+                                    <option value="">
+                                        -- Pilih Kategori --
+                                    </option>
+                                    <option value="teori">Teori</option>
+                                    <option value="teori-praktik">
+                                        Teori & Praktik
+                                    </option>
+                                    <option value="praktik">Praktik</option>
+                                </select>
+                            </div>
+
+                            <!-- Spesifikasi -->
+                            <div>
+                                <label
+                                    for="spesifikasi"
+                                    class="mb-1 block text-sm font-medium text-gray-700"
+                                    >Spesifikasi</label
+                                >
+                                <select
+                                    id="spesifikasi"
+                                    name="spesifikasi"
+                                    class="w-full rounded-lg border-gray-300 focus:ring-blue-500"
+                                    required
+                                >
+                                    <option value="standar">
+                                        Spesifikasi: Standar
+                                    </option>
+                                    <option value="tinggi">
+                                        Spesifikasi: Tinggi (Lab 3)
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </x-dashboard.modal>
+                </div>
             </div>
 
             <div class="w-full overflow-x-auto rounded-2xl bg-white shadow-sm">
@@ -113,6 +190,11 @@
                             <th
                                 class="px-6 py-3 text-center text-xs font-bold uppercase text-gray-500"
                             >
+                                Kategori
+                            </th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-bold uppercase text-gray-500"
+                            >
                                 Prioritas
                             </th>
                             <th
@@ -128,6 +210,17 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 bg-white">
+                        @if ($matakuliahs->isEmpty())
+                            <tr>
+                                <td
+                                    colspan="7"
+                                    class="px-6 py-4 text-center text-gray-500"
+                                >
+                                    Belum ada mata kuliah. Tambahkan mata kuliah
+                                    baru menggunakan form di atas.
+                                </td>
+                            </tr>
+                        @endif
                         @foreach ($matakuliahs as $mk)
                             <tr class="odd:bg-white even:bg-gray-50">
                                 <td class="px-6 py-4 font-mono text-sm">
@@ -146,6 +239,9 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     {{ $mk->sks }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    {{ $mk->kategori }}
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <span

@@ -170,6 +170,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if ($ajuans->isEmpty())
+                                <tr>
+                                    <td
+                                        colspan="12"
+                                        class="px-6 py-4 text-center text-gray-500"
+                                    >
+                                        Belum ada ajuan yang dibuat.
+                                    </td>
+                                </tr>
+                            @endif
                             @foreach ($ajuans as $ajuan)
                                 <tr
                                     class="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-default border-b"
