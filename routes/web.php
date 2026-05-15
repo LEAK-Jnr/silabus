@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\ProdiController;
+use App\Http\Controllers\Admin\ProdiController as AdminProdiController;
+use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -21,24 +23,15 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth'])->group(function () {
 
     // DASHBOARD PINTAR: Satu rute untuk semua, tapi tampilan beda-beda
-    Route::get('/dashboard', function () {
-        $role = Auth::user()->role;
-        if ($role === 'admin') {
-            return view('dashboard');
-        } elseif ($role === 'prodi') {
-            return view('prodi.ajuan.index');
-        } elseif ($role === 'dosen') {
-            return view('dosen.jadwal.index');
-        }
-        abort(403);
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
+
 
     // --- KHUSUS ROLE: ADMIN ---
     Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/prodi', [ProdiController::class, 'index'])->name('admin.prodi.index');
-        Route::post('/admin/prodi', [ProdiController::class, 'store'])->name('admin.prodi.store');
-        Route::put('/admin/prodi/{prodi}', [ProdiController::class, 'update'])->name('admin.prodi.update');
-        Route::delete('/admin/prodi/{prodi}', [ProdiController::class, 'destroy'])->name('admin.prodi.destroy');
+        Route::get('/admin/prodi', [AdminProdiController::class, 'index'])->name('admin.prodi.index');
+        Route::post('/admin/prodi', [AdminProdiController::class, 'store'])->name('admin.prodi.store');
+        Route::put('/admin/prodi/{prodi}', [AdminProdiController::class, 'update'])->name('admin.prodi.update');
+        Route::delete('/admin/prodi/{prodi}', [AdminProdiController::class, 'destroy'])->name('admin.prodi.destroy');
         Route::get('/admin/matakuliah', [MataKuliahController::class, 'index'])->name('admin.matakuliah.index');
         Route::post('/admin/matakuliah', [MataKuliahController::class, 'store'])->name('admin.matakuliah.store');
         Route::put('/admin/matakuliah/{id}', [MataKuliahController::class, 'update'])->name('admin.matakuliah.update');
@@ -47,9 +40,8 @@ Route::middleware(['auth'])->group(function () {
 
     // --- KHUSUS ROLE: PRODI ---
     Route::middleware('role:prodi')->group(function () {
-        Route::get('/prodi/ajuan', function () {
-            return view('prodi.ajuan.index');
-        })->name('prodi.ajuan');
+        Route::get('/prodi/ajuan', [ProdiController::class, 'index'])->name('prodi.ajuan');
+        Route::post('/prodi/ajuan', [ProdiController::class, 'store'])->name('prodi.ajuan.store');
     });
 
     // --- KHUSUS ROLE: DOSEN ---

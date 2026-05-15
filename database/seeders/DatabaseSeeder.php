@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProdiSeeder::class,
             MataKuliahSeeder::class,
+            KelasSeeder::class
         ]);
 
         // Ambil ID Prodi Sistem Informasi untuk akun prodi
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator Lab',
             'username' => 'admin', // Login pakai 'admin'
             'password' => Hash::make('password'),
+            'prodi_id' => null, 
             'role' => 'admin',
         ]);
 
@@ -33,6 +35,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin Prodi SI',
             'username' => 'prodi_si', // Login pakai kode prodi
             'password' => Hash::make('password'),
+            'prodi_id' => $prodiSI ? $prodiSI->id : null, // Set prodi_id jika Prodi SI ditemukan
             'role' => 'prodi',
         ]);
 
@@ -40,7 +43,25 @@ class DatabaseSeeder extends Seeder
             'name' => 'Leo Sandi',
             'username' => '02900', // Login pakai NIDOS
             'password' => Hash::make('password'),
+            'prodi_id' => $prodiSI ? $prodiSI->id : null, // Set prodi_id jika Prodi SI ditemukan
             'role' => 'dosen',
+        ]);
+        User::create([
+            'name' => 'Meline Maldini',
+            'username' => '03520', // Login pakai NIDOS
+            'password' => Hash::make('password'),
+            'prodi_id' => $prodiSI ? $prodiSI->id : null, // Set prodi_id jika Prodi SI ditemukan
+            'role' => 'dosen',
+        ]);
+        User::create([
+            'name' => 'Wowo Gendut',
+            'username' => '6666', // Login pakai NIDOS
+            'password' => Hash::make('1'),
+            'prodi_id' => $prodiSI ? $prodiSI->id : null, // Set prodi_id jika Prodi SI ditemukan
+            'role' => 'prodi',
+        ]);
+        $this->call([
+            AjuanSeeder::class,
         ]);
     }
 }
