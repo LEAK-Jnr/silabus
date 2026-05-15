@@ -23,9 +23,43 @@ class MataKuliahController extends Controller
         'nama_mk' => 'required',
         'prodi_id' => 'required|exists:prodis,id',
         'sks' => 'required|integer',
-        'skor_prioritas' => 'required|integer|min:1|max:100',
+        'semester' => 'required|integer|min:1',
+        'kategori' => 'required|in:teori,praktik,teori-praktik',
         'spesifikasi' => 'required|in:tinggi,standar',
         ]);
+
+        // Kalkulasi Skor Prioritas
+        $skor = 0;
+        
+        // Logic SKS
+        $skor += ($validated['sks'] < 3) ? 10 : 30;
+
+        // Logic Semester
+        if ($validated['semester'] <= 3) {
+            $skor += 30;
+        } elseif ($validated['semester'] >= 4 && $validated['semester'] <= 5) {
+            $skor += 15;
+        } else {
+            $skor += 5;
+        }
+
+        // Logic Kategori
+        if ($validated['kategori'] === 'praktik') {
+            $skor += 30;
+        } elseif ($validated['kategori'] === 'teori-praktik') {
+            $skor += 20;
+        } elseif ($validated['kategori'] === 'teori') {
+            $skor += 5;
+        }
+
+        $validated['skor_prioritas'] = $skor;
+
+        // Kategori re-map jika skema database (enum) berbeda
+        if ($validated['kategori'] === 'praktik') {
+            $validated['kategori'] = 'praktikum';
+        } elseif ($validated['kategori'] === 'teori-praktik') {
+            $validated['kategori'] = 'teori_praktikum';
+        }
 
         MataKuliah::create($validated);
 
@@ -40,9 +74,40 @@ class MataKuliahController extends Controller
             'nama_mk' => 'required',
             'prodi_id' => 'required|exists:prodis,id',
             'sks' => 'required|integer',
-            'skor_prioritas' => 'required|integer|min:1|max:100',
+            'semester' => 'required|integer|min:1',
+            'kategori' => 'required|in:teori,praktik,teori-praktik',
             'spesifikasi' => 'required|in:tinggi,standar',
         ]);
+
+        // Kalkulasi ulang Skor Prioritas
+        $skor = 0;
+        
+        $skor += ($validated['sks'] < 3) ? 10 : 30;
+
+        if ($validated['semester'] <= 3) {
+            $skor += 30;
+        } elseif ($validated['semester'] >= 4 && $validated['semester'] <= 5) {
+            $skor += 15;
+        } else {
+            $skor += 5;
+        }
+
+        if ($validated['kategori'] === 'praktik') {
+            $skor += 30;
+        } elseif ($validated['kategori'] === 'teori-praktik') {
+            $skor += 20;
+        } elseif ($validated['kategori'] === 'teori') {
+            $skor += 5;
+        }
+
+        $validated['skor_prioritas'] = $skor;
+
+        // Kategori re-map jika skema database (enum) berbeda
+        if ($validated['kategori'] === 'praktik') {
+            $validated['kategori'] = 'praktikum';
+        } elseif ($validated['kategori'] === 'teori-praktik') {
+            $validated['kategori'] = 'teori_praktikum';
+        }
 
         $matakuliah->update($validated);
 

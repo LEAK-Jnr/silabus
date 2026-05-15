@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ajuan', function (Blueprint $table) {
+        Schema::create('ajuans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kode_mk')->constrained('mata_kuliahs')->cascadeOnDelete();
             $table->foreignId('kode_kelas')->constrained('kelas')->cascadeOnDelete();
             $table->string('username_dosen');
-            $table->foreign('username_dosen')->references('username')->on('users')->cascadeOnDelete();
+            $table->foreign('username_dosen')->references('username')->on('users')->cascadeOnDelete();            
+            $table->unsignedBigInteger('ruangan_id')->nullable();
+            $table->foreign('ruangan_id')->references('id')->on('ruangans')->nullOnDelete();
             $table->enum('status', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
             $table->timestamps();
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ajuan');
+        Schema::dropIfExists('ajuans');
     }
 };

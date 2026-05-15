@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
         // Relasi ke Prodi
             $table->foreignId('prodi_id')->constrained('prodis')->onDelete('cascade');
-        
             $table->string('kode_mk')->unique();
             $table->string('nama_mk');
             $table->integer('sks');
+            $table->integer('semester')->default(1);
             $table->integer('skor_prioritas')->default(1); 
             $table->enum('spesifikasi', ['tinggi', 'standar'])->default('standar'); 
             $table->enum('kategori', ['teori', 'praktikum', 'teori_praktikum'])->default('praktikum');

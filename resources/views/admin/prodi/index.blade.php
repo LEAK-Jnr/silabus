@@ -14,7 +14,7 @@
             <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-2xl">
                 <div class="mb-4 flex justify-between">
                     <h3 class="text-lg font-bold">Daftar Prodi</h3>
-                    <x-prodi.modal
+                    <x-dashboard.modal
                         :action="route('admin.prodi.store')"
                         title="Tambah Program Studi"
                     >
@@ -54,7 +54,7 @@
                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                             />
                         </div>
-                    </x-prodi.modal>
+                    </x-dashboard.modal>
                 </div>
 
                 <table class="w-full border-collapse border border-gray-200">
@@ -83,7 +83,7 @@
                                 <td
                                     class="flex items-center justify-center space-x-2 p-2"
                                 >
-                                    <x-prodi.modal
+                                    <x-dashboard.modal
                                         :action="route('admin.prodi.update', $p->id)"
                                         method="PUT"
                                         title="Edit Prodi"
@@ -121,22 +121,19 @@
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                                             />
                                         </div>
-                                    </x-prodi.modal>
+                                    </x-dashboard.modal>
                                     <div class="h-4 w-px bg-black"></div>
-                                    <form
-                                        action="{{ route('admin.prodi.destroy', $p->id) }}"
-                                        method="POST"
-                                        class="inline"
+                                    <x-dashboard.modal-confirm
+                                        :action="route('admin.prodi.destroy', $p->id)"
+                                        method="DELETE"
+                                        title="Hapus Prodi"
+                                        type="danger"
+                                        confirmText="Ya, Hapus Prodi Ini"
+                                        :id="'delete-prodi-' . $p->id"
                                     >
-                                        @csrf
-                                        @method ("DELETE")
-                                        <button
-                                            type="submit"
-                                            class="text-red-600"
-                                        >
-                                            Hapus
-                                        </button>
-                                    </form>
+                                        Apakah Anda yakin ingin menghapus prodi
+                                        <strong>{{ $p->nama_prodi }}</strong>?
+                                    </x-dashboard.modal-confirm>
                                 </td>
                             </tr>
                         @endforeach

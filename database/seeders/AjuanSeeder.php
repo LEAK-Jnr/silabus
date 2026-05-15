@@ -7,6 +7,7 @@ use App\Models\Ajuan;
 use App\Models\MataKuliah;
 use App\Models\Kelas;
 use App\Models\User;
+use App\Models\Ruangan;
 use Illuminate\Support\Arr;
 
 class AjuanSeeder extends Seeder
@@ -61,6 +62,7 @@ class AjuanSeeder extends Seeder
                 'kode_mk'        => $terpilihMk, 
                 'kode_kelas'     => Arr::random($banyakKelas), 
                 'username_dosen' => $dosen->username,
+                'ruangan_id'     => 1, // Asumsikan ruangan_id 1 selalu ada, atau bisa diubah sesuai kebutuhan
                 'status'         => $statusTerpilih,
             ]);
         }

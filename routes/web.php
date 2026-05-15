@@ -42,6 +42,8 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware('role:prodi')->group(function () {
         Route::get('/prodi/ajuan', [ProdiController::class, 'index'])->name('prodi.ajuan');
         Route::post('/prodi/ajuan', [ProdiController::class, 'store'])->name('prodi.ajuan.store');
+        Route::put('/prodi/ajuan/{id}', [ProdiController::class, 'update'])->name('prodi.ajuan.update');
+        Route::delete('/prodi/ajuan/{id}', [ProdiController::class, 'destroy'])->name('prodi.ajuan.destroy');
     });
 
     // --- KHUSUS ROLE: DOSEN ---

@@ -54,11 +54,22 @@
                     />
                     <input
                         type="number"
-                        name="skor_prioritas"
-                        placeholder="Skor Prioritas (1-100)"
+                        name="semester"
+                        placeholder="Semester"
                         class="rounded-lg border-gray-300 focus:ring-blue-500"
                         required
                     />
+
+                    <select
+                        name="kategori"
+                        class="rounded-lg border-gray-300 focus:ring-blue-500"
+                        required
+                    >
+                        <option value="">-- Pilih Kategori --</option>
+                        <option value="teori">Teori</option>
+                        <option value="teori-praktik">Teori & Praktik</option>
+                        <option value="praktik">Praktik</option>
+                    </select>
 
                     <select
                         name="spesifikasi"
@@ -154,7 +165,7 @@
                                 <td
                                     class="flex items-center justify-center gap-2 px-6 py-6 text-right"
                                 >
-                                    <x-prodi.modal
+                                    <x-dashboard.modal
                                         :action="route('admin.matakuliah.update', $mk->id)"
                                         method="PUT"
                                         title="Edit Mata Kuliah"
@@ -216,26 +227,67 @@
                                                 name="sks"
                                                 id="sks"
                                                 value="{{ $mk->sks }}"
-                                                max="3"
+                                                max="6"
                                                 required
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                                             />
                                         </div>
                                         <div class="flex flex-col text-start">
                                             <label
-                                                for="skor_prioritas"
+                                                for="semester"
                                                 class="mb-1 block text-sm font-medium text-gray-700"
-                                                >Skor Prioritas</label
+                                                >Semester</label
                                             >
                                             <input
                                                 type="number"
-                                                name="skor_prioritas"
-                                                id="skor_prioritas"
-                                                value="{{ $mk->skor_prioritas }}"
-                                                max="100"
+                                                name="semester"
+                                                id="semester"
+                                                value="{{ $mk->semester ?? 1 }}"
+                                                max="8"
                                                 required
                                                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                                             />
+                                        </div>
+                                        <div class="flex flex-col text-start">
+                                            <label
+                                                for="kategori"
+                                                class="mb-1 block text-sm font-medium text-gray-700"
+                                                >Kategori</label
+                                            >
+                                            <select
+                                                name="kategori"
+                                                id="kategori"
+                                                required
+                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                            >
+                                                <option
+                                                    value="teori"
+                                                    {{
+                                                        $mk->kategori == "teori"
+                                                            ? "selected"
+                                                            : ""
+                                                    }}
+                                                    >Teori
+                                                </option>
+                                                <option
+                                                    value="teori-praktik"
+                                                    {{
+                                                        $mk->kategori == "teori_praktikum"
+                                                            ? "selected"
+                                                            : ""
+                                                    }}
+                                                    >Teori & Praktik
+                                                </option>
+                                                <option
+                                                    value="praktik"
+                                                    {{
+                                                        $mk->kategori == "praktikum"
+                                                            ? "selected"
+                                                            : ""
+                                                    }}
+                                                    >Praktik
+                                                </option>
+                                            </select>
                                         </div>
                                         <div class="flex flex-col text-start">
                                             <label
@@ -271,7 +323,7 @@
                                                 </option>
                                             </select>
                                         </div>
-                                    </x-prodi.modal>
+                                    </x-dashboard.modal>
                                     <div class="h-4 w-px bg-black"></div>
                                     <form
                                         action="{{ route('admin.matakuliah.destroy', $mk->id) }}"

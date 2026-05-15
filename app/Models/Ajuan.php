@@ -7,12 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ajuan extends Model
 {
-    protected $table = 'ajuan';
-
     protected $fillable = [
         'kode_mk',
         'kode_kelas',
         'username_dosen',
+        'ruangan_id',
         'status',
     ];
     public function mataKuliah(): BelongsTo
@@ -28,5 +27,9 @@ class Ajuan extends Model
     public function dosen(): BelongsTo
     {
         return $this->belongsTo(User::class, 'username_dosen', 'username');
+    }
+    public function ruangan(): BelongsTo
+    {
+        return $this->belongsTo(Ruangan::class, 'ruangan_id');
     }
 }
