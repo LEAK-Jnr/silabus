@@ -92,7 +92,7 @@ class MataKuliahController extends Controller
     
     public function destroy($id)
     {
-        MataKuliah::findOrFail($id)->delete();
+        MataKuliah::findOrFail($id)->softDelete();
         return redirect()->back()->with('success', 'Mata Kuliah berhasil dihapus!');
     }
 }
