@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'dosen', 'prodi'])->default('dosen'); // Tambahkan role
+            $table->foreignId('prodi_id')->nullable()->constrained('prodis')->nullOnDelete(); 
             $table->rememberToken();
             $table->timestamps();
         });

@@ -47,6 +47,14 @@ class MataKuliahSeeder extends Seeder
                 'skor_prioritas' => 95,
                 'spesifikasi' => 'tinggi', // Akan masuk Lab 3
             ],
+            [
+                'prodi_id' => $prodiSI->id,
+                'kode_mk' => 'SIF405',
+                'nama_mk' => 'Pemograman Web I',
+                'sks' => 3,
+                'skor_prioritas' => 95,
+                'spesifikasi' => 'tinggi', 
+            ],
         ];
 
         foreach ($data as $item) {
