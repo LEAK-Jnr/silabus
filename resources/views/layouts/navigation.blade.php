@@ -28,6 +28,9 @@
         <x-nav-link :href="route('admin.matakuliah.index')" :active="request()->routeIs('admin.matakuliah.index')">
             {{ __('Master Mata Kuliah') }}
         </x-nav-link>
+        <x-nav-link :href="route('admin.ruangan.index')" :active="request()->routeIs('admin.ruangan.*')">
+            Master Ruangan
+        </x-nav-link>
     </div>
 @endif
                 </div>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProdiController;
 use App\Http\Controllers\Admin\MataKuliahController;
+use App\Http\Controllers\Admin\RuanganController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,13 +35,16 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 
     // --- KHUSUS ROLE: ADMIN ---
-    Route::middleware('role:admin')->group(function () {
-        Route::get('/admin/prodi', [ProdiController::class, 'index'])->name('admin.prodi.index');
-        Route::post('/admin/prodi', [ProdiController::class, 'store'])->name('admin.prodi.store');
-        Route::delete('/admin/prodi/{prodi}', [ProdiController::class, 'destroy'])->name('admin.prodi.destroy');
-        Route::get('/admin/matakuliah', [MataKuliahController::class, 'index'])->name('admin.matakuliah.index');
-        Route::post('/admin/matakuliah', [MataKuliahController::class, 'store'])->name('admin.matakuliah.store');
-        Route::delete('/admin/matakuliah/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matakuliah.destroy');
+Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/prodi', [ProdiController::class, 'index'])->name('prodi.index');
+        Route::post('/prodi', [ProdiController::class, 'store'])->name('prodi.store');
+        Route::delete('/prodi/{prodi}', [ProdiController::class, 'destroy'])->name('prodi.destroy');
+
+        Route::get('/matakuliah', [MataKuliahController::class, 'index'])->name('matakuliah.index');
+        Route::post('/matakuliah', [MataKuliahController::class, 'store'])->name('matakuliah.store');
+        Route::delete('/matakuliah/{id}', [MataKuliahController::class, 'destroy'])->name('matakuliah.destroy');
+
+        Route::resource('ruangan', RuanganController::class);
     });
 
     // --- KHUSUS ROLE: PRODI ---
