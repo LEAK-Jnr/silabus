@@ -123,6 +123,13 @@
                                         </div>
                                     </x-dashboard.modal>
                                     <div class="h-4 w-px bg-black"></div>
+                                    <button
+                                        x-data
+                                        @click="$dispatch('open-modal-delete-prodi-{{ $p->id }}')"
+                                        class="cursor-pointer font-semibold text-red-500 hover:text-red-700"
+                                    >
+                                        Hapus
+                                    </button>
                                     <x-dashboard.modal-confirm
                                         :action="route('admin.prodi.destroy', $p->id)"
                                         method="DELETE"

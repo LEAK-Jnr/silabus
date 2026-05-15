@@ -421,18 +421,25 @@
                                         </div>
                                     </x-dashboard.modal>
                                     <div class="h-4 w-px bg-black"></div>
-                                    <form
-                                        action="{{ route('admin.matakuliah.destroy', $mk->id) }}"
-                                        method="POST"
+                                    <button
+                                        x-data
+                                        @click="$dispatch('open-modal-delete-mk-{{ $mk->id }}')"
+                                        class="cursor-pointer font-semibold text-red-500 hover:text-red-700"
                                     >
-                                        @csrf
-                                        @method ("DELETE")
-                                        <button
-                                            class="text-md font-bold text-red-500 hover:underline"
-                                        >
-                                            Hapus
-                                        </button>
-                                    </form>
+                                        Hapus
+                                    </button>
+                                    <x-dashboard.modal-confirm
+                                        :action="route('admin.matakuliah.destroy', $mk->id)"
+                                        method="DELETE"
+                                        title="Hapus Mata Kuliah"
+                                        type="danger"
+                                        confirmText="Ya, Hapus Mata Kuliah Ini"
+                                        :id="'delete-mk-' . $mk->id"
+                                    >
+                                        Apakah Anda yakin ingin menghapus mata
+                                        kuliah
+                                        <strong>{{ $mk->nama_mk }}</strong>?
+                                    </x-dashboard.modal-confirm>
                                 </td>
                             </tr>
                         @endforeach
