@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Ajuan;
 use App\Models\User;
+use App\Models\Ruangan;
+use App\Models\MataKuliah;
+use App\Models\Kelas;
 
 class ProdiController extends Controller
 {
@@ -14,82 +17,85 @@ class ProdiController extends Controller
         
         $query = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan']);
         $dosenQuery = User::where('role', 'dosen');
-        $ruangans = \App\Models\Ruangan::all();
-        $matakuliahs = \App\Models\MataKuliah::query();
+        $matakuliahQuery = MataKuliah::query();
+        $ruangans = Ruangan::all();
+        $kelases = Kelas::all();
+
+        // Koreksi: Range pekan menjadi 1 sampai 14
+        $pekans = range(1, 14);
 
         if ($user->role === 'prodi') {
             $query->whereHas('mataKuliah', function($q) use ($user) {
                 $q->where('prodi_id', $user->prodi_id);
             });
             $dosenQuery->where('prodi_id', $user->prodi_id);
-            $matakuliahs->where('prodi_id', $user->prodi_id);
+            $matakuliahQuery->where('prodi_id', $user->prodi_id);
         }
 
-        $ajuans = $query->get();
+        // Tampilan tabel urut berdasarkan pekan (1, 2, 3... dst)
+        $ajuans = $query->orderBy('pekan', 'asc')->get(); 
+        
         $dosenPengampu = $dosenQuery->get();
-        $matakuliahs = $matakuliahs->get();
-        $kelases = \App\Models\Kelas::all();
+        $matakuliahs = $matakuliahQuery->get();
 
-        return view('prodi.ajuan.index', compact('ajuans', 'dosenPengampu', 'ruangans', 'matakuliahs', 'kelases'));
+        return view('prodi.ajuan.index', compact(
+            'ajuans', 
+            'dosenPengampu', 
+            'ruangans', 
+            'matakuliahs', 
+            'kelases', 
+            'pekans'
+        ));
     }
-    public function store()
+
+    public function store(Request $request)
     {
-        // Validasi input
-        $validated = request()->validate([
-            'kode_mk' => 'required|exists:mata_kuliahs,id',
-            'kode_kelas' => 'required|exists:kelas,id',
-            'username_dosen' => 'required|exists:users,username',
-            'ruangan_id' => 'required|exists:ruangans,id', // Tambahkan validasi untuk ruangan_id
-        ]);
-
-
-        // Simpan ajuan baru
-        Ajuan::create([
-            'kode_mk' => $validated['kode_mk'],
-            'kode_kelas' => $validated['kode_kelas'],
-            'username_dosen' => $validated['username_dosen'],
-            'ruangan_id' => $validated['ruangan_id'],
-            'status' => 'menunggu',
-        ]);
-
-        return redirect()->route('prodi.ajuan')->with('success', 'Ajuan berhasil dibuat!');
-    }
-
-    public function update(Request $request, $id) {
-        // Cek status 'disetujui'
-        $ajuan = \App\Models\Ajuan::findOrFail($id);
-        if ($ajuan->status === 'disetujui') {
-            return redirect()->route('prodi.ajuan')->with('error', 'Ajuan yang sudah "disetujui" tidak dapat dirubah!');
-        }
-         // 3. Jalankan validasi input form baru
-        $request->validate([
+        $validated = $request->validate([
             'kode_mk'        => 'required|exists:mata_kuliahs,id',
             'kode_kelas'     => 'required|exists:kelas,id',
             'username_dosen' => 'required|exists:users,username',
             'ruangan_id'     => 'required|exists:ruangans,id',
-            'status'          => 'in:menunggu,disetujui,ditolak',
+            'pekan'          => 'required|integer|min:1|max:14', // Koreksi validasi max:14
         ]);
 
-        $ajuan->update([
-            'kode_mk' => $request->kode_mk,
-            'kode_kelas' => $request->kode_kelas,
-            'username_dosen' => $request->username_dosen,
-            'ruangan_id' => $request->ruangan_id,
-            'status' => $request->status,
+        Ajuan::create(array_merge($validated, [
+            'status' => 'menunggu'
+        ]));
+
+        return redirect()->route('prodi.ajuan')->with('success', 'Ajuan Pekan ke-' . $request->pekan . ' berhasil dibuat!');
+    }
+
+    public function update(Request $request, $id) 
+    {
+        $ajuan = Ajuan::findOrFail($id);
+
+        if ($ajuan->status === 'disetujui') {
+            return redirect()->route('prodi.ajuan')->with('error', 'Status "disetujui" sudah dikunci!');
+        }
+
+        $validated = $request->validate([
+            'kode_mk'        => 'required|exists:mata_kuliahs,id',
+            'kode_kelas'     => 'required|exists:kelas,id',
+            'username_dosen' => 'required|exists:users,username',
+            'ruangan_id'     => 'required|exists:ruangans,id',
+            'pekan'          => 'required|integer|min:1|max:14', // Koreksi validasi max:14
+            'status'         => 'required|in:menunggu,disetujui,ditolak',
         ]);
 
-        return redirect()->route('prodi.ajuan')->with('success', 'Ajuan berhasil diperbarui!');
+        $ajuan->update($validated);
 
+        return redirect()->route('prodi.ajuan')->with('success', 'Perubahan pekan ke-' . $request->pekan . ' berhasil disimpan!');
     }
 
     public function destroy($id)
     {
-        $ajuan = \App\Models\Ajuan::findOrFail($id);
-            if ($ajuan->status === 'disetujui') {
-                return redirect()->route('prodi.ajuan')->with('error', 'Ajuan yang sudah "disetujui" tidak dapat dihapus!');
-            }
+        $ajuan = Ajuan::findOrFail($id);
+
+        if ($ajuan->status === 'disetujui') {
+            return redirect()->route('prodi.ajuan')->with('error', 'Data yang sudah disetujui tidak bisa dihapus!');
+        }
+
         $ajuan->delete();
-        
-        return redirect()->route('prodi.ajuan')->with('success', 'Ajuan berhasil dihapus!');
+        return redirect()->route('prodi.ajuan')->with('success', 'Data berhasil dihapus.');
     }
 }

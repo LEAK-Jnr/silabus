@@ -63,6 +63,7 @@ class AjuanSeeder extends Seeder
                 'kode_kelas'     => Arr::random($banyakKelas), 
                 'username_dosen' => $dosen->username,
                 'ruangan_id'     => 1, // Asumsikan ruangan_id 1 selalu ada, atau bisa diubah sesuai kebutuhan
+                'pekan'          => 2,
                 'status'         => $statusTerpilih,
             ]);
         }

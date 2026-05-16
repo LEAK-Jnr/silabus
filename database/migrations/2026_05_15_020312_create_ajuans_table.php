@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('username_dosen')->references('username')->on('users')->cascadeOnDelete();            
             $table->unsignedBigInteger('ruangan_id')->nullable();
             $table->foreign('ruangan_id')->references('id')->on('ruangans')->nullOnDelete();
+            $table->integer('pekan');
             $table->enum('status', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
             $table->timestamps();
         });
