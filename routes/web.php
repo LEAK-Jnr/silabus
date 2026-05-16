@@ -6,6 +6,7 @@ use App\Http\Controllers\ProdiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RuanganController;
 use App\Http\Controllers\Admin\MataKuliahController;
+use App\Http\Controllers\Admin\JadwalController; // <--- Import Controller Baru
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,19 +30,27 @@ Route::middleware(['auth'])->group(function () {
 
     // --- KHUSUS ROLE: ADMIN ---
     Route::middleware('role:admin')->group(function () {
+        // Menu Prodi
         Route::get('/admin/prodi', [AdminProdiController::class, 'index'])->name('admin.prodi.index');
         Route::post('/admin/prodi', [AdminProdiController::class, 'store'])->name('admin.prodi.store');
         Route::put('/admin/prodi/{prodi}', [AdminProdiController::class, 'update'])->name('admin.prodi.update');
         Route::delete('/admin/prodi/{prodi}', [AdminProdiController::class, 'destroy'])->name('admin.prodi.destroy');
+        
+        // Menu Mata Kuliah
         Route::get('/admin/matakuliah', [MataKuliahController::class, 'index'])->name('admin.matakuliah.index');
         Route::post('/admin/matakuliah', [MataKuliahController::class, 'store'])->name('admin.matakuliah.store');
         Route::put('/admin/matakuliah/{id}', [MataKuliahController::class, 'update'])->name('admin.matakuliah.update');
         Route::delete('/admin/matakuliah/{id}', [MataKuliahController::class, 'destroy'])->name('admin.matakuliah.destroy');
-        //ruangan :
+        
+        // Menu Ruangan
         Route::get('/admin/ruangan', [RuanganController::class, 'index'])->name('admin.ruangan.index');
         Route::post('/admin/ruangan', [RuanganController::class, 'store'])->name('admin.ruangan.store');
         Route::put('/admin/ruangan/{ruangan}', [RuanganController::class, 'update'])->name('admin.ruangan.update');
         Route::delete('/admin/ruangan/{ruangan}', [RuanganController::class, 'destroy'])->name('admin.ruangan.destroy');
+
+        // --- MENU JADWAL (PLOTTING OTOMATIS) ---
+        Route::get('/admin/jadwal', [JadwalController::class, 'index'])->name('admin.jadwal.index');
+        Route::post('/admin/jadwal/generate', [JadwalController::class, 'generate'])->name('admin.jadwal.generate');
     });
 
     // --- KHUSUS ROLE: PRODI ---

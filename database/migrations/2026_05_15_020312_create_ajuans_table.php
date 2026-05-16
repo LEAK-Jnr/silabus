@@ -21,6 +21,9 @@ return new class extends Migration
             $table->foreign('ruangan_id')->references('id')->on('ruangans')->nullOnDelete();
             $table->integer('pekan');
             $table->enum('status', ['menunggu', 'disetujui', 'ditolak'])->default('menunggu');
+            $table->string('hari')->nullable();
+            $table->time('jam_mulai')->nullable();
+            $table->time('jam_selesai')->nullable();
             $table->timestamps();
         });
     }

@@ -12,6 +12,10 @@ class Ajuan extends Model
         'kode_kelas',
         'username_dosen',
         'ruangan_id',
+        'pekan', 
+        'hari',
+        'jam_mulai',
+        'jam_selesai',
         'status',
     ];
     public function mataKuliah(): BelongsTo

@@ -64,7 +64,10 @@ class AjuanSeeder extends Seeder
                 'username_dosen' => $dosen->username,
                 'ruangan_id'     => 1, // Asumsikan ruangan_id 1 selalu ada, atau bisa diubah sesuai kebutuhan
                 'pekan'          => 2,
-                'status'         => $statusTerpilih,
+                'hari'           => null,
+                'jam_mulai'      => null,
+                'jam_selesai'    => null,
+                'status'         => 'menunggu',
             ]);
         }
     }

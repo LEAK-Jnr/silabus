@@ -56,6 +56,12 @@
                                     )
                                 }}
                             </x-nav-link>
+                            <x-nav-link 
+                                :href="route('admin.jadwal.index')" 
+                                :active="request()->routeIs('admin.jadwal.*')"
+                            >
+                            {{ __("Penjadwalan") }}
+                            </x-nav-link>
                         </div>
                     @endif
                 </div>
