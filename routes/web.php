@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProdiController as AdminProdiController;
 use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\LaporanKerusakanController;
+use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RuanganController;
 use App\Http\Controllers\Admin\MataKuliahController;
@@ -67,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
             return view('dosen.jadwal.index');
         })->name('dosen.jadwal');
         Route::get('/dosen/presensi', [PresensiController::class, 'index'])->name('dosen.presensi');
-        Route::get('/dosen/laporan-kerusakan', [LaporanKerusakan::class, 'index'])->name('dosen.laporan-kerusakan');
+        Route::get('/dosen/laporan-kerusakan', [LaporanKerusakanController::class, 'index'])->name('dosen.laporan-kerusakan');
     });
 
     // --- PROFILE (Bisa diakses semua role) ---
