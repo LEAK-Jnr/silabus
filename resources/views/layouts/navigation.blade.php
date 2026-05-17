@@ -15,19 +15,46 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if (Auth::user()->role === "admin")
-                        <x-nav-link
-                            :href="route('admin.prodi.index')"
-                            :active="request()->routeIs('admin.prodi.index')"
+                        <div
+                            class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                         >
-                            {{
-                                __(
-                                    "Master Prodi",
-                                )
-                            }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('admin.ruangan.index')" :active="request()->routeIs('admin.ruangan.*')">
-                            Master Ruangan
-                        </x-nav-link>
+                            <x-nav-link
+                                :href="route('admin.prodi.index')"
+                                :active="request()->routeIs('admin.prodi.index')"
+                            >
+                                {{
+                                    __(
+                                        "Master Prodi",
+                                    )
+                                }}
+                            </x-nav-link>
+                            <x-nav-link
+                                :href="route('admin.ruangan.index')"
+                                :active="request()->routeIs('admin.ruangan.*')"
+                            >
+                                Master Ruangan
+                            </x-nav-link>
+                            <x-nav-link
+                                :href="route('admin.matakuliah.index')"
+                                :active="request()->routeIs('admin.matakuliah.index')"
+                            >
+                                {{
+                                    __(
+                                        "Master Mata Kuliah",
+                                    )
+                                }}
+                            </x-nav-link>
+                            <x-nav-link
+                                :href="route('admin.jadwal.index')"
+                                :active="request()->routeIs('admin.jadwal.*')"
+                            >
+                                {{
+                                    __(
+                                        "Penjadwalan",
+                                    )
+                                }}
+                            </x-nav-link>
+                        </div>
                     @endif
 
                     @if (Auth::user()->role === "prodi")
@@ -42,27 +69,33 @@
                             }}
                         </x-nav-link>
                     @endif
-                    @if (Auth::user()->role === "admin")
-                        <div
-                            class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                    @if (Auth::user()->role === "dosen")
+                        <x-nav-link
+                            :href="route('dosen.jadwal')"
+                            :active="request()->routeIs('dosen.jadwal')"
                         >
-                            <x-nav-link
-                                :href="route('admin.matakuliah.index')"
-                                :active="request()->routeIs('admin.matakuliah.index')"
-                            >
-                                {{
-                                    __(
-                                        "Master Mata Kuliah",
-                                    )
-                                }}
-                            </x-nav-link>
-                            <x-nav-link 
-                                :href="route('admin.jadwal.index')" 
-                                :active="request()->routeIs('admin.jadwal.*')"
-                            >
-                            {{ __("Penjadwalan") }}
-                            </x-nav-link>
-                        </div>
+                            {{
+                                __(
+                                    "Jadwal Praktikum",
+                                )
+                            }}
+                        </x-nav-link>
+                        <x-nav-link
+                            :href="route('dosen.presensi')"
+                            :active="request()->routeIs('dosen.presensi')"
+                        >
+                            {{ __("Presensi") }}
+                        </x-nav-link>
+                        <x-nav-link
+                            :href="route('dosen.laporan-kerusakan')"
+                            :active="request()->routeIs('dosen.laporan-kerusakan')"
+                        >
+                            {{
+                                __(
+                                    "Laporan Kerusakan",
+                                )
+                            }}
+                        </x-nav-link>
                     @endif
                 </div>
             </div>

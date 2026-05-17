@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('kode_mk')->constrained('mata_kuliahs')->cascadeOnDelete();
             $table->foreignId('kode_kelas')->constrained('kelas')->cascadeOnDelete();
-            $table->string('username_dosen');
-            $table->foreign('username_dosen')->references('username')->on('users')->cascadeOnDelete();            
+            $table->string('user_username');
+            $table->foreign('user_username')->references('username')->on('users')->cascadeOnDelete();            
             $table->unsignedBigInteger('ruangan_id')->nullable();
             $table->foreign('ruangan_id')->references('id')->on('ruangans')->nullOnDelete();
             $table->integer('pekan');

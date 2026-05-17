@@ -10,7 +10,7 @@ class Ajuan extends Model
     protected $fillable = [
         'kode_mk',
         'kode_kelas',
-        'username_dosen',
+        'user_username',
         'ruangan_id',
         'pekan', 
         'hari',
@@ -30,7 +30,7 @@ class Ajuan extends Model
 
     public function dosen(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'username_dosen', 'username');
+        return $this->belongsTo(User::class, 'user_username', 'username');
     }
     public function ruangan(): BelongsTo
     {
