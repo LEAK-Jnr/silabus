@@ -40,7 +40,6 @@
         <!-- Page Content -->
         <main>
             <x-dashboard.toast />
-
             {{ $slot }}
         </main>
     </div>

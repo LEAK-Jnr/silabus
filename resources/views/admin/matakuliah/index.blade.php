@@ -185,6 +185,11 @@
                             <th
                                 class="px-6 py-3 text-center text-xs font-bold uppercase text-gray-500"
                             >
+                                Semester
+                            </th>
+                            <th
+                                class="px-6 py-3 text-center text-xs font-bold uppercase text-gray-500"
+                            >
                                 SKS
                             </th>
                             <th
@@ -236,6 +241,12 @@
                                                 ->nama_prodi
                                         }}
                                     </div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span
+                                        class="text-white-700 rounded bg-blue-100 px-2 py-1 text-xs font-bold text-blue-800"
+                                        >{{ $mk->semester }}</span
+                                    >
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     {{ $mk->sks }}

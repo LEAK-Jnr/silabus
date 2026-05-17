@@ -26,6 +26,19 @@ class RuanganController extends Controller
 
         return redirect()->back()->with('success', 'Ruangan berhasil ditambahkan!');
     }
+    
+    public function update(Request $request, Ruangan $ruangan)
+    {
+        $request->validate([
+            'nama_ruangan' => 'required|string|max:255',
+            'kapasitas' => 'required|integer',
+            'spesifikasi' => 'required|in:standar,tinggi',
+        ]);
+
+        $ruangan->update($request->all());
+
+        return redirect()->back()->with('success', 'Ruangan berhasil diperbarui!');
+    }
 
     public function destroy(Ruangan $ruangan)
     {

@@ -65,27 +65,34 @@ class ProdiController extends Controller
         return redirect()->route('prodi.ajuan')->with('success', 'Ajuan Pekan ke-' . $request->pekan . ' berhasil dibuat!');
     }
 
-    public function update(Request $request, $id) 
-    {
-        $ajuan = Ajuan::findOrFail($id);
+   public function update(Request $request, $id) 
+{
+    $ajuan = Ajuan::findOrFail($id);
 
-        if ($ajuan->status === 'disetujui') {
-            return redirect()->route('prodi.ajuan')->with('error', 'Status "disetujui" sudah dikunci!');
-        }
-
-        $validated = $request->validate([
-            'kode_mk'        => 'required|exists:mata_kuliahs,id',
-            'kode_kelas'     => 'required|exists:kelas,id',
-            'username_dosen' => 'required|exists:users,username',
-            'ruangan_id'     => 'required|exists:ruangans,id',
-            'pekan'          => 'required|integer|min:1|max:14', // Koreksi validasi max:14
-            'status'         => 'required|in:menunggu,disetujui,ditolak',
-        ]);
-
-        $ajuan->update($validated);
-
-        return redirect()->route('prodi.ajuan')->with('success', 'Perubahan pekan ke-' . $request->pekan . ' berhasil disimpan!');
+    if ($ajuan->status === 'disetujui') {
+        return redirect()->route('prodi.ajuan')->with('error', 'Status "disetujui" sudah dikunci!');
     }
+
+    // Tulis aturan validasi
+    $validated = $request->validate([
+        'kode_mk'        => 'required|exists:mata_kuliahs,id',
+        'kode_kelas'     => 'required|exists:kelas,id',
+        'username_dosen' => 'required|exists:users,username',
+        'ruangan_id'     => 'required|exists:ruangans,id',
+        'pekan'          => 'required|integer|min:1|max:14', 
+    ], [
+        // SUNTIKKAN PESAN KUSTOM DI SINI:
+        'pekan.max' => 'Pekan tidak boleh melebihi 14!',
+        'pekan.min' => 'Pekan minimal berangka 1!',
+    ]);
+
+    // Jalankan update
+    $ajuan->update($validated);
+
+    return redirect()->route('prodi.ajuan')->with('success', 'Perubahan pekan ke-' . $request->pekan . ' berhasil disimpan!');
+}
+
+
 
     public function destroy($id)
     {

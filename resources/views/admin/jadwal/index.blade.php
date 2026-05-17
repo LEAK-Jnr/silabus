@@ -1,39 +1,62 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800">
-            {{ __("Manajemen Plotting Jadwal Kuliah") }}
+            {{
+                __(
+                    "Manajemen Plotting Jadwal Kuliah",
+                )
+            }}
         </h2>
     </x-slot>
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-2xl">
-                
                 {{-- Bagian Header: Judul & Tombol Generate --}}
                 <div class="mb-6 flex items-center justify-between">
                     <div>
-                        <h3 class="text-lg font-bold text-gray-800">Jadwal Pekan ke-{{ $pekanAktif }}</h3>
+                        <h3 class="text-lg font-bold text-gray-800">
+                            Jadwal Pekan ke-{{ $pekanAktif }}
+                        </h3>
                         <p class="text-sm text-gray-500">Klik tombol generate untuk memproses plotting otomatis berdasarkan prioritas.</p>
                     </div>
 
-                    <form action="{{ route('admin.jadwal.generate') }}" method="POST" onsubmit="return confirm('Sistem akan memplotting ajuan status menunggu berdasarkan skor prioritas. Lanjutkan?')">
-                        @csrf
-                        <button type="submit" class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700">
-                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            Generate Jadwal Otomatis
-                        </button>
-                    </form>
+                    <button
+                        x-data
+                        @click="$dispatch('open-modal-generate-jadwal')"
+                        class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
+                    >
+                        <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Generate Jadwal Otomatis
+                    </button>
+
+                    <x-dashboard.modal-confirm
+                        id="generate-jadwal"
+                        title="Konfirmasi Generate Jadwal"
+                        btnColor="bg-blue-600 hover:bg-blue-700"
+                        confirmText="Ya, Generate!"
+                        action="{{ route('admin.jadwal.generate') }}"
+                        method="POST"
+                    >
+                        <p>Sistem akan memplotting ajuan status menunggu berdasarkan skor prioritas. Lanjutkan?</p>
+                    </x-dashboard.modal-confirm>
                 </div>
 
                 {{-- Bagian Filter Pekan --}}
-                <div class="mb-6 flex items-center space-x-4 rounded-xl bg-gray-50 p-4 border border-gray-100">
-                    <label class="text-sm font-medium text-gray-700">Pilih Pekan:</label>
+                <div
+                    class="mb-6 flex items-center space-x-4 rounded-xl border border-gray-100 bg-gray-50 p-4"
+                >
+                    <label class="text-sm font-medium text-gray-700"
+                        >Pilih Pekan:</label
+                    >
                     <div class="flex flex-wrap gap-2">
                         @foreach (range(1, 14) as $p)
-                            <a href="{{ route('admin.jadwal.index', ['pekan' => $p]) }}" 
-                               class="rounded-lg px-3 py-1 text-sm font-semibold transition {{ $pekanAktif == $p ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100' }}">
+                            <a
+                                href="{{ route('admin.jadwal.index', ['pekan' => $p]) }}"
+                                class="rounded-lg px-3 py-1 text-sm font-semibold transition {{ $pekanAktif == $p ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100' }}"
+                            >
                                 {{ $p }}
                             </a>
                         @endforeach
@@ -42,64 +65,154 @@
 
                 {{-- Tabel Jadwal --}}
                 <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border border-gray-200">
+                    <table
+                        class="w-full border-collapse border border-gray-200"
+                    >
                         <thead>
                             <tr class="bg-gray-300">
-                                <th class="p-3 text-sm font-bold uppercase text-gray-700">Waktu & Ruangan</th>
-                                <th class="p-3 text-sm font-bold uppercase text-gray-700">Mata Kuliah</th>
-                                <th class="p-3 text-sm font-bold uppercase text-gray-700">Dosen</th>
-                                <th class="p-3 text-sm font-bold uppercase text-gray-700">Kelas</th>
-                                <th class="p-3 text-sm font-bold uppercase text-gray-700">Status</th>
+                                <th
+                                    class="p-3 text-sm font-bold uppercase text-gray-700"
+                                >
+                                    Waktu & Ruangan
+                                </th>
+                                <th
+                                    class="p-3 text-sm font-bold uppercase text-gray-700"
+                                >
+                                    Mata Kuliah
+                                </th>
+                                <th
+                                    class="p-3 text-sm font-bold uppercase text-gray-700"
+                                >
+                                    Dosen
+                                </th>
+                                <th
+                                    class="p-3 text-sm font-bold uppercase text-gray-700"
+                                >
+                                    Kelas
+                                </th>
+                                <th
+                                    class="p-3 text-sm font-bold uppercase text-gray-700"
+                                >
+                                    Status
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($ajuans as $index => $j)
-                                <tr class="text-center odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition">
-                                    <td class="p-3 border-b border-gray-100 text-left">
-                                        @if($j->hari)
-                                            <div class="font-bold text-blue-700">{{ $j->hari }}</div>
-                                            <div class="text-xs text-gray-500">{{ $j->jam_mulai }} - {{ $j->jam_selesai }}</div>
-                                            <div class="mt-1 text-xs font-semibold text-gray-600 italic">📍 {{ $j->ruangan->nama_ruangan ?? 'N/A' }}</div>
+                                <tr
+                                    class="text-center transition odd:bg-white even:bg-gray-50 hover:bg-blue-50"
+                                >
+                                    <td
+                                        class="border-b border-gray-100 p-3 text-left"
+                                    >
+                                        @if ($j->hari)
+                                            <div
+                                                class="font-bold text-blue-700"
+                                            >
+                                                {{ $j->hari }}
+                                            </div>
+                                            <div class="text-xs text-gray-500">
+                                                {{
+                                                    date(
+                                                        "H:i",
+                                                        strtotime($j->jam_mulai),
+                                                    )
+                                                }} - {{
+                                                    date(
+                                                        "H:i",
+                                                        strtotime($j->jam_selesai),
+                                                    )
+                                                }}
+                                            </div>
+                                            <div
+                                                class="mt-1 flex items-center gap-2 text-xs font-semibold italic text-gray-600"
+                                            >
+                                                <span
+                                                    ><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 12 12">
+                                                        <path d="M0 0h12v12H0z" fill="none" />
+                                                        <path fill="#f52323" d="M6 .5A4.5 4.5 0 0 1 10.5 5c0 1.863-1.42 3.815-4.2 5.9a.5.5 0 0 1-.6 0C2.92 8.815 1.5 6.863 1.5 5A4.5 4.5 0 0 1 6 .5m0 3a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3" />
+                                                    </svg> </span
+                                                >{{
+                                                    $j->ruangan->nama_ruangan ??
+                                                        "N/A"
+                                                }}
+                                            </div>
                                         @else
-                                            <span class="text-xs italic text-gray-400">Belum di-plot</span>
+                                            <span
+                                                class="text-xs italic text-gray-400"
+                                                >Belum di-plot</span
+                                            >
                                         @endif
                                     </td>
-                                    <td class="p-3 border-b border-gray-100 text-left">
-                                        <div class="text-sm font-bold">{{ $j->mataKuliah->nama_mk }}</div>
-                                        <div class="text-xs text-gray-400">{{ $j->mataKuliah->kode_mk }} ({{ $j->mataKuliah->sks }} SKS)</div>
+                                    <td
+                                        class="border-b border-gray-100 p-3 text-left"
+                                    >
+                                        <div class="text-sm font-bold">
+                                            {{
+                                                $j->mataKuliah
+                                                    ->nama_mk
+                                            }}
+                                        </div>
+                                        <div class="text-xs text-gray-400">
+                                            {{ $j->mataKuliah->kode_mk }} ({{ $j->mataKuliah->sks }} SKS)
+                                        </div>
                                     </td>
-                                    <td class="p-3 border-b border-gray-100">
-                                        <div class="text-sm font-medium text-gray-700">{{ $j->dosen->name }}</div>
+                                    <td class="border-b border-gray-100 p-3">
+                                        <div
+                                            class="text-sm font-medium text-gray-700"
+                                        >
+                                            {{
+                                                $j->dosen
+                                                    ->name
+                                            }}
+                                        </div>
                                     </td>
-                                    <td class="p-3 border-b border-gray-100 text-xs">
-                                        <span class="font-bold">{{ $j->kelas->kode_kelas }}</span>
-                                        <br>
-                                        <span class="text-gray-500 text-[10px]">Reg {{ strtoupper($j->kelas->reguler) }}</span>
+                                    <td
+                                        class="border-b border-gray-100 p-3 text-xs"
+                                    >
+                                        <span class="font-bold">{{
+                                            $j->kelas
+                                                ->kode_kelas
+                                        }}</span>
+                                        <br />
+                                        <span class="text-[10px] text-gray-500"
+                                            >Reg {{
+                                                strtoupper(
+                                                    $j->kelas->reguler,
+                                                )
+                                            }}</span
+                                        >
                                     </td>
-                                    <td class="p-3 border-b border-gray-100">
+                                    <td class="border-b border-gray-100 p-3">
                                         @php
-                                            $badgeColor = [
-                                                'menunggu' => 'bg-amber-100 text-amber-800',
-                                                'disetujui' => 'bg-green-100 text-green-800',
-                                                'ditolak' => 'bg-red-100 text-red-800',
-                                            ][$j->status] ?? 'bg-gray-100 text-gray-800';
+                                            $badgeColor =
+                                                [
+                                                    "menunggu" => "bg-amber-100 text-amber-800",
+                                                    "disetujui" => "bg-green-100 text-green-800",
+                                                    "ditolak" => "bg-red-100 text-red-800",
+                                                ][$j->status] ?? "bg-gray-100 text-gray-800";
                                         @endphp
-                                        <span class="inline-block rounded-full {{ $badgeColor }} px-3 py-1 text-[10px] font-bold uppercase">
+                                        <span
+                                            class="inline-block rounded-full {{ $badgeColor }} px-3 py-1 text-[10px] font-bold uppercase"
+                                        >
                                             {{ $j->status }}
                                         </span>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="p-10 text-center text-gray-400 italic">
-                                        Tidak ada ajuan atau jadwal pada pekan ini.
+                                    <td
+                                        colspan="5"
+                                        class="p-10 text-center italic text-gray-400"
+                                    >
+                                        Tidak ada ajuan atau jadwal pada pekan
+                                        ini.
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
