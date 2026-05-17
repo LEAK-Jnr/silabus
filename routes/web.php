@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\ProdiController as AdminProdiController;
-use App\Http\Controllers\ProdiController;
+use App\Http\Controllers\Prodi\ProdiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RuanganController;
 use App\Http\Controllers\Admin\MataKuliahController;
-use App\Http\Controllers\Admin\JadwalController; // <--- Import Controller Baru
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\JadwalController; 
+use App\Http\Controllers\Dosen\PresensiController;
+use App\Http\Controllers\Dosen\LaporanKerusakanController;
 use Illuminate\Support\Facades\Auth;
 
 // 1. Landing Page Pintar
