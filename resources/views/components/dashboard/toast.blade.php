@@ -7,6 +7,9 @@
         @if(session('error'))
             message = '{{ session('error') }}'; type = 'error'; show = true; setTimeout(() => show = false, 4000);
         @endif
+         @if($errors->any())
+            message = '{{ $errors->first() }}'; type = 'error'; show = true; setTimeout(() => show = false, 5000);
+        @endif
     "
     x-show="show"
     x-transition:enter="transform ease-out duration-300 transition"
