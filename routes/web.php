@@ -68,7 +68,7 @@ Route::middleware(['auth'])->group(function () {
             return view('dosen.jadwal.index');
         })->name('dosen.jadwal');
         Route::get('/dosen/presensi', [PresensiController::class, 'index'])->name('dosen.presensi');
-        Route::get('/dosen/laporan-kerusakan', [LaporanKerusakan::class, 'index'])->name('dosen.laporan-kerusakan');
+        Route::get('/dosen/laporan-kerusakan', [LaporanKerusakanController::class, 'index'])->name('dosen.laporan-kerusakan');
     });
 
     // --- PROFILE (Bisa diakses semua role) ---
