@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-2xl font-bold leading-tight text-blue-900">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800">
             Master Mata Kuliah
         </h2>
     </x-slot>
