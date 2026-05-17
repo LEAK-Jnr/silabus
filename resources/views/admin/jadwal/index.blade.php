@@ -21,27 +21,6 @@
                         <p class="text-sm text-gray-500">Klik tombol generate untuk memproses plotting otomatis berdasarkan prioritas.</p>
                     </div>
 
-                    {{-- <form
-                        action="{{ route('admin.jadwal.generate') }}"
-                        method="POST"
-                        onsubmit="
-                            return confirm(
-                                'Sistem akan memplotting ajuan status menunggu berdasarkan skor prioritas. Lanjutkan?',
-                            );
-                        "
-                    >
-                        @csrf
-                        <button
-                            type="submit"
-                            class="inline-flex items-center rounded-xl bg-blue-600 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700"
-                        >
-                            <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            Generate Jadwal Otomatis
-                        </button>
-                    </form> --}}
-                    <!-- TOMBOL PEMICU GENERATE -->
                     <button
                         x-data
                         @click="$dispatch('open-modal-generate-jadwal')"
@@ -53,10 +32,8 @@
                         Generate Jadwal Otomatis
                     </button>
 
-                    <!-- COMPONENT MODAL GENERATE -->
                     <x-dashboard.modal-confirm
                         id="generate-jadwal"
-                        {{-- Pastikan teks setelah kata 'open-modal-' di atas sama dengan isi ID ini --}}
                         title="Konfirmasi Generate Jadwal"
                         btnColor="bg-blue-600 hover:bg-blue-700"
                         confirmText="Ya, Generate!"
@@ -67,7 +44,6 @@
                     </x-dashboard.modal-confirm>
                 </div>
 
-                {{-- Bagian Filter Pekan --}}
                 <div
                     class="mb-6 flex items-center space-x-4 rounded-xl border border-gray-100 bg-gray-50 p-4"
                 >
