@@ -99,7 +99,7 @@
                         @endif
                         <button
                             type="submit"
-                            class="inline-flex justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all"
+                            class="inline-flex w-full justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all"
                         >
                             {{ $confirmText }}
                         </button>
