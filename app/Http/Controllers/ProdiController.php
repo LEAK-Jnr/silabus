@@ -53,7 +53,7 @@ class ProdiController extends Controller
         $validated = $request->validate([
             'kode_mk'        => 'required|exists:mata_kuliahs,id',
             'kode_kelas'     => 'required|exists:kelas,id',
-            'username_dosen' => 'required|exists:users,username',
+            'user_username' => 'required|exists:users,username',
             'ruangan_id'     => 'required|exists:ruangans,id',
             'pekan'          => 'required|integer|min:1|max:14', // Koreksi validasi max:14
         ]);
@@ -77,7 +77,7 @@ class ProdiController extends Controller
     $validated = $request->validate([
         'kode_mk'        => 'required|exists:mata_kuliahs,id',
         'kode_kelas'     => 'required|exists:kelas,id',
-        'username_dosen' => 'required|exists:users,username',
+        'user_username' => 'required|exists:users,username',
         'ruangan_id'     => 'required|exists:ruangans,id',
         'pekan'          => 'required|integer|min:1|max:14', 
     ], [

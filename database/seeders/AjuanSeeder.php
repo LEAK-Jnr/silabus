@@ -61,7 +61,7 @@ class AjuanSeeder extends Seeder
             Ajuan::create([
                 'kode_mk'        => $terpilihMk, 
                 'kode_kelas'     => Arr::random($banyakKelas), 
-                'username_dosen' => $dosen->username,
+                'user_username' => $dosen->username,
                 'ruangan_id'     => 1, // Asumsikan ruangan_id 1 selalu ada, atau bisa diubah sesuai kebutuhan
                 'pekan'          => 2,
                 'hari'           => null,
