@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('presensis', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->foreign('username')->references('username')->on('users')->cascadeOnDelete();
+            $table->string('user_username');
+            $table->foreign('user_username')->references('username')->on('users')->cascadeOnDelete();
             $table->foreignId('ajuan_id')->constrained('ajuans')->cascadeOnDelete(); 
             $table->date('tanggal'); 
             $table->time('jam_masuk')->nullable();

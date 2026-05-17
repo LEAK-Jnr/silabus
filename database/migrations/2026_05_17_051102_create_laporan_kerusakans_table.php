@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('laporan_kerusakans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ruangan_id')->constrained('ruangans')->cascadeOnDelete();
-            $table->string('username');
-            $table->foreign('username')->references('username')->on('users')->cascadeOnDelete();  
+            $table->string('user_username');
+            $table->foreign('user_username')->references('username')->on('users')->cascadeOnDelete();  
             $table->string('nama_barang');
             $table->text('deskripsi_kerusakan');
             $table->enum('tingkat_kerusakan', ['ringan', 'sedang', 'berat'])->default('ringan');
