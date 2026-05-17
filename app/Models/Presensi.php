@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Presensi extends Model
 {
     protected $fillable = [
-        'username',
+        'user_username',
         'ajuan_id',
         'tanggal',
         'jam_masuk',

@@ -8,7 +8,7 @@ class LaporanKerusakan extends Model
 {
     protected $fillable = [
         'ruangan_id',
-        'username',
+        'user_username',
         'nama_barang',
         'deskripsi_kerusakan',
         'tingkat_kerusakan',

@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class LaporanKerusakanController extends Controller
 {
     public function index() {
-        return view('prodi.laporan_kerusakan.index');
+        return view('dosen.laporan.index');
     }
 }
