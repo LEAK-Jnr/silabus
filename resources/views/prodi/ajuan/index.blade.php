@@ -79,50 +79,26 @@
 
                 {{-- 5. RUANGAN (DATALIST) --}}
                 <div>
-                    <label for="ruangan_search" class="block text-sm font-medium text-gray-700">Ruangan Ajuan</label>
-                    <input list="list_ruangan" id="ruangan_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Ruangan...">
-                    <datalist id="list_ruangan">
-                        @foreach ($ruangans as $ruangan)
-                            <option data-id="{{ $ruangan->id }}" value="{{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }})">
-                        @endforeach
-                    </datalist>
-                    <input type="hidden" name="ruangan_id" id="ruangan_id" required>
+                    <label for="ruangan_id" class="block text-sm font-medium text-gray-700">Ruangan Ajuan</label>
+                    <select 
+                        id="ruangan_id" 
+                        name="ruangan_id" 
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                        required
+                    >
+                        <option value="">Pilih Ruangan</option>
+                            @foreach ($ruangans as $ruangan)
+                                <option value="{{ $ruangan->id }}">
+                                    {{ $ruangan->nama_ruangan }} (Kap: {{ $ruangan->kapasitas }} | {{ $ruangan->spesifikasi }})
+                                </option>
+                            @endforeach
+                    </select>
                 </div>
             </div>
         </x-dashboard.modal>
     </div>
 </div>
 
-{{-- SCRIPT PENGHUBUNG --}}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function setupDatalist(inputId, listId, hiddenId) {
-            const input = document.getElementById(inputId);
-            const list = document.getElementById(listId);
-            const hidden = document.getElementById(hiddenId);
-
-            if(!input || !list || !hidden) return;
-
-            input.addEventListener('input', function() {
-                const options = list.querySelectorAll('option');
-                let foundValue = "";
-                
-                options.forEach(option => {
-                    if (option.value === input.value) {
-                        foundValue = option.getAttribute('data-id');
-                    }
-                });
-                hidden.value = foundValue;
-            });
-        }
-
-        // Jalankan untuk semua field
-        setupDatalist('mk_search', 'list_mk', 'kode_mk');
-        setupDatalist('kelas_search', 'list_kelas', 'kode_kelas');
-        setupDatalist('dosen_search', 'list_dosen', 'user_username');
-        setupDatalist('ruangan_search', 'list_ruangan', 'ruangan_id');
-    });
-</script>
 {{-- akhir modal ajuan --}}
                 <div
                     class="bg-neutral-primary-soft shadow-xs rounded-base border-default relative mt-5 w-full overflow-x-auto border"
@@ -276,160 +252,95 @@
                                             <div
                                                 class="flex flex-row items-center justify-start gap-2"
                                             >
-                                                <x-dashboard.modal
-                                                    :action="route('prodi.ajuan.update', $ajuan->id)"
-                                                    method="PUT"
-                                                    title="Edit Ajuan"
-                                                    :triggerAttributes="'text-blue-600 hover:text-blue-800 font-semibold'"
-                                                    :trigger="'Edit'"
-                                                >
-                                                    <div
-                                                        class="grid grid-cols-1 gap-4"
-                                                    >
-                                                        <div>
-                                                            <label
-                                                                for="kode_mk"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                                >Mata
-                                                                Kuliah</label
-                                                            >
-                                                            <select
-                                                                id="kode_mk"
-                                                                name="kode_mk"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                                            >
-                                                                <option
-                                                                    value=""
-                                                                >
-                                                                    Pilih Mata
-                                                                    Kuliah
-                                                                </option>
-                                                                @foreach ($matakuliahs as $mk)
-                                                                    <option
-                                                                        value="{{ $mk->id }}"
-                                                                        {{
-                                                                            $mk->id === $ajuan->kode_mk
-                                                                                ? "selected"
-                                                                                : ""
-                                                                        }}
-                                                                        >{{ $mk->nama_mk }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                {{-- modal edit --}}
+                                                <x-dashboard.modal 
+    :action="route('prodi.ajuan.update', $ajuan->id)" 
+    method="PUT" 
+    title="Edit Ajuan" 
+    :triggerAttributes="'text-blue-600 hover:text-blue-800 font-semibold'" 
+    :trigger="'Edit'"
+>
+    <div class="grid grid-cols-1 gap-4 text-left">
+        {{-- 1. MATA KULIAH (DATALIST) --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Mata Kuliah</label>
+            <input 
+                list="edit_list_mk" 
+                id="edit_mk_search_{{ $ajuan->id }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                placeholder="Cari Mata Kuliah..."
+                value="{{ $ajuan->mataKuliah->nama_mk ?? '' }}"
+            >
+            <datalist id="edit_list_mk">
+                @foreach ($matakuliahs as $mk)
+                    <option data-id="{{ $mk->id }}" value="{{ $mk->nama_mk }}">
+                @endforeach
+            </datalist>
+            <input type="hidden" name="kode_mk" id="edit_kode_mk_{{ $ajuan->id }}" value="{{ $ajuan->kode_mk }}" required>
+        </div>
 
-                                                        <div>
-                                                            <label
-                                                                for="pekan"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                                >Pekan
-                                                                Perkuliahan</label
-                                                            >
-                                                            <select
-                                                                id="pekan"
-                                                                name="pekan"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                                                required
-                                                            >
-                                                                @for ($i = 1; $i <= 16; $i++)
-                                                                    <option
-                                                                        value="{{ $i }}"
-                                                                        {{
-                                                                            $ajuan->pekan == $i
-                                                                                ? "selected"
-                                                                                : ""
-                                                                        }}
-                                                                        >Pekan {{ $i }}
-                                                                    </option>
-                                                                @endfor
-                                                            </select>
-                                                        </div>
+        <div class="grid grid-cols-2 gap-4">
+            {{-- 2. KODE KELAS (DATALIST) --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Kode Kelas</label>
+                <input 
+                    list="edit_list_kelas" 
+                    id="edit_kelas_search_{{ $ajuan->id }}" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                    placeholder="Cari Kelas..."
+                    value="{{ $ajuan->kelas->kode_kelas ?? '' }} - Reg {{ $ajuan->kelas->reguler ?? '' }}"
+                >
+                <datalist id="edit_list_kelas">
+                    @foreach ($kelases as $kelas)
+                        <option data-id="{{ $kelas->id }}" value="{{ $kelas->kode_kelas }} - Reg {{ $kelas->reguler }}">
+                    @endforeach
+                </datalist>
+                <input type="hidden" name="kode_kelas" id="edit_kode_kelas_{{ $ajuan->id }}" value="{{ $ajuan->kode_kelas }}" required>
+            </div>
 
-                                                        <div>
-                                                            <label
-                                                                for="kode_kelas"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                                >Kode
-                                                                Kelas</label
-                                                            >
-                                                            <select
-                                                                id="kode_kelas"
-                                                                name="kode_kelas"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                                                required
-                                                            >
-                                                                @foreach ($kelases as $kelas)
-                                                                    <option
-                                                                        value="{{ $kelas->id }}"
-                                                                        {{
-                                                                            $kelas->id === $ajuan->kode_kelas
-                                                                                ? "selected"
-                                                                                : ""
-                                                                        }}
-                                                                        >{{ $kelas->kode_kelas }} -
-                                                                        Reg {{ $kelas->reguler }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+            {{-- 3. PEKAN (SELECT TETAP) --}}
+            <div>
+                <label for="pekan" class="block text-sm font-medium text-gray-700">Pekan Perkuliahan</label>
+                <select name="pekan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+                    @foreach ($pekans as $p)
+                        <option value="{{ $p }}" {{ $ajuan->pekan == $p ? 'selected' : '' }}>Pekan {{ $p }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
-                                                        <div>
-                                                            <label
-                                                                for="user_username"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                                >Dosen
-                                                                Pengampu</label
-                                                            >
-                                                            <select
-                                                                id="user_username"
-                                                                name="user_username"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                                                required
-                                                            >
-                                                                @foreach ($dosenPengampu as $dosen)
-                                                                    <option
-                                                                        value="{{ $dosen->username }}"
-                                                                        {{
-                                                                            $dosen->username ===
-                                                                            $ajuan->user_username
-                                                                                ? "selected"
-                                                                                : ""
-                                                                        }}
-                                                                        >{{ $dosen->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+        {{-- 4. DOSEN (DATALIST) --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Dosen Pengampu</label>
+            <input 
+                list="edit_list_dosen" 
+                id="edit_dosen_search_{{ $ajuan->id }}" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                placeholder="Cari Nama Dosen..."
+                value="{{ $ajuan->dosen->name ?? '' }}"
+            >
+            <datalist id="edit_list_dosen">
+                @foreach ($dosenPengampu as $dosen)
+                    <option data-id="{{ $dosen->username }}" value="{{ $dosen->name }}">
+                @endforeach
+            </datalist>
+            <input type="hidden" name="user_username" id="edit_user_username_{{ $ajuan->id }}" value="{{ $ajuan->user_username }}" required>
+        </div>
 
-                                                        <div>
-                                                            <label
-                                                                for="ruangan_id"
-                                                                class="block text-sm font-medium text-gray-700"
-                                                                >Ruangan
-                                                                Ajuan</label
-                                                            >
-                                                            <select
-                                                                id="ruangan_id"
-                                                                name="ruangan_id"
-                                                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                                                                required
-                                                            >
-                                                                @foreach ($ruangans as $ruangan)
-                                                                    <option
-                                                                        value="{{ $ruangan->id }}"
-                                                                        {{
-                                                                            $ruangan->id === $ajuan->ruangan_id
-                                                                                ? "selected"
-                                                                                : ""
-                                                                        }}
-                                                                        >{{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }})
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </x-dashboard.modal>
-
+        {{-- 5. RUANGAN (KEMBALI KE SELECT SESUAI REQUEST) --}}
+        <div>
+            <label for="ruangan_id" class="block text-sm font-medium text-gray-700">Ruangan Ajuan</label>
+            <select name="ruangan_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+                @foreach ($ruangans as $ruangan)
+                    <option value="{{ $ruangan->id }}" {{ $ajuan->ruangan_id == $ruangan->id ? 'selected' : '' }}>
+                        {{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</x-dashboard.modal>
+{{-- akhir modal edit --}}
                                                 <div
                                                     class="h-4 w-px bg-black"
                                                 ></div>
@@ -466,6 +377,47 @@
                             @endforeach
                         </tbody>
                     </table>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fungsi utama untuk menghubungkan input pencarian dengan ID tersembunyi
+        function setupDatalist(inputId, listId, hiddenId) {
+            const input = document.getElementById(inputId);
+            const list = document.getElementById(listId);
+            const hidden = document.getElementById(hiddenId);
+
+            if(!input || !list || !hidden) return;
+
+            input.addEventListener('input', function() {
+                const options = list.querySelectorAll('option');
+                let foundValue = "";
+                
+                options.forEach(option => {
+                    if (option.value === input.value) {
+                        foundValue = option.getAttribute('data-id');
+                    }
+                });
+                
+                // Masukkan ID asli ke input hidden agar bisa dikirim ke database
+                hidden.value = foundValue;
+                console.log('Input:', inputId, 'ID Set to:', foundValue); // Untuk debugging di console
+            });
+        }
+
+        // --- 1. INISIALISASI UNTUK MODAL TAMBAH ---
+        // Pastikan ID ini sesuai dengan yang ada di modal tambah Anda
+        setupDatalist('mk_search', 'list_mk', 'kode_mk');
+        setupDatalist('kelas_search', 'list_kelas', 'kode_kelas');
+        setupDatalist('dosen_search', 'list_dosen', 'user_username');
+
+        // --- 2. INISIALISASI UNTUK SEMUA MODAL EDIT (DINAMIS) ---
+        // Kita menggunakan looping blade untuk mendaftarkan ID unik tiap baris
+        @foreach($ajuans as $ajuan)
+            setupDatalist('edit_mk_search_{{ $ajuan->id }}', 'edit_list_mk', 'edit_kode_mk_{{ $ajuan->id }}');
+            setupDatalist('edit_kelas_search_{{ $ajuan->id }}', 'edit_list_kelas', 'edit_kode_kelas_{{ $ajuan->id }}');
+            setupDatalist('edit_dosen_search_{{ $ajuan->id }}', 'edit_list_dosen', 'edit_user_username_{{ $ajuan->id }}');
+        @endforeach
+    });
+</script>
                 </div>
             </div>
         </div>
