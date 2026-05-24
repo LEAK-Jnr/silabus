@@ -47,7 +47,7 @@
                         <input list="list_kelas" id="kelas_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Kelas...">
                         <datalist id="list_kelas">
                             @foreach ($kelases as $kelas)
-                                <option data-id="{{ $kelas->id }}" value="{{ $kelas->kode_kelas }} (Reg {{ $kelas->reguler }})">
+                                <option data-id="{{ $kelas->id }}" value="{{ $kelas->kode_kelas }} ({{ $kelas->reguler }})">
                             @endforeach
                         </datalist>
                         <input type="hidden" name="kode_kelas" id="kode_kelas" required>
