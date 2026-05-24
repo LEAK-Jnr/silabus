@@ -36,7 +36,7 @@ class MataKuliahSeeder extends Seeder
                 'kode_mk' => 'SIF202',
                 'nama_mk' => 'Algoritma Pemrograman',
                 'sks' => 2,
-                'skor_prioritas' => 70,
+                'skor_prioritas' => 80,
                 'spesifikasi' => 'standar',
             ],
             [
@@ -44,7 +44,7 @@ class MataKuliahSeeder extends Seeder
                 'kode_mk' => 'SIF401',
                 'nama_mk' => 'Mobile Programming',
                 'sks' => 3,
-                'skor_prioritas' => 95,
+                'skor_prioritas' => 75,
                 'spesifikasi' => 'tinggi', // Akan masuk Lab 3
             ],
             [
@@ -52,7 +52,7 @@ class MataKuliahSeeder extends Seeder
                 'kode_mk' => 'SIF405',
                 'nama_mk' => 'Pemograman Web I',
                 'sks' => 3,
-                'skor_prioritas' => 95,
+                'skor_prioritas' => 75,
                 'spesifikasi' => 'tinggi', 
             ],
         ];

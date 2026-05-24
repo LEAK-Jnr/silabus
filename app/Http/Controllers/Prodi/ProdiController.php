@@ -15,29 +15,37 @@ class ProdiController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+        // 1. Inisialisasi Query dasar
         $query = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan']);
         $dosenQuery = User::where('role', 'dosen');
         $matakuliahQuery = MataKuliah::query();
+        $kelasQuery = Kelas::query(); //  query builder untuk kelas
         $ruangans = Ruangan::all();
-        $kelases = Kelas::all();
-
-        // Koreksi: Range pekan menjadi 1 sampai 14
         $pekans = range(1, 14);
 
+        // 4. Filtering ketat jika role-nya adalah 'prodi'
         if ($user->role === 'prodi') {
+            // Filter Ajuan: Hanya tampilkan ajuan yang Mata Kuliahnya milik prodi ybs
             $query->whereHas('mataKuliah', function($q) use ($user) {
                 $q->where('prodi_id', $user->prodi_id);
             });
+
+            // Filter Dosen: Hanya dosen di prodi ybs
             $dosenQuery->where('prodi_id', $user->prodi_id);
+
+            // Filter Mata Kuliah: Hanya MK milik prodi ybs
             $matakuliahQuery->where('prodi_id', $user->prodi_id);
+
+            // --- TAMBAHAN: Filter Kelas ---
+            // Agar datalist kelas tidak memunculkan kelas dari prodi lain
+            $kelasQuery->where('prodi_id', $user->prodi_id);
         }
 
-        // Tampilan tabel urut berdasarkan pekan (1, 2, 3... dst)
+        // 5. Eksekusi Get Data
         $ajuans = $query->orderBy('pekan', 'asc')->get(); 
-        
         $dosenPengampu = $dosenQuery->get();
         $matakuliahs = $matakuliahQuery->get();
+        $kelases = $kelasQuery->get(); // Ambil hasil filter kelas
 
         return view('prodi.ajuan.index', compact(
             'ajuans', 

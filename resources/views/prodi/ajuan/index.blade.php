@@ -19,144 +19,111 @@
                 {{-- <div class="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-700">
                     Sistem sedang disiapkan untuk fitur upload ajuan.
                 </div> --}}
+                {{-- di bawhah ini modal tambah ajuan --}}
                 <div class="flex-co w-fulll flex-col">
-                    <div class="flex justify-end">
-                        <x-dashboard.modal
-                            :action="route('prodi.ajuan.store')"
-                            title="Tambah Ajuan Baru"
-                        >
-                            <x-slot:trigger>
-                                + Tambah Ajuan Baru
-                            </x-slot:trigger>
+    <div class="flex justify-end">
+        <x-dashboard.modal :action="route('prodi.ajuan.store')" title="Tambah Ajuan Baru">
+            <x-slot:trigger>
+                + Tambah Ajuan Baru
+            </x-slot:trigger>
 
-                            <div class="grid grid-cols-1 gap-4">
-                                {{-- Ditambahkan gap agar antar baris tidak rapat --}}
-                                <div>
-                                    <label
-                                        for="kode_mk"
-                                        class="block text-sm font-medium text-gray-700"
-                                        >Mata Kuliah</label
-                                    >
-                                    <select
-                                        id="kode_mk"
-                                        name="kode_mk"
-                                        required
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                    >
-                                        <option value="">
-                                            Pilih Mata Kuliah
-                                        </option>
-                                        @foreach ($matakuliahs as $mk)
-                                            <option value="{{ $mk->id }}">
-                                                {{ $mk->nama_mk }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+            <div class="grid grid-cols-1 gap-4">
+                {{-- 1. MATA KULIAH (DATALIST) --}}
+                <div>
+                    <label for="mk_search" class="block text-sm font-medium text-gray-700">Mata Kuliah</label>
+                    <input list="list_mk" id="mk_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Mata Kuliah...">
+                    <datalist id="list_mk">
+                        @foreach ($matakuliahs as $mk)
+                            <option data-id="{{ $mk->id }}" value="{{ $mk->nama_mk }}">
+                        @endforeach
+                    </datalist>
+                    <input type="hidden" name="kode_mk" id="kode_mk" required>
+                </div>
 
-                                <div class="grid grid-cols-2 gap-4">
-                                    {{-- Saya bagi dua kolom agar lebih compact --}}
-                                    <div>
-                                        <label
-                                            for="kode_kelas"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Kode Kelas</label
-                                        >
-                                        <select
-                                            id="kode_kelas"
-                                            name="kode_kelas"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                            required
-                                        >
-                                            <option value="">
-                                                Pilih Kode Kelas
-                                            </option>
-                                            @foreach ($kelases as $kelas)
-                                                <option
-                                                    value="{{ $kelas->id }}"
-                                                >
-                                                    {{ $kelas->kode_kelas }} -
-                                                    Reg {{ $kelas->reguler }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                <div class="grid grid-cols-2 gap-4">
+                    {{-- 2. KODE KELAS (DATALIST) --}}
+                    <div>
+                        <label for="kelas_search" class="block text-sm font-medium text-gray-700">Kode Kelas</label>
+                        <input list="list_kelas" id="kelas_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Kelas...">
+                        <datalist id="list_kelas">
+                            @foreach ($kelases as $kelas)
+                                <option data-id="{{ $kelas->id }}" value="{{ $kelas->kode_kelas }} (Reg {{ $kelas->reguler }})">
+                            @endforeach
+                        </datalist>
+                        <input type="hidden" name="kode_kelas" id="kode_kelas" required>
+                    </div>
 
-                                    {{-- --- MODIFIKASI: INPUT PEKAN --- --}}
-                                    <div>
-                                        <label
-                                            for="pekan"
-                                            class="block text-sm font-medium text-gray-700"
-                                            >Pekan Ke-</label
-                                        >
-                                        <select
-                                            id="pekan"
-                                            name="pekan"
-                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                            required
-                                        >
-                                            <option value="">
-                                                Pilih Pekan
-                                            </option>
-                                            @for ($i = 1; $i <= 14; $i++)
-                                                <option value="{{ $i }}">
-                                                    Pekan {{ $i }}
-                                                </option>
-                                            @endfor
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label
-                                        for="user_username"
-                                        class="block text-sm font-medium text-gray-700"
-                                        >Dosen Pengampu</label
-                                    >
-                                    <select
-                                        id="user_username"
-                                        name="user_username"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        required
-                                    >
-                                        <option value="">
-                                            Pilih Dosen Pengampu
-                                        </option>
-                                        @foreach ($dosenPengampu as $dosen)
-                                            <option
-                                                value="{{ $dosen->username }}"
-                                            >
-                                                {{ $dosen->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label
-                                        for="ruangan_id"
-                                        class="block text-sm font-medium text-gray-700"
-                                        >Ruangan Ajuan</label
-                                    >
-                                    <select
-                                        id="ruangan_id"
-                                        name="ruangan_id"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                                        required
-                                    >
-                                        <option value="">Pilih Ruangan</option>
-                                        @foreach ($ruangans as $ruangan)
-                                            <option value="{{ $ruangan->id }}">
-                                                {{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }} |
-                                                Spek: {{ $ruangan->spesifikasi }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </x-dashboard.modal>
+                    {{-- 3. PEKAN (TETAP SELECT KARENA HANYA 14 OPSI) --}}
+                    <div>
+                        <label for="pekan" class="block text-sm font-medium text-gray-700">Pekan Ke-</label>
+                        <select id="pekan" name="pekan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+                            <option value="">Pilih Pekan</option>
+                            @for ($i = 1; $i <= 14; $i++)
+                                <option value="{{ $i }}">Pekan {{ $i }}</option>
+                            @endfor
+                        </select>
                     </div>
                 </div>
+
+                {{-- 4. DOSEN (DATALIST) --}}
+                <div>
+                    <label for="dosen_search" class="block text-sm font-medium text-gray-700">Dosen Pengampu</label>
+                    <input list="list_dosen" id="dosen_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Nama Dosen...">
+                    <datalist id="list_dosen">
+                        @foreach ($dosenPengampu as $dosen)
+                            <option data-id="{{ $dosen->username }}" value="{{ $dosen->name }}">
+                        @endforeach
+                    </datalist>
+                    <input type="hidden" name="user_username" id="user_username" required>
+                </div>
+
+                {{-- 5. RUANGAN (DATALIST) --}}
+                <div>
+                    <label for="ruangan_search" class="block text-sm font-medium text-gray-700">Ruangan Ajuan</label>
+                    <input list="list_ruangan" id="ruangan_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Ruangan...">
+                    <datalist id="list_ruangan">
+                        @foreach ($ruangans as $ruangan)
+                            <option data-id="{{ $ruangan->id }}" value="{{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }})">
+                        @endforeach
+                    </datalist>
+                    <input type="hidden" name="ruangan_id" id="ruangan_id" required>
+                </div>
+            </div>
+        </x-dashboard.modal>
+    </div>
+</div>
+
+{{-- SCRIPT PENGHUBUNG --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function setupDatalist(inputId, listId, hiddenId) {
+            const input = document.getElementById(inputId);
+            const list = document.getElementById(listId);
+            const hidden = document.getElementById(hiddenId);
+
+            if(!input || !list || !hidden) return;
+
+            input.addEventListener('input', function() {
+                const options = list.querySelectorAll('option');
+                let foundValue = "";
+                
+                options.forEach(option => {
+                    if (option.value === input.value) {
+                        foundValue = option.getAttribute('data-id');
+                    }
+                });
+                hidden.value = foundValue;
+            });
+        }
+
+        // Jalankan untuk semua field
+        setupDatalist('mk_search', 'list_mk', 'kode_mk');
+        setupDatalist('kelas_search', 'list_kelas', 'kode_kelas');
+        setupDatalist('dosen_search', 'list_dosen', 'user_username');
+        setupDatalist('ruangan_search', 'list_ruangan', 'ruangan_id');
+    });
+</script>
+{{-- akhir modal ajuan --}}
                 <div
                     class="bg-neutral-primary-soft shadow-xs rounded-base border-default relative mt-5 w-full overflow-x-auto border"
                 >

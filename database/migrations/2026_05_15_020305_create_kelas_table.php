@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('kode_kelas')->unique();
             $table->string('reguler');
+            $table->foreignId('prodi_id')->constrained('prodis')->onDelete('cascade');
             $table->timestamps();
         });
     }
