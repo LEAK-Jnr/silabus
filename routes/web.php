@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/ruangan/{ruangan}', [RuanganController::class, 'destroy'])->name('admin.ruangan.destroy');
 
         // --- MENU JADWAL (PLOTTING OTOMATIS) ---
+        Route::get('/admin/jadwal/export-pdf-all', [JadwalController::class, 'exportPdfAll'])->name('admin.jadwal.export-pdf-all');
+        Route::get('/admin/jadwal/export-pdf', [JadwalController::class, 'exportPdf'])->name('admin.jadwal.export-pdf');
         Route::get('/admin/jadwal', [JadwalController::class, 'index'])->name('admin.jadwal.index');
         Route::post('/admin/jadwal/generate', [JadwalController::class, 'generate'])->name('admin.jadwal.generate');
     });

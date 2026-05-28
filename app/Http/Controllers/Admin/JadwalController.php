@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
 use App\Models\Ajuan;
+use PDF;
 
 class JadwalController extends Controller
 {
@@ -57,7 +58,6 @@ class JadwalController extends Controller
         $countTolak = 0;
 
         foreach ($ajuans as $ajuan) {
-            // Mengubah format reguler (contoh: 'Reguler A' -> 'A')
             $regulerRaw = strtoupper($ajuan->kelas->reguler); 
             $reguler = trim(str_replace('REGULER', '', $regulerRaw));
             $foundSlot = false;
@@ -111,5 +111,31 @@ class JadwalController extends Controller
         }
 
         return redirect()->back()->with('success', "Generate Selesai! $countSetuju Ajuan Disetujui, $countTolak Ajuan Ditolak.");
+    }
+    public function exportPdf(Request $request) {
+        $pekanAktif = $request->get('pekan', 1);
+
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+            ->where('pekan', $pekanAktif)
+            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+        $pdf = PDF::loadView('admin.jadwal.pdf', compact('ajuans', 'pekanAktif'))->setPaper('a4', 'landscape');
+
+        return $pdf->download("jadwal-pekan-{$pekanAktif}.pdf");
+    }
+    public function exportPdfAll() {
+        // Ambil semua ajuan dan kelompokkan berdasarkan pekan
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+        $ajuansGrouped = $ajuans->groupBy('pekan');
+
+        $pdf = PDF::loadView('admin.jadwal.pdf-all', compact('ajuansGrouped'))->setPaper('a4', 'landscape');
+
+        return $pdf->download("jadwal-kuliah-massal-pekan-1-14.pdf");
     }
 }
