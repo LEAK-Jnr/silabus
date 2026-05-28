@@ -44,7 +44,8 @@ class JadwalController extends Controller
             ]
         ];
 
-        $ajuans = Ajuan::where('status', 'menunggu')
+        $ajuans = Ajuan::with('kelas')
+            ->where('ajuans.status', 'menunggu')
             ->join('mata_kuliahs', 'ajuans.kode_mk', '=', 'mata_kuliahs.id')
             ->join('prodis', 'mata_kuliahs.prodi_id', '=', 'prodis.id')
             ->select('ajuans.*')
@@ -56,7 +57,9 @@ class JadwalController extends Controller
         $countTolak = 0;
 
         foreach ($ajuans as $ajuan) {
-            $reguler = strtoupper($ajuan->kelas->reguler); 
+            // Mengubah format reguler (contoh: 'Reguler A' -> 'A')
+            $regulerRaw = strtoupper($ajuan->kelas->reguler); 
+            $reguler = trim(str_replace('REGULER', '', $regulerRaw));
             $foundSlot = false;
 
             if (!isset($slotWaktu[$reguler])) {
@@ -73,9 +76,11 @@ class JadwalController extends Controller
                         ->where('jam_mulai', $start)
                         ->where('status', 'disetujui')
                         ->where(function($q) use ($ajuan) {
-                            $q->where('ruangan_id', $ajuan->ruangan_id)
-                              ->orWhere('user_username', $ajuan->user_username)
+                            $q->where('user_username', $ajuan->user_username)
                               ->orWhere('kode_kelas', $ajuan->kode_kelas);
+                            if ($ajuan->ruangan_id) {
+                                $q->orWhere('ruangan_id', $ajuan->ruangan_id);
+                            }
                         })->exists();
 
                     if (!$isOccupied) {

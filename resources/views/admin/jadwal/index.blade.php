@@ -112,17 +112,7 @@
                                                 {{ $j->hari }}
                                             </div>
                                             <div class="text-xs text-gray-500">
-                                                {{
-                                                    date(
-                                                        "H:i",
-                                                        strtotime($j->jam_mulai),
-                                                    )
-                                                }} - {{
-                                                    date(
-                                                        "H:i",
-                                                        strtotime($j->jam_selesai),
-                                                    )
-                                                }}
+                                                {{ $j->jam_mulai?->format('H:i') }} - {{ $j->jam_selesai?->format('H:i') }}
                                             </div>
                                             <div
                                                 class="mt-1 flex items-center gap-2 text-xs font-semibold italic text-gray-600"
