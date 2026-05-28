@@ -8,7 +8,7 @@
             margin: 10mm 15mm;
         }
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 11px;
             color: #374151;
             margin: 0;
@@ -97,7 +97,7 @@
 </head>
 <body>
     <div class="header">
-        <h2>Manajemen Plotting Jadwal Kuliah</h2>
+        <h2>Manajemen Laboratorium</h2>
         <p>Jadwal Pekan ke-{{ $pekanAktif }}</p>
     </div>
 
@@ -116,30 +116,69 @@
                 <tr>
                     <td>
                         @if ($j->hari)
-                            <div class="text-blue-700 font-bold">{{ $j->hari }}</div>
-                            <div class="text-gray-500 text-xs">
-                                {{ $j->jam_mulai?->format('H:i') }} - {{ $j->jam_selesai?->format('H:i') }}
+                            <div class="font-bold text-blue-700">
+                                {{ $j->hari }}
                             </div>
-                            <div class="text-gray-500 text-xs" style="margin-top: 2px; font-style: italic;">
-                                Ruangan: {{ $j->ruangan->nama_ruangan ?? 'N/A' }}
+                            <div class="text-xs text-gray-500">
+                                {{
+                                    $j->jam_mulai?->format(
+                                        "H:i",
+                                    )
+                                }} - {{
+                                    $j->jam_selesai?->format(
+                                        "H:i",
+                                    )
+                                }}
+                            </div>
+                            <div
+                                class="text-xs text-gray-500"
+                                style="margin-top: 2px; font-style: italic"
+                            >
+                                Ruangan: {{
+                                    $j->ruangan->nama_ruangan ??
+                                        "N/A"
+                                }}
                             </div>
                         @else
-                            <span class="text-gray-500" style="font-style: italic;">Belum di-plot</span>
+                            <span
+                                class="text-gray-500"
+                                style="font-style: italic"
+                                >Belum di-plot</span
+                            >
                         @endif
                     </td>
                     <td>
-                        <div class="font-bold text-gray-700">{{ $j->mataKuliah->nama_mk }}</div>
-                        <div class="text-gray-500 text-xs">
+                        <div class="font-bold text-gray-700">
+                            {{
+                                $j->mataKuliah
+                                    ->nama_mk
+                            }}
+                        </div>
+                        <div class="text-xs text-gray-500">
                             {{ $j->mataKuliah->kode_mk }} ({{ $j->mataKuliah->sks }} SKS)
                         </div>
                     </td>
                     <td>
-                        <div class="text-gray-700">{{ $j->dosen->name }}</div>
+                        <div class="text-gray-700">
+                            {{
+                                $j->dosen
+                                    ->name
+                            }}
+                        </div>
                     </td>
                     <td>
-                        <div class="font-bold text-gray-700">{{ $j->kelas->kode_kelas }}</div>
-                        <div class="text-gray-500 text-xs">
-                            Reg {{ strtoupper($j->kelas->reguler) }}
+                        <div class="font-bold text-gray-700">
+                            {{
+                                $j->kelas
+                                    ->kode_kelas
+                            }}
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            Reg {{
+                                strtoupper(
+                                    $j->kelas->reguler,
+                                )
+                            }}
                         </div>
                     </td>
                     <td class="text-center">
@@ -153,7 +192,7 @@
                     <td
                         colspan="5"
                         class="text-center text-gray-500"
-                        style="padding: 20px; font-style: italic;"
+                        style="padding: 20px; font-style: italic"
                     >
                         Tidak ada ajuan atau jadwal pada pekan ini.
                     </td>
