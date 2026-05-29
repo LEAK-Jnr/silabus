@@ -18,6 +18,11 @@ class Ajuan extends Model
         'jam_selesai',
         'status',
     ];
+
+    protected $casts = [
+        'jam_mulai' => 'datetime:H:i',
+        'jam_selesai' => 'datetime:H:i',
+    ];
     public function mataKuliah(): BelongsTo
     {
         return $this->belongsTo(MataKuliah::class, 'kode_mk');

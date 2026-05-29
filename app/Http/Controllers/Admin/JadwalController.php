@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
 use App\Models\Ajuan;
+use PDF;
 
 class JadwalController extends Controller
 {
@@ -44,7 +45,8 @@ class JadwalController extends Controller
             ]
         ];
 
-        $ajuans = Ajuan::where('status', 'menunggu')
+        $ajuans = Ajuan::with('kelas')
+            ->where('ajuans.status', 'menunggu')
             ->join('mata_kuliahs', 'ajuans.kode_mk', '=', 'mata_kuliahs.id')
             ->join('prodis', 'mata_kuliahs.prodi_id', '=', 'prodis.id')
             ->select('ajuans.*')
@@ -56,7 +58,8 @@ class JadwalController extends Controller
         $countTolak = 0;
 
         foreach ($ajuans as $ajuan) {
-            $reguler = strtoupper($ajuan->kelas->reguler); 
+            $regulerRaw = strtoupper($ajuan->kelas->reguler); 
+            $reguler = trim(str_replace('REGULER', '', $regulerRaw));
             $foundSlot = false;
 
             if (!isset($slotWaktu[$reguler])) {
@@ -73,9 +76,11 @@ class JadwalController extends Controller
                         ->where('jam_mulai', $start)
                         ->where('status', 'disetujui')
                         ->where(function($q) use ($ajuan) {
-                            $q->where('ruangan_id', $ajuan->ruangan_id)
-                              ->orWhere('user_username', $ajuan->user_username)
+                            $q->where('user_username', $ajuan->user_username)
                               ->orWhere('kode_kelas', $ajuan->kode_kelas);
+                            if ($ajuan->ruangan_id) {
+                                $q->orWhere('ruangan_id', $ajuan->ruangan_id);
+                            }
                         })->exists();
 
                     if (!$isOccupied) {
@@ -106,5 +111,31 @@ class JadwalController extends Controller
         }
 
         return redirect()->back()->with('success', "Generate Selesai! $countSetuju Ajuan Disetujui, $countTolak Ajuan Ditolak.");
+    }
+    public function exportPdf(Request $request) {
+        $pekanAktif = $request->get('pekan', 1);
+
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+            ->where('pekan', $pekanAktif)
+            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+        $pdf = PDF::loadView('admin.jadwal.pdf', compact('ajuans', 'pekanAktif'))->setPaper('a4', 'landscape');
+
+        return $pdf->download("jadwal-pekan-{$pekanAktif}.pdf");
+    }
+    public function exportPdfAll() {
+        // Ambil semua ajuan dan kelompokkan berdasarkan pekan
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+        $ajuansGrouped = $ajuans->groupBy('pekan');
+
+        $pdf = PDF::loadView('admin.jadwal.pdf-all', compact('ajuansGrouped'))->setPaper('a4', 'landscape');
+
+        return $pdf->download("jadwal-kuliah-massal-pekan-1-14.pdf");
     }
 }
