@@ -27,6 +27,7 @@ class ProdiSeeder extends Seeder
             ['nama_prodi' => 'S1 Administrasi Negara', 'bobot_prioritas' => 1],
             ['nama_prodi' => 'S1 Ilmu Pemerintahan', 'bobot_prioritas' => 1],
             ['nama_prodi' => 'S1 Ilmu Hukum', 'bobot_prioritas' => 1],
+            ['nama_prodi' => 'UPPS Unpam Serang', 'bobot_prioritas' => 100],
         ];
 
         foreach ($prodi as $p) {
