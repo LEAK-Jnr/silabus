@@ -9,22 +9,22 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-blue-600">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border-b-4 border-blue-600">
                     <p class="text-gray-500 text-sm font-semibold uppercase">Total Program Studi</p>
                     <h3 class="text-3xl font-bold text-gray-800">{{ \App\Models\Prodi::count() }}</h3>
                     <p class="text-xs text-blue-600 mt-2">● Terintegrasi Sistem</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-green-500">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border-b-4 border-green-500">
                     <p class="text-gray-500 text-sm font-semibold uppercase">Ajuan Praktikum</p>
                     <h3 class="text-3xl font-bold text-gray-800">12</h3>
                     <p class="text-xs text-green-600 mt-2">↑ 4 Baru masuk</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-yellow-500">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border-b-4 border-yellow-500">
                     <p class="text-gray-500 text-sm font-semibold uppercase">Laboratorium Aktif</p>
                     <h3 class="text-3xl font-bold text-gray-800">4</h3>
                     <p class="text-xs text-yellow-600 mt-2">● Monitoring Real-time</p>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border-b-4 border-purple-600">
+                <div class="bg-white p-6 rounded-2xl shadow-xs border-b-4 border-purple-600">
                     <p class="text-gray-500 text-sm font-semibold uppercase">Total Dosen</p>
                     <h3 class="text-3xl font-bold text-gray-800">{{ \App\Models\User::where('role', 'dosen')->count() }}</h3>
                     <p class="text-xs text-purple-600 mt-2">● Akun Terverifikasi</p>
@@ -32,7 +32,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="md:col-span-2 bg-white rounded-2xl shadow-sm p-8">
+                <div class="md:col-span-2 bg-white rounded-2xl shadow-xs p-8">
                     <h4 class="text-lg font-bold text-blue-900 mb-4">Selamat Datang di SIM-LAB</h4>
                     <p class="text-gray-600 leading-relaxed">
                         Sistem Informasi Manajemen Laboratorium saat ini sudah siap untuk mengelola data master Program Studi dan autentikasi pengguna. Anda dapat mulai melakukan plotting jadwal setelah semua Prodi mengunggah ajuan praktikum.

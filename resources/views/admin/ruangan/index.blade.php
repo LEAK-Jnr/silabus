@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-2xl">
+            <div class="overflow-hidden bg-white p-6 shadow-xs sm:rounded-2xl">
                 <div class="mb-4 flex justify-between">
                     <h3 class="text-lg font-bold">Daftar Ruangan</h3>
                     <x-dashboard.modal
@@ -27,7 +27,7 @@
                                     id="nama_ruangan"
                                     placeholder="Contoh: Lab Komputer 01"
                                     required
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                    class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                 />
                             </div>
 
@@ -39,13 +39,13 @@
                                     id="kapasitas"
                                     placeholder="Contoh: 30"
                                     required
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                    class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                 />
                             </div>
 
                             <div>
                                 <label for="spesifikasi" class="mb-1 block text-sm font-medium text-gray-700">Spesifikasi</label>
-                                <select name="spesifikasi" id="spesifikasi" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                                <select name="spesifikasi" id="spesifikasi" class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200">
                                     <option value="standar">Standar</option>
                                     <option value="tinggi">Tinggi (High-Spec)</option>
                                 </select>
@@ -91,7 +91,7 @@
                                                     name="nama_ruangan"
                                                     value="{{ $r->nama_ruangan }}"
                                                     required
-                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                    class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                                 />
                                             </div>
                                             <div>
@@ -101,12 +101,12 @@
                                                     name="kapasitas"
                                                     value="{{ $r->kapasitas }}"
                                                     required
-                                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                    class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                                 />
                                             </div>
                                             <div>
                                                 <label for="spesifikasi" class="mb-1 block text-sm font-medium text-gray-700">Spesifikasi</label>
-                                                <select name="spesifikasi" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
+                                                <select name="spesifikasi" class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200">
                                                     <option value="standar" {{ $r->spesifikasi == 'standar' ? 'selected' : '' }}>Standar</option>
                                                     <option value="tinggi" {{ $r->spesifikasi == 'tinggi' ? 'selected' : '' }}>Tinggi (High-Spec)</option>
                                                 </select>

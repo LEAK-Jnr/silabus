@@ -11,7 +11,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white p-8 shadow-sm sm:rounded-lg">
+            <div class="overflow-hidden bg-white p-8 shadow-xs sm:rounded-lg">
                 <div class="mb-6 flex items-center gap-4">
                     <div
                         class="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-xl text-indigo-600"

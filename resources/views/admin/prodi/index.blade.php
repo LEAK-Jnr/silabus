@@ -11,7 +11,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-2xl">
+            <div class="overflow-hidden bg-white p-6 shadow-xs sm:rounded-2xl">
                 <div class="mb-4 flex justify-between">
                     <h3 class="text-lg font-bold">Daftar Prodi</h3>
                     <x-dashboard.modal
@@ -34,7 +34,7 @@
                                 id="nama_prodi"
                                 placeholder="Contoh: S1 Sastra Indonesia"
                                 required
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                             />
                         </div>
 
@@ -51,7 +51,7 @@
                                 value="1"
                                 max="5"
                                 required
-                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                             />
                         </div>
                     </x-dashboard.modal>
@@ -102,7 +102,7 @@
                                                 id="nama_prodi"
                                                 value="{{ $p->nama_prodi }}"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             />
                                         </div>
                                         <div class="flex flex-col text-start">
@@ -118,7 +118,7 @@
                                                 value="{{ $p->bobot_prioritas }}"
                                                 max="5"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             />
                                         </div>
                                     </x-dashboard.modal>

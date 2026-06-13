@@ -11,7 +11,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white p-6 shadow-sm sm:rounded-lg">
+            <div class="overflow-hidden bg-white p-6 shadow-xs sm:rounded-lg">
                 <h3 class="mb-4 text-lg font-bold">
                     Selamat Datang, Admin Prodi {{ Auth::user()->name }}
                 </h3>
@@ -31,7 +31,7 @@
                 {{-- 1. MATA KULIAH (DATALIST) --}}
                 <div>
                     <label for="mk_search" class="block text-sm font-medium text-gray-700">Mata Kuliah</label>
-                    <input list="list_mk" id="mk_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Mata Kuliah...">
+                    <input list="list_mk" id="mk_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" placeholder="Cari Mata Kuliah...">
                     <datalist id="list_mk">
                         @foreach ($matakuliahs as $mk)
                             <option data-id="{{ $mk->id }}" value="{{ $mk->nama_mk }}">
@@ -44,7 +44,7 @@
                     {{-- 2. KODE KELAS (DATALIST) --}}
                     <div>
                         <label for="kelas_search" class="block text-sm font-medium text-gray-700">Kode Kelas</label>
-                        <input list="list_kelas" id="kelas_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Kelas...">
+                        <input list="list_kelas" id="kelas_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" placeholder="Cari Kelas...">
                         <datalist id="list_kelas">
                             @foreach ($kelases as $kelas)
                                 <option data-id="{{ $kelas->id }}" value="{{ $kelas->kode_kelas }} ({{ $kelas->reguler }})">
@@ -56,7 +56,7 @@
                     {{-- 3. PEKAN (TETAP SELECT KARENA HANYA 14 OPSI) --}}
                     <div>
                         <label for="pekan" class="block text-sm font-medium text-gray-700">Pekan Ke-</label>
-                        <select id="pekan" name="pekan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+                        <select id="pekan" name="pekan" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" required>
                             <option value="">Pilih Pekan</option>
                             @for ($i = 1; $i <= 14; $i++)
                                 <option value="{{ $i }}">Pekan {{ $i }}</option>
@@ -68,7 +68,7 @@
                 {{-- 4. DOSEN (DATALIST) --}}
                 <div>
                     <label for="dosen_search" class="block text-sm font-medium text-gray-700">Dosen Pengampu</label>
-                    <input list="list_dosen" id="dosen_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" placeholder="Cari Nama Dosen...">
+                    <input list="list_dosen" id="dosen_search" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" placeholder="Cari Nama Dosen...">
                     <datalist id="list_dosen">
                         @foreach ($dosenPengampu as $dosen)
                             <option data-id="{{ $dosen->username }}" value="{{ $dosen->name }}">
@@ -83,7 +83,7 @@
                     <select 
                         id="ruangan_id" 
                         name="ruangan_id" 
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" 
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200 focus:ring-opacity-50" 
                         required
                     >
                         <option value="">Pilih Ruangan</option>
@@ -101,7 +101,7 @@
 
 {{-- akhir modal ajuan --}}
                 <div
-                    class="bg-neutral-primary-soft shadow-xs rounded-base border-default relative mt-5 w-full overflow-x-auto border"
+                    class="bg-neutral-primary-soft shadow-2xs rounded-base border-default relative mt-5 w-full overflow-x-auto border"
                 >
                     <table
                         class="text-body w-full text-left text-sm rtl:text-right"
@@ -187,7 +187,7 @@
 
                                     <td class="px-6 py-4">
                                         <span
-                                            class="rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                                            class="rounded-sm bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
                                         >
                                             {{
                                                 $ajuan->pekan ??
@@ -267,7 +267,7 @@
             <input 
                 list="edit_list_mk" 
                 id="edit_mk_search_{{ $ajuan->id }}" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" 
                 placeholder="Cari Mata Kuliah..."
                 value="{{ $ajuan->mataKuliah->nama_mk ?? '' }}"
             >
@@ -286,7 +286,7 @@
                 <input 
                     list="edit_list_kelas" 
                     id="edit_kelas_search_{{ $ajuan->id }}" 
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" 
                     placeholder="Cari Kelas..."
                     value="{{ $ajuan->kelas->kode_kelas ?? '' }} - Reg {{ $ajuan->kelas->reguler ?? '' }}"
                 >
@@ -301,7 +301,7 @@
             {{-- 3. PEKAN (SELECT TETAP) --}}
             <div>
                 <label for="pekan" class="block text-sm font-medium text-gray-700">Pekan Perkuliahan</label>
-                <select name="pekan" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+                <select name="pekan" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" required>
                     @foreach ($pekans as $p)
                         <option value="{{ $p }}" {{ $ajuan->pekan == $p ? 'selected' : '' }}>Pekan {{ $p }}</option>
                     @endforeach
@@ -315,7 +315,7 @@
             <input 
                 list="edit_list_dosen" 
                 id="edit_dosen_search_{{ $ajuan->id }}" 
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" 
                 placeholder="Cari Nama Dosen..."
                 value="{{ $ajuan->dosen->name ?? '' }}"
             >
@@ -330,7 +330,7 @@
         {{-- 5. RUANGAN (KEMBALI KE SELECT SESUAI REQUEST) --}}
         <div>
             <label for="ruangan_id" class="block text-sm font-medium text-gray-700">Ruangan Ajuan</label>
-            <select name="ruangan_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+            <select name="ruangan_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200" required>
                 @foreach ($ruangans as $ruangan)
                     <option value="{{ $ruangan->id }}" {{ $ajuan->ruangan_id == $ruangan->id ? 'selected' : '' }}>
                         {{ $ruangan->nama_ruangan }} (Kapasitas: {{ $ruangan->kapasitas }})

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Admin\JadwalController; 
 use App\Http\Controllers\Dosen\PresensiController;
 use App\Http\Controllers\Dosen\LaporanKerusakanController;
+use App\Livewire\Prodi\JadwalProdi;
 use Illuminate\Support\Facades\Auth;
 
 // 1. Landing Page Pintar
@@ -62,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/prodi/ajuan', [ProdiController::class, 'store'])->name('prodi.ajuan.store');
         Route::put('/prodi/ajuan/{id}', [ProdiController::class, 'update'])->name('prodi.ajuan.update');
         Route::delete('/prodi/ajuan/{id}', [ProdiController::class, 'destroy'])->name('prodi.ajuan.destroy');
+        Route::get('/prodi/jadwal', JadwalProdi::class)->name('prodi.jadwal');
     });
 
     // --- KHUSUS ROLE: DOSEN ---

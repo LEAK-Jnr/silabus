@@ -9,7 +9,7 @@
 <div x-data="{ openModal: false }">
     <button
         @click="openModal = true"
-        class="{{ $triggerAttributes ?? 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow' }}"
+        class="{{ $triggerAttributes ?? 'bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm shadow-sm' }}"
     >
         {{
             $trigger ??
@@ -61,13 +61,13 @@
                     <button
                         type="button"
                         @click="openModal = false"
-                        class="rounded bg-gray-300 px-4 py-2 font-semibold text-gray-800 shadow hover:bg-gray-400"
+                        class="rounded-sm bg-gray-300 px-4 py-2 font-semibold text-gray-800 shadow-sm hover:bg-gray-400"
                     >
                         Batal
                     </button>
                     <button
                         type="submit"
-                        class="rounded bg-blue-600 px-4 py-2 font-semibold text-white shadow hover:bg-blue-700"
+                        class="rounded-sm bg-blue-600 px-4 py-2 font-semibold text-white shadow-sm hover:bg-blue-700"
                     >
                         Simpan Data
                     </button>

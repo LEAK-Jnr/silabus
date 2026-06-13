@@ -15,7 +15,7 @@
     x-transition:enter="transform ease-out duration-300 transition"
     x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
     x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
-    class="fixed bottom-5 left-1/2 z-[100] w-full max-w-sm -translate-x-1/2 overflow-hidden rounded-xl border-l-4 bg-white shadow-lg ring-1 ring-black/5"
+    class="fixed bottom-5 left-1/2 z-100 w-full max-w-sm -translate-x-1/2 overflow-hidden rounded-xl border-l-4 bg-white shadow-lg ring-1 ring-black/5"
     :class="type === 'success' ? 'border-emerald-500' : 'border-red-500'"
     style="display: none"
 >

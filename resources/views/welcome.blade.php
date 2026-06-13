@@ -20,7 +20,7 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
     <nav
-        class="flex items-center justify-between bg-white px-12 py-6 shadow-sm"
+        class="flex items-center justify-between bg-white px-12 py-6 shadow-xs"
     >
         <div class="flex items-center gap-3">
             <div
@@ -80,7 +80,7 @@
     </section>
 
     <section id="features" class="grid gap-8 px-12 py-20 md:grid-cols-3">
-        <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+        <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-xs">
             <div
                 class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600"
             >
@@ -100,7 +100,7 @@
             <h3 class="mb-3 text-xl font-bold">Admin Lab</h3>
             <p class="text-gray-600">Fitur plotting jadwal otomatis dan manajemen aset laboratorium secara real-time.</p>
         </div>
-        <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+        <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-xs">
             <div
                 class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100 text-green-600"
             >
@@ -112,7 +112,7 @@
             <h3 class="mb-3 text-xl font-bold">Program Studi</h3>
             <p class="text-gray-600">Unggah ajuan praktikum, manajemen kelas paralel, dan pantau status persetujuan jadwal.</p>
         </div>
-        <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+        <div class="rounded-2xl border border-gray-100 bg-white p-8 shadow-xs">
             <div
                 class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 text-purple-600"
             >

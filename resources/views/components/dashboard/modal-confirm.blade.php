@@ -37,7 +37,7 @@
         x-transition:leave="ease-in duration-200"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
-        class="fixed inset-0 bg-gray-500/75 backdrop-blur-sm transition-opacity"
+        class="fixed inset-0 bg-gray-500/75 backdrop-blur-xs transition-opacity"
         @click="open = false"
     ></div>
 
@@ -99,7 +99,7 @@
                         @endif
                         <button
                             type="submit"
-                            class="inline-flex w-full justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all"
+                            class="inline-flex w-full justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-xs transition-all"
                         >
                             {{ $confirmText }}
                         </button>
@@ -108,7 +108,7 @@
                     <button
                         type="button"
                         id="confirm-button-{{ $id }}"
-                        class="inline-flex justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-sm transition-all"
+                        class="inline-flex justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-xs transition-all"
                     >
                         {{ $confirmText }}
                     </button>

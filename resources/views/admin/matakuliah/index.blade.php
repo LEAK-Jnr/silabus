@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="mb-6 rounded-2xl bg-white p-6 shadow-sm">
+            <div class="mb-6 rounded-2xl bg-white p-6 shadow-xs">
                 <h3 class="mb-4 text-lg font-bold text-gray-700">
                     Tambah Mata Kuliah Baru
                 </h3>
@@ -168,7 +168,7 @@
                 </div>
             </div>
 
-            <div class="w-full overflow-x-auto rounded-2xl bg-white shadow-sm">
+            <div class="w-full overflow-x-auto rounded-2xl bg-white shadow-xs">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -244,7 +244,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <span
-                                        class="text-white-700 rounded bg-blue-100 px-2 py-1 text-xs font-bold text-blue-800"
+                                        class="text-white-700 rounded-sm bg-blue-100 px-2 py-1 text-xs font-bold text-blue-800"
                                         >{{ $mk->semester }}</span
                                     >
                                 </td>
@@ -256,7 +256,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <span
-                                        class="rounded bg-orange-100 px-2 py-1 text-xs font-bold text-orange-700"
+                                        class="rounded-sm bg-orange-100 px-2 py-1 text-xs font-bold text-orange-700"
                                         >{{ $mk->skor_prioritas }}</span
                                     >
                                 </td>
@@ -291,7 +291,7 @@
                                                 id="nama_mk"
                                                 value="{{ $mk->nama_mk }}"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             />
                                         </div>
                                         <div class="flex flex-col text-start">
@@ -304,7 +304,7 @@
                                                 name="prodi_id"
                                                 id="prodi_id"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             >
                                                 <option value="">
                                                     Pilih Program Studi
@@ -336,7 +336,7 @@
                                                 value="{{ $mk->sks }}"
                                                 max="6"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             />
                                         </div>
                                         <div class="flex flex-col text-start">
@@ -352,7 +352,7 @@
                                                 value="{{ $mk->semester ?? 1 }}"
                                                 max="8"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             />
                                         </div>
                                         <div class="flex flex-col text-start">
@@ -365,7 +365,7 @@
                                                 name="kategori"
                                                 id="kategori"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             >
                                                 <option
                                                     value="teori"
@@ -406,7 +406,7 @@
                                                 name="spesifikasi"
                                                 id="spesifikasi"
                                                 required
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                                class="w-full rounded-md border-gray-300 shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-blue-200"
                                             >
                                                 <option
                                                     value="standar"

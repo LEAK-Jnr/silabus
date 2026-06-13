@@ -68,6 +68,16 @@
                                 )
                             }}
                         </x-nav-link>
+                        <x-nav-link
+                            :href="route('prodi.jadwal')"
+                            :active="request()->routeIs('prodi.jadwal')"
+                        >
+                            {{
+                                __(
+                                    "Jadwal Praktikum",
+                                )
+                            }}
+                        </x-nav-link>
                     @endif
                     @if (Auth::user()->role === "dosen")
                         <x-nav-link
@@ -105,7 +115,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-hidden"
                         >
                             <div>
                                 {{
@@ -149,7 +159,7 @@
             <div class="-me-2 flex items-center sm:hidden">
                 <button
                     @click="open = !open"
-                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-hidden"
                 >
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path
