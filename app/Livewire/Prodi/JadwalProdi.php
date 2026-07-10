@@ -16,19 +16,11 @@ class JadwalProdi extends Component
     public $prodi = '';
     public $ruangan = '';
 
-    public Ajuan $ajuan;
     public function render()
     {
         return view('livewire.prodi.jadwal-prodi');
     }
 
-    public function mount(Ajuan $ajuan)
-    {
-        $this->ajuan = $ajuan;
-        $this->pekan = request()->get('pekan', '');
-        $this->prodi = request()->get('prodi', '');
-        $this->ruangan = request()->get('lab', '');
-    }
 
     #[Computed]
     public function user(){
