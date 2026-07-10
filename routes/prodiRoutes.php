@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Prodi\ProdiController;
+use App\Livewire\Prodi\AjuanProdi;
 use App\Livewire\Prodi\JadwalProdi;
 use Illuminate\Support\Facades\Route;
 
@@ -14,5 +15,8 @@ Route::middleware('auth')->group(function () {
         
         // using Livewire Class
         Route::get('/prodi/jadwal', JadwalProdi::class)->name('prodi.jadwal');
+
+        // testing
+        Route::get('/prodi/test', AjuanProdi::class)->name('prodi.test');
     });    
 });

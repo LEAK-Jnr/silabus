@@ -78,6 +78,16 @@
                                 )
                             }}
                         </x-nav-link>
+                        <x-nav-link
+                            :href="route('prodi.test')"
+                            :active="request()->routeIs('prodi.test')"
+                        >
+                            {{
+                                __(
+                                    "test Ajuan",
+                                )
+                            }}
+                        </x-nav-link>
                     @endif
                     @if (Auth::user()->role === "dosen")
                         <x-nav-link
