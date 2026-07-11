@@ -67,7 +67,7 @@ class AjuanProdi extends Component
             })
             ->orderBy('pekan')
             ->orderBy('ruangan_id')
-            ->paginate(10);
+            ->paginate(35);
     }
 
     public function updatedPekan() { $this->resetPage(); }

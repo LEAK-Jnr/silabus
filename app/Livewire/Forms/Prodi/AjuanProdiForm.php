@@ -70,16 +70,14 @@ class AjuanProdiForm extends Form
     public function store(): void
     {
         // dd($this->data);
-        
         foreach ($this->data as $item) {
-            $id_ruangan = $item['ruangan_praktikum'] == 'Lab Komputer Tinggi (Lab Komputer 03)' ? 3 : null;
             DB::beginTransaction();
             try {
                 Ajuan::create([
                     'kode_mk' => $item['kode_mk'],
                     'kode_kelas' => $this->getIdKelas($item['kelas']),
                     'user_username' => $this->getKodeDosen($item['kode_dosen']),
-                    'ruangan_id' => $item['ruangan_praktikum'] == 'Lab Komputer Tinggi (Lab Komputer 03)' ? 3 : null,
+                    'ruangan_id' => $item['ruangan_praktikum'],
                     'pekan' => $item['pekan'],
                     'hari' => null,
                     'jam_mulai' => null,

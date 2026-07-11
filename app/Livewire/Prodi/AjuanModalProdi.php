@@ -3,6 +3,7 @@
 namespace App\Livewire\Prodi;
 
 use App\Livewire\Forms\Prodi\AjuanProdiForm;
+use App\Models\Ajuan;
 use App\Models\MataKuliah;
 use App\Models\User;
 use Flux\Flux;
@@ -165,16 +166,33 @@ class AjuanModalProdi extends Component
         $prefixSemester = str_pad($semester, 2, '0', STR_PAD_LEFT);
 
         $ruangan_praktikum = '';
-        if ($this->ajuanProdiForm->ruangan_praktikum === 'lab-komputer') {
-            $spesifikasiMK = $this->matakuliahs()->firstWhere('id', $this->ajuanProdiForm->kode_mk)?->spesifikasi;
-            if ($spesifikasiMK === 'tinggi') {
-                $ruangan_praktikum = 'Lab Komputer Tinggi (Lab Komputer 03)';
-            } else {
-                $ruangan_praktikum = 'Lab Komputer Standar (Lab Komputer 01/02)';
-            }
-        }
 
         foreach ($this->ajuanProdiForm->pekan as $pekan) {
+            // plotting Ruangan
+            $spesifikasiMK = $this->matakuliahs()->firstWhere('id', $this->ajuanProdiForm->kode_mk)?->spesifikasi;
+            $ruangan_praktikum = null;
+            if ($spesifikasiMK === 'tinggi') {
+                $ruangan_praktikum = 3;
+            } elseif ($spesifikasiMK === 'sedang') {
+                $labkom_satu = $this->getCountTotalAjuanLabkom($pekan, $this->ajuanProdiForm->reguler, 1);
+                $labkom_dua = $this->getCountTotalAjuanLabkom($pekan, $this->ajuanProdiForm->reguler, 2);
+                $limit = match ($this->ajuanProdiForm->reguler) {
+                    'A' => 20,
+                    'B' => 10,
+                    'C' => 5,
+                    default => null,
+                };
+                if ($limit !== null && $labkom_satu < $labkom_dua && $labkom_satu <= $limit) {
+                    $ruangan_praktikum = 1;
+                } elseif ($limit !== null && $labkom_dua < $labkom_satu && $labkom_dua <= $limit) {
+                    $ruangan_praktikum = 2;
+                } else {
+                    // fallback: reguler tidak dikenali, atau kedua labkom sama penuh/tidak memenuhi limit
+                    $ruangan_praktikum = rand(1, 2);
+                }
+            } else {
+                $ruangan_praktikum = rand(1, 2);
+            }
             for ($i = 0; $i < $this->ajuanProdiForm->jumlah_kelas; $i++) {
                 // $kelas = 'Kelas Reg' . $this->Reguler . '-' . ($this->suffix_kelas + $i);
                 $urutan = str_pad($this->ajuanProdiForm->suffix_kelas + $i, 3, '0', STR_PAD_LEFT);
@@ -194,4 +212,16 @@ class AjuanModalProdi extends Component
         return $this->ajuanProdiForm->data = $data;
     }
 
+    public function getCountTotalAjuanLabkom($pekan, $reguler, $ruanganId)
+    {
+        return Ajuan::query()
+            ->with('kelas')
+            ->where('pekan', $pekan)
+            ->whereHas('kelas', function ($query) use ($reguler) {
+                $query->where('reguler', "Reguler $reguler");
+            })
+            ->where('ruangan_id', $ruanganId)
+            ->where('status', 'disetujui')
+            ->count();
+    }
 }

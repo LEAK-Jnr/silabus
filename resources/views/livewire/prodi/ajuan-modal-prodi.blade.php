@@ -205,7 +205,7 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell class="text-zinc-600 dark:text-zinc-400 font-medium">
-                                    {{ $item['ruangan_praktikum'] }}
+                                    {{ $item['ruangan_praktikum'] == 3 ? "Lab Komputer Tinggi (Lab Komputer 03)" : "Lab Komputer Standar (Lab Komputer 01/02)" }}
                                 </flux:table.cell>
                             </flux:table.row>
                         @empty
