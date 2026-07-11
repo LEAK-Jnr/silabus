@@ -1,5 +1,6 @@
 <div>
-    <flux:modal name="add-ajuan-prodi" class="max-w-2xl">
+    {{-- modal add ajuan --}}
+    <flux:modal name="add-ajuan-prodi" class="max-w-2xl" :dismissible="false">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Add Ajuan</flux:heading>
@@ -10,9 +11,10 @@
             <div class="relative" x-data x-on:click.outside="$wire.showMkDropdown = false">
                 <flux:field>
                     <flux:label>Mata Kuliah</flux:label>
-                    <flux:input wire:model.live.debounce.300ms="mkSearch" wire:focus="showMkDropdown = true"
-                        placeholder="Cari Mata Kuliah..." autocomplete="off" />
-                    <flux:error name="kode_mk" />
+                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.mkSearch"
+                        wire:focus="showMkDropdown = true" placeholder="Cari Mata Kuliah..." autocomplete="off"
+                        clearable />
+                    <flux:error name="ajuanProdiForm.kode_mk" />
                 </flux:field>
 
                 @if ($showMkDropdown && $this->matakuliahs->isNotEmpty())
@@ -25,7 +27,7 @@
                             </button>
                         @endforeach
                     </div>
-                @elseif ($showMkDropdown && filled($mkSearch))
+                @elseif ($showMkDropdown && filled($this->ajuanProdiForm->mkSearch))
                     <div
                         class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-500 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
                         Tidak ditemukan.
@@ -37,9 +39,10 @@
             <div class="relative" x-data x-on:click.outside="$wire.showDosenDropdown = false">
                 <flux:field>
                     <flux:label>Nama Dosen</flux:label>
-                    <flux:input wire:model.live.debounce.300ms="dosenSearch" wire:focus="showDosenDropdown = true"
-                        placeholder="Cari Nama Dosen..." autocomplete="off" />
-                    <flux:error name="kode_dosen" />
+                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.dosenSearch"
+                        wire:focus="showDosenDropdown = true" placeholder="Cari Nama Dosen..." autocomplete="off"
+                        clearable />
+                    <flux:error name="ajuanProdiForm.kode_dosen" />
                 </flux:field>
                 @if ($showDosenDropdown && $this->dosens->isNotEmpty())
                     <div
@@ -53,7 +56,7 @@
                         @endforeach
                     </div>
 
-                @elseif ($showDosenDropdown && filled($dosenSearch))
+                @elseif ($showDosenDropdown && filled($this->ajuanProdiForm->dosenSearch))
                     <div
                         class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-500 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
                         Tidak ditemukan.
@@ -65,8 +68,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                 {{-- field jumlah kelas --}}
                 <div>
-                    <flux:input label="Jumlah Kelas" type="number" min="1" wire:model="jumlah_kelas"
-                        placeholder="Masukkan Jumlah Kelas" class="w-full sm:w-auto" />
+                    <flux:input label="Jumlah Kelas" type="number" min="1" wire:model="ajuanProdiForm.jumlah_kelas"
+                        placeholder="Masukkan Jumlah Kelas" class="w-full sm:w-auto" clearable />
                 </div>
                 {{-- field suffix kelas --}}
                 <div>
@@ -84,15 +87,15 @@
                                 </flux:tooltip.content>
                             </flux:tooltip>
                         </flux:heading>
-                        <flux:input name="suffix_kelas" wire:model='suffix_kelas' type="number" min="1"
-                            placeholder="Contoh: 001" />
-                        <flux:error name="suffix_kelas" />
+                        <flux:input name="suffix_kelas" wire:model='ajuanProdiForm.suffix_kelas' type="number" min="1"
+                            placeholder="Contoh: 001" clearable />
+                        <flux:error name="ajuanProdiForm.suffix_kelas" />
                     </flux:field>
                 </div>
                 {{-- field reguler --}}
                 <div>
-                    <flux:select label="Reguler" wire:model="Reguler" placeholder="Silahkan pilih Reguler"
-                        class="w-full sm:w-auto">
+                    <flux:select label="Reguler" wire:model="ajuanProdiForm.reguler"
+                        placeholder="Silahkan pilih Reguler" class="w-full sm:w-auto">
                         <flux:select.option value="A">Reguler A</flux:select.option>
                         <flux:select.option value="B">Reguler B</flux:select.option>
                         <flux:select.option value="C">Reguler C</flux:select.option>
@@ -104,19 +107,35 @@
             <flux:fieldset>
                 <flux:legend>Pekan</flux:legend>
                 <flux:description>Choose the weeks you want to include.</flux:description>
+                <flux:error name="ajuanProdiForm.pekan" />
                 <div
                     class="grid grid-cols-2 sm:grid-cols-5 gap-4 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
                     @for ($i = 1; $i <= 14; $i++)
                         <div class="flex items-center">
-                            <flux:checkbox wire:model="pekan" value="pekan-{{ $i }}" label="Pekan {{ $i }}" />
+                            <flux:checkbox wire:model.live="ajuanProdiForm.pekan" value="{{ $i }}" label="Pekan {{ $i }}" />
                         </div>
                     @endfor
+                    {{-- button select all and unselect all --}}
+                    <div
+                        class="col-span-2 sm:col-span-5 flex items-center gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-700 mt-1">
+                        <flux:button type="button" size="sm" variant="ghost" icon="check" wire:click="selectAllPekan">
+                            Pilih Semua
+                        </flux:button>
+                        <flux:button type="button" size="sm" variant="ghost" icon="x-mark"
+                            class="text-red-600 hover:text-red-700" wire:click="unselectAllPekan">
+                            Batal Semua
+                        </flux:button>
+
+                        <span class="text-xs text-zinc-400 ml-auto font-medium">
+                            {{ count($this->ajuanProdiForm->pekan) }} dari 14 Terpilih
+                        </span>
+                    </div>
                 </div>
             </flux:fieldset>
 
             {{-- field ruangan --}}
             <div class="relative">
-                <flux:select label="Ruangan Praktikum" wire:model="ruangan_praktikum"
+                <flux:select label="Ruangan Praktikum" wire:model="ajuanProdiForm.ruangan_praktikum"
                     placeholder="Silahkan pilih Ruangan Praktikum" class="w-full ">
                     <flux:select.option value="lab-komputer">Lab Komputer</flux:select.option>
                     <flux:select.option disabled class="text-red-400">Lab. lain nya sedang dalam pengembangan
@@ -132,48 +151,82 @@
         </div>
     </flux:modal>
 
-    <flux:modal name="konfirm-add-ajuan-prodi" class="max-w-2xl" :dismissible="false">
+    {{-- modal konfirmasi ajuan --}}
+    <flux:modal name="konfirm-add-ajuan-prodi" class="max-w-4xl" :dismissible="false">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">Konfirmasi {{ count($this->generateData()) }} Ajuan</flux:heading>
-                <flux:text class="mt-2">Silakan konfirmasi detail ajuan berikut sebelum menyimpan.</flux:text>
+                <flux:heading size="lg" class="flex items-center gap-2">
+                    <flux:icon name="exclamation-triangle" class="text-amber-500" variant="mini" />
+                    Konfirmasi {{ count($this->generateData()) }} Ajuan Jadwal
+                </flux:heading>
+                <flux:text class="mt-1">Silakan periksa kembali detail ajuan kelompok praktikum berikut sebelum disimpan
+                    ke database.</flux:text>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md mx-4 md:mx-10 pb-4 md:py-5 px-4 md:px-5 mt-5 mb-5">
-                <div class="overflow-x-auto -mx-4 md:-mx-5">
-                    <flux:table class="w-full text-sm md:text-base">
-                        <flux:table.columns class="bg-gray-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200">
-                            <flux:table.column class="w-px whitespace-nowrap text-center">No.</flux:table.column>
-                            <flux:table.column class="w-24 whitespace-nowrap">Pekan</flux:table.column>
-                            <flux:table.column class="w-24 text-center whitespace-nowrap">Kelas</flux:table.column>
-                            <flux:table.column class="w-56">Mata Kuliah</flux:table.column>
-                            <flux:table.column class="w-44">Dosen Pengampu</flux:table.column>
-                            <flux:table.column class="w-76 whitespace-nowrap">Ruangan / Lab</flux:table.column>
-                        </flux:table.columns>
-                        <flux:table.rows>
-                            @foreach ($this->generateData() as $index => $item)
-                                <flux:table.row>
-                                    <flux:table.cell class="text-center">{{ $index + 1 }}</flux:table.cell>
-                                    <flux:table.cell>{{ $item['pekan'] }}</flux:table.cell>
-                                    <flux:table.cell class="text-center">{{ $item['kelas'] }}</flux:table.cell>
-                                    <flux:table.cell>{{ $item['mata_kuliah'] }}</flux:table.cell>
-                                    <flux:table.cell>{{ $item['dosen'] }}</flux:table.cell>
-                                    <flux:table.cell>{{ $item['ruangan_praktikum'] }}</flux:table.cell>
-                                </flux:table.row>
-                            @endforeach
-                        </flux:table.rows>
-                    </flux:table>
-                </div>
+            <div
+                class="max-h-80 overflow-y-auto border border-zinc-200 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-900">
+                <flux:table class="w-full text-sm">
+                    <flux:table.columns
+                        class="sticky top-0 z-10 bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 shadow-sm">
+                        <flux:table.column class="w-px whitespace-nowrap text-center bg-inherit">No.</flux:table.column>
+                        <flux:table.column class="w-28 whitespace-nowrap bg-inherit">Pekan</flux:table.column>
+                        <flux:table.column class="w-24 text-center whitespace-nowrap bg-inherit">Kelas
+                        </flux:table.column>
+                        <flux:table.column class="min-w-48 bg-inherit">Mata Kuliah</flux:table.column>
+                        <flux:table.column class="min-w-40 bg-inherit">Dosen Pengampu</flux:table.column>
+                        <flux:table.column class="min-w-44 bg-inherit">Ruangan / Lab</flux:table.column>
+                    </flux:table.columns>
+
+                    <flux:table.rows>
+                        @forelse ($this->ajuanProdiForm->data as $index => $item)
+                            <flux:table.row
+                                class="align-middle odd:bg-white even:bg-zinc-50/50 dark:odd:bg-zinc-900 dark:even:bg-zinc-800/30">
+                                <flux:table.cell class="text-center font-medium text-zinc-500 text-xs">
+                                    {{ $index + 1 }}
+                                </flux:table.cell>
+
+                                <flux:table.cell class="whitespace-nowrap font-medium text-zinc-900 dark:text-zinc-100">
+                                    Pekan {{ $item['pekan'] }}
+                                </flux:table.cell>
+
+                                <flux:table.cell class="text-center whitespace-nowrap">
+                                    <span
+                                        class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                                        {{ $item['kelas'] }}
+                                    </span>
+                                </flux:table.cell>
+
+                                <flux:table.cell class="text-zinc-800 dark:text-zinc-200 font-medium">
+                                    {{ $item['mata_kuliah'] }}
+                                </flux:table.cell>
+
+                                <flux:table.cell class="text-zinc-600 dark:text-zinc-400">
+                                    {{ $item['dosen'] }}
+                                </flux:table.cell>
+
+                                <flux:table.cell class="text-zinc-600 dark:text-zinc-400 font-medium">
+                                    {{ $item['ruangan_praktikum'] }}
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @empty
+                            <flux:table.row>
+                                <flux:table.cell colspan="6" class="text-center py-8 text-zinc-400 italic">
+                                    Tidak ada data untuk dikonfirmasi.
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforelse
+                    </flux:table.rows>
+                </flux:table>
             </div>
 
-            <div class="flex gap-2">
-                <flux:spacer />
+            <div class="flex justify-end gap-2 pt-2">
                 <flux:modal.close>
-                    <flux:button variant="ghost">Cancel</flux:button>
+                    <flux:button variant="ghost">Batal</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary" color="green" icon="plus">Insert project</flux:button>
+                <flux:button type="submit" variant="primary" color="green" icon="check" wire:click="storeAjuan">
+                    Simpan Semua Ajuan
+                </flux:button>
             </div>
-
         </div>
     </flux:modal>
 </div>
