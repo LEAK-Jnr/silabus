@@ -100,4 +100,15 @@ class AjuanProdiForm extends Form
         return User::where('id', $idDosen)->first()?->username;
     }
 
+    public function destroy($idHapus){
+        DB::beginTransaction();
+        try {
+            Ajuan::findOrFail($idHapus)->delete();
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+    }
+
 }

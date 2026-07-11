@@ -182,4 +182,44 @@
     </div>
 
     <livewire:prodi.ajuan-modal-prodi />
+
+
+    <x-dashboard.modal-confirm id="hapus-ajuan" title="Hapus Ajuan" type="danger" confirmText="Ya, Hapus Ajuan Ini"
+        wire:click="destroy">
+        <div class="space-y-3">
+            <p class="text-sm text-zinc-600 dark:text-zinc-400">
+                Apakah Anda yakin ingin menghapus ajuan jadwal praktikum ini? Tindakan ini tidak dapat dibatalkan.
+            </p>
+
+            <div
+                class="p-3 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/50 rounded-lg text-xs space-y-1">
+                <div class="flex justify-between text-red-800 dark:text-red-300">
+                    <span class="font-medium">Mata Kuliah:</span>
+                    <span class="font-bold">
+                        {{ $this->ajuans()->firstWhere('id', $idHapus)?->mataKuliah?->nama_mk }}
+                    </span>
+                </div>
+                <div class="flex justify-between text-red-800 dark:text-red-300">
+                    <span class="font-medium">Dosen:</span>
+                    <span class="font-bold">
+                        {{ $this->ajuans()->firstWhere('id', $idHapus)?->dosen?->name }}
+                    </span>
+                </div>
+                <div class="flex justify-between text-red-700 dark:text-red-400">
+                    <span>Pekan & Kelas:</span>
+                    <span class="font-semibold">
+                        Pekan {{ $this->ajuans()->firstWhere('id', $idHapus)?->pekan }}
+                        -
+                        {{ $this->ajuans()->firstWhere('id', $idHapus)?->kelas->kode_kelas }}
+                    </span>
+                </div>
+                <div class="flex justify-between text-red-800 dark:text-red-300">
+                    <span class="font-medium">Ruangan:</span>
+                    <span class="font-bold">
+                        {{ $this->ajuans()->firstWhere('id', $idHapus)?->ruangan?->nama_ruangan }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </x-dashboard.modal-confirm>
 </div>

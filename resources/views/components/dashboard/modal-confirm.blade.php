@@ -108,6 +108,7 @@
                     <button
                         type="button"
                         id="confirm-button-{{ $id }}"
+                        {{ $attributes->only('wire:click') }}
                         class="inline-flex justify-center rounded-xl {{ $btnColor }} px-5 py-2 text-sm font-semibold text-white shadow-xs transition-all"
                     >
                         {{ $confirmText }}

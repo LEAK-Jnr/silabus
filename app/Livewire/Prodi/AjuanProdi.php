@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Prodi;
 
+use App\Livewire\Forms\Prodi\AjuanProdiForm;
 use App\Models\Ajuan;
 use App\Models\Ruangan;
 use App\Models\User;
@@ -18,6 +19,9 @@ class AjuanProdi extends Component
     public $ruangan = '';
     public $status = '';
     public $dosen = '';
+    public $idHapus ='';
+
+    public AjuanProdiForm $form;
 
     public function render()
     {
@@ -68,6 +72,20 @@ class AjuanProdi extends Component
             ->orderBy('pekan')
             ->orderBy('ruangan_id')
             ->paginate(35);
+    }
+
+    public function deleteAjuan($id){
+        $this->idHapus = $id;
+        $this->dispatch('open-modal-hapus-ajuan');
+    }
+
+    public function destroy(){
+        try {
+            $this->form->destroy($this->idHapus);
+            return redirect()->route('prodi.test')->with('success', 'data berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('prodi.test')->with('error', "Gagal Hapus | " . $e->getMessage() );
+        }
     }
 
     public function updatedPekan() { $this->resetPage(); }
