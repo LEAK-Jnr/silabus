@@ -139,10 +139,15 @@ class AjuanModalProdi extends Component
 
     public function successAddAjuan()
     {
-        $insertedData = $this->ajuanProdiForm->data->count();
+        $sukses = $this->ajuanProdiForm->data->get('rowInserted', 0);
+        $gagal  = $this->ajuanProdiForm->data->get('errorInsert', 0);
         $this->ajuanProdiForm->resetExcept('data');
         $this->ajuanProdiForm->data = collect();
-        return redirect()->route('prodi.test')->with('success', "$insertedData ajuan berhasil dibuat!");
+        $message = "Berhasil menyimpan {$sukses} ajuan jadwal praktikum.";
+        if ($gagal > 0) {
+            $message .= " Sebanyak {$gagal} data otomatis dilewati karena kode kelas tidak valid.";
+        }
+        return redirect()->route('prodi.test')->with('success', $message);
     }
 
     public function errorAddAjuan($messages)

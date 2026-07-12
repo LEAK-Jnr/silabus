@@ -82,26 +82,36 @@ class AjuanProdiForm extends Form
 
     public function store(): void
     {
-        // dd($this->data);
-        foreach ($this->data as $item) {
-            DB::beginTransaction();
-            try {
+        $rowInserted=0;
+        $errorInsert=0;
+        DB::beginTransaction();
+        try {
+            foreach ($this->data as $item) {
+                if (!isset($item['kelas'])) {
+                    continue;
+                }
+                $idKelas = $this->getIdKelas($item['kelas']);
+                if (is_null($idKelas)) {
+                    $errorInsert++;
+                    continue;
+                }
                 Ajuan::create([
                     'kode_mk' => $item['kode_mk'],
-                    'kode_kelas' => $this->getIdKelas($item['kelas']),
+                    'kode_kelas' => $idKelas,
                     'user_username' => $this->getKodeDosen($item['kode_dosen']),
                     'ruangan_id' => $item['ruangan_praktikum'],
                     'pekan' => $item['pekan'],
-                    'hari' => null,
-                    'jam_mulai' => null,
-                    'jam_selesai' => null,
-                    'status' => 'menunggu',
+                    'status' => 'menunggu'
                 ]);
-                DB::commit();
-            } catch (\Throwable $th) {
-                DB::rollBack(); 
-                throw $th;
+                $rowInserted++;
             }
+            DB::commit();
+            $this->data = collect();
+            $this->data->put('rowInserted', $rowInserted);
+            $this->data->put('errorInsert', $errorInsert);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
         }
     }
 

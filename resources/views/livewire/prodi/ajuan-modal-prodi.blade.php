@@ -190,32 +190,42 @@
 
                     <flux:table.rows>
                         @forelse ($this->ajuanProdiForm->data as $index => $item)
+                            @php
+                                $kelasId = $this->ajuanProdiForm->getIdKelas($item['kelas']);
+                                $isInvalid = is_null($kelasId);
+                            @endphp
+
                             <flux:table.row
-                                class="align-middle odd:bg-white even:bg-zinc-50/50 dark:odd:bg-zinc-900 dark:even:bg-zinc-800/30">
-                                <flux:table.cell class="text-center font-medium text-zinc-500 text-xs">
+                                class="align-middle odd:bg-white even:bg-zinc-50/50 dark:odd:bg-zinc-900 dark:even:bg-zinc-800/30 {{ $isInvalid ? 'text-red-500 line-through dark:text-red-400' : '' }}">
+
+                                <flux:table.cell
+                                    class="text-center font-medium text-xs {{ !$isInvalid ? 'text-zinc-500' : '' }}">
                                     {{ $index + 1 }}
                                 </flux:table.cell>
 
-                                <flux:table.cell class="whitespace-nowrap font-medium text-zinc-900 dark:text-zinc-100">
+                                <flux:table.cell
+                                    class="whitespace-nowrap font-medium {{ !$isInvalid ? 'text-zinc-900 dark:text-zinc-100' : '' }}">
                                     Pekan {{ $item['pekan'] }}
                                 </flux:table.cell>
 
                                 <flux:table.cell class="text-center whitespace-nowrap">
                                     <span
-                                        class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                                        class="inline-block px-2 py-0.5 rounded text-xs font-bold border {{ $isInvalid ? 'bg-red-100 border-red-300 text-red-700 dark:bg-red-950/50 dark:border-red-900' : 'bg-zinc-100 border-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300' }}">
                                         {{ $item['kelas'] }}
                                     </span>
                                 </flux:table.cell>
 
-                                <flux:table.cell class="text-zinc-800 dark:text-zinc-200 font-medium">
+                                <flux:table.cell
+                                    class="{{ !$isInvalid ? 'text-zinc-800 dark:text-zinc-200 font-medium' : '' }}">
                                     {{ $item['mata_kuliah'] }}
                                 </flux:table.cell>
 
-                                <flux:table.cell class="text-zinc-600 dark:text-zinc-400">
+                                <flux:table.cell class="{{ !$isInvalid ? 'text-zinc-600 dark:text-zinc-400' : '' }}">
                                     {{ $item['dosen'] }}
                                 </flux:table.cell>
 
-                                <flux:table.cell class="text-zinc-600 dark:text-zinc-400 font-medium">
+                                <flux:table.cell
+                                    class="font-medium {{ !$isInvalid ? 'text-zinc-600 dark:text-zinc-400' : '' }}">
                                     {{ $item['ruangan_praktikum'] == 3 ? "Lab Komputer Tinggi (Lab Komputer 03)" : "Lab Komputer Standar (Lab Komputer 01/02)" }}
                                 </flux:table.cell>
                             </flux:table.row>
@@ -230,6 +240,9 @@
                 </flux:table>
             </div>
 
+            <flux:text class="mt-2 text-center text-red-500">Kelas merah artinya kelas tidak/belum terdaftar pada
+                database. Maka baris tersebut
+                tidak akan ditambahkan pada ajuan.</flux:text>
             <div class="flex justify-end gap-2 pt-2">
                 <flux:modal.close>
                     <flux:button variant="ghost">Batal</flux:button>
