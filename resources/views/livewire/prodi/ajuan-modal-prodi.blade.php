@@ -13,7 +13,7 @@
                     <flux:label>Mata Kuliah</flux:label>
                     <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.mkSearch"
                         wire:focus="showMkDropdown = true" placeholder="Cari Mata Kuliah..." autocomplete="off"
-                        clearable />
+                        clearable wire:clear="$set('ajuanProdiForm.kode_mk', null); showMkDropdown = false" />
                     <flux:error name="ajuanProdiForm.kode_mk" />
                 </flux:field>
 
@@ -103,35 +103,43 @@
                 </div>
             </div>
 
-            {{-- field pekan --}}
-            <flux:fieldset>
-                <flux:legend>Pekan</flux:legend>
-                <flux:description>Choose the weeks you want to include.</flux:description>
-                <flux:error name="ajuanProdiForm.pekan" />
-                <div
-                    class="grid grid-cols-2 sm:grid-cols-5 gap-4 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                    @for ($i = 1; $i <= 14; $i++)
-                        <div class="flex items-center">
-                            <flux:checkbox wire:model.live="ajuanProdiForm.pekan" value="{{ $i }}" label="Pekan {{ $i }}" />
-                        </div>
-                    @endfor
-                    {{-- button select all and unselect all --}}
+            @if ($this->ajuanProdiForm->mkSearch && $this->ajuanProdiForm->kode_mk)
+                {{-- field pekan --}}
+                <flux:fieldset>
+                    <flux:legend>Pekan</flux:legend>
+                    <flux:description>Choose the weeks you want to include.</flux:description>
+                    <flux:error name="ajuanProdiForm.pekan" />
                     <div
-                        class="col-span-2 sm:col-span-5 flex items-center gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-700 mt-1">
-                        <flux:button type="button" size="sm" variant="ghost" icon="check" wire:click="selectAllPekan">
-                            Pilih Semua
-                        </flux:button>
-                        <flux:button type="button" size="sm" variant="ghost" icon="x-mark"
-                            class="text-red-600 hover:text-red-700" wire:click="unselectAllPekan">
-                            Batal Semua
-                        </flux:button>
+                        class="grid grid-cols-2 sm:grid-cols-5 gap-4 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                        @for ($i = 1; $i <= 14; $i++)
+                            <div class="flex items-center">
+                                <flux:checkbox wire:model.live="ajuanProdiForm.pekan" value="{{ $i }}" label="Pekan {{ $i }}" />
+                            </div>
+                        @endfor
+                        {{-- button select all and unselect all --}}
+                        <div
+                            class="col-span-2 sm:col-span-5 flex items-center gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-700 mt-1">
+                            <flux:button type="button" size="sm" variant="ghost" icon="check" wire:click="selectAllPekan">
+                                Pilih Semua
+                            </flux:button>
+                            <flux:button type="button" size="sm" variant="ghost" icon="x-mark"
+                                class="text-red-600 hover:text-red-700" wire:click="unselectAllPekan">
+                                Batal Semua
+                            </flux:button>
 
-                        <span class="text-xs text-zinc-400 ml-auto font-medium">
-                            {{ count($this->ajuanProdiForm->pekan) }} dari 14 Terpilih
-                        </span>
+                            <span class="text-xs text-zinc-400 ml-auto font-medium">
+                                {{ count($this->ajuanProdiForm->pekan) }} dari 14 Terpilih
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </flux:fieldset>
+                </flux:fieldset>
+            @else
+                {{ $this->unselectAllPekan() }}
+                <flux:legend>Pekan</flux:legend>
+                <flux:separator />
+                <flux:text class="mt-2 text-center text-red-500">Silahkan masukan Mata Kuliah dengan benar</flux:text>
+                <flux:separator />
+            @endif
 
             {{-- field ruangan --}}
             <div class="relative">
@@ -143,8 +151,11 @@
                 </flux:select>
             </div>
 
-            <div class="flex">
-                <flux:spacer />
+            <flux:separator />
+            <div class="flex justify-end gap-2">
+                <flux:modal.close>
+                    <flux:button variant="ghost">Batal</flux:button>
+                </flux:modal.close>
                 <flux:button type="submit" icon="plus" color="blue" variant="primary" wire:click='save'>Save changes
                 </flux:button>
             </div>
@@ -226,6 +237,126 @@
                 <flux:button type="submit" variant="primary" color="green" icon="check" wire:click="storeAjuan">
                     Simpan Semua Ajuan
                 </flux:button>
+            </div>
+        </div>
+    </flux:modal>
+
+    {{-- modal edit ajuan --}}
+    <flux:modal name="edit-ajuan-prodi" class="max-w-2xl" :dismissible="false">
+        <div class="space-y-6">
+            <div>
+                <flux:heading size="lg">Edit Ajuan Jadwal</flux:heading>
+                <flux:text class="mt-2">Ubah rincian data ajuan kelompok praktikum.</flux:text>
+            </div>
+
+            {{-- field Mata Kuliah (Sama seperti ADD) --}}
+            <div class="relative" x-data x-on:click.outside="$wire.showMkDropdown = false">
+                <flux:field>
+                    <flux:label>Mata Kuliah</flux:label>
+                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.mkSearch"
+                        wire:focus="showMkDropdown = true" placeholder="Cari Mata Kuliah..." autocomplete="off"
+                        clearable />
+                    <flux:error name="ajuanProdiForm.kode_mk" />
+                </flux:field>
+
+                @if ($showMkDropdown && $this->matakuliahs->isNotEmpty())
+                    <div
+                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
+                        @foreach ($this->matakuliahs as $mk)
+                            <button type="button" wire:click="selectMk({{ $mk->id }}, '{{ addslashes($mk->nama_mk) }}')"
+                                class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                                {{ $mk->nama_mk }}
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            {{-- field Dosen (Sama seperti ADD) --}}
+            <div class="relative" x-data x-on:click.outside="$wire.showDosenDropdown = false">
+                <flux:field>
+                    <flux:label>Nama Dosen</flux:label>
+                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.dosenSearch"
+                        wire:focus="showDosenDropdown = true" placeholder="Cari Nama Dosen..." autocomplete="off"
+                        clearable />
+                    <flux:error name="ajuanProdiForm.kode_dosen" />
+                </flux:field>
+                @if ($showDosenDropdown && $this->dosens->isNotEmpty())
+                    <div
+                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
+                        @foreach ($this->dosens as $dosen)
+                            <button type="button" wire:click="selectDosen({{ $dosen->id }}, '{{ addslashes($dosen->name) }}')"
+                                class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                                {{ $dosen->name }} <span class="text-zinc-400 text-xs">({{ $dosen->username }})</span>
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            {{-- Row untuk Kelas & Reguler --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                {{-- field Nama/Kode Kelas --}}
+                <div x-data x-on:click.outside="$wire.showKelasDropdown = false">
+                    <flux:field>
+                        <flux:label>Kode Kelas</flux:label>
+                        <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.kelas"
+                            wire:focus="showKelasDropdown = true" placeholder="Contoh: 03SISM002" autocomplete="off"
+                            clearable />
+                        <flux:error name="ajuanProdiForm.kelas" />
+                    </flux:field>
+                    @if ($showKelasDropdown && $this->kelas->isNotEmpty())
+                        <div
+                            class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
+                            @foreach ($this->kelas as $kelas)
+                                <button type="button"
+                                    wire:click="selectKelas({{ $kelas->id }}, '{{ addslashes($kelas->kode_kelas) }}', '{{ $kelas->reguler }}')"
+                                    class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
+                                    {{ $kelas->kode_kelas }} <span class="text-zinc-400 text-xs">({{ $kelas->reguler }})</span>
+                                    -
+                                    <span class="text-zinc-400 text-xs">(Semester {{ substr($kelas->kode_kelas, 1, 1) }})</span>
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+                {{-- field reguler --}}
+                <div>
+                    <flux:input disabled label="Reguler" wire:model.live="reg" />
+                </div>
+            </div>
+
+            {{-- field pekan (Select dropdown tunggal) --}}
+            <div>
+                <flux:select label="Pekan" wire:model="ajuanProdiForm.pekan.0" placeholder="Silahkan pilih Pekan">
+                    @for ($i = 1; $i <= 14; $i++)
+                        <flux:select.option value="{{ $i }}">Pekan {{ $i }}</flux:select.option>
+                    @endfor
+                </flux:select>
+                <flux:error name="ajuanProdiForm.pekan" />
+            </div>
+
+            {{-- field Ruangan (Bisa diedit secara bebas lewat select option master ID Ruangan) --}}
+            <div>
+                <flux:select label="Ruangan Praktikum" wire:model="ajuanProdiForm.ruangan_praktikum"
+                    placeholder="Pilih Ruangan">
+                    @if ($spesifikasiMK == 'standar')
+                        <flux:select.option value="1">Lab Komputer 01 (Standar)</flux:select.option>
+                        <flux:select.option value="2">Lab Komputer 02 (Standar)</flux:select.option>
+                    @else
+                        <flux:select.option value="3">Lab Komputer 03 (Spesifikasi Tinggi)</flux:select.option>
+                    @endif
+                </flux:select>
+                <flux:error name="ajuanProdiForm.ruangan_praktikum" />
+            </div>
+
+            <div class="flex">
+                <flux:spacer />
+                <flux:modal.close>
+                    <flux:button variant="ghost" class="mr-2">Batal</flux:button>
+                </flux:modal.close>
+                <flux:button type="submit" icon="check" color="green" variant="primary" wire:click='updateAjuan'>Simpan
+                    Perubahan</flux:button>
             </div>
         </div>
     </flux:modal>

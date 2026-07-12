@@ -20,23 +20,36 @@ class AjuanProdiForm extends Form
     public ?int $kode_mk = null;
     public ?int $kode_dosen = null;
     public array $pekan = [];
+    public ?int $idEdit = null;
+    public string $kelas = '';
+    public ?int $idKelas = null;
 
     public Collection $data;
 
     public function rules(): array
     {
-        return [
+        $baseRules = [
             'mkSearch' => ['required', 'string'],
             'dosenSearch' => ['required', 'string'],
-            'jumlah_kelas' => ['required', 'integer', 'min:1'],
-            'suffix_kelas' => ['required', 'integer', 'min:1'],
-            'reguler' => ['required', 'string'],
             'ruangan_praktikum' => ['required', 'string'],
             'kode_mk' => ['required', 'integer', 'exists:mata_kuliahs,id'],
             'kode_dosen' => ['required', 'integer', 'exists:users,id'],
+        ];
+        $addRules = [
+            'reguler' => ['required', 'string'],
+            'jumlah_kelas' => ['required', 'integer', 'min:1'],
+            'suffix_kelas' => ['required', 'integer', 'min:1'],
             'pekan' => ['required', 'array'],
             'pekan.*' => ['required', 'integer', 'min:1'],
         ];
+        $editRules = [
+            'kelas' => ['required', 'string'],
+            'pekan' => ['required', 'array', 'min:1'],
+        ];
+        if ($this->idEdit) {
+            return array_merge($baseRules, $editRules);
+        }
+        return array_merge($baseRules, $addRules);
     }
 
     public function messages(): array
@@ -53,10 +66,10 @@ class AjuanProdiForm extends Form
             'reguler.required' => 'Reguler harus diisi.',
             'reguler.in' => 'Reguler harus berupa "reguler" atau "non-reguler".',
             'ruangan_praktikum.required' => 'Ruangan praktikum harus diisi.',
-            'kode_mk.required' => 'Kode mata kuliah harus diisi.',
+            'kode_mk.required' => 'Mata kuliah belum di isi dengan benar',
             'kode_mk.integer' => 'Kode mata kuliah harus berupa angka.',
             'kode_mk.exists' => 'Kode mata kuliah tidak valid.',
-            'kode_dosen.required' => 'Kode dosen harus diisi.',
+            'kode_dosen.required' => 'Dosen belum di isi dengan benar',
             'kode_dosen.integer' => 'Kode dosen harus berupa angka.',
             'kode_dosen.exists' => 'Kode dosen tidak valid.',
             'pekan.required' => 'Pekan harus diisi minimal 1.',
@@ -89,6 +102,24 @@ class AjuanProdiForm extends Form
                 DB::rollBack(); 
                 throw $th;
             }
+        }
+    }
+
+    public function update(){
+        DB::beginTransaction();
+        try {
+            $ajuan = Ajuan::findOrFail($this->idEdit);
+            $ajuan->update([
+                'kode_mk' => $this->kode_mk,
+                'kode_kelas' => $this->getIdKelas($this->kelas),
+                'user_username' => $this->getKodeDosen($this->kode_dosen),
+                'ruangan_id' => $this->ruangan_praktikum,
+                'pekan' => head($this->pekan),
+            ]);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
         }
     }
 

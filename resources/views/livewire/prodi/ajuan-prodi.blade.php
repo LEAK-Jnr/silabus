@@ -183,7 +183,7 @@
 
     <livewire:prodi.ajuan-modal-prodi />
 
-
+    {{-- modal konfirmasi hapus --}}
     <x-dashboard.modal-confirm id="hapus-ajuan" title="Hapus Ajuan" type="danger" confirmText="Ya, Hapus Ajuan Ini"
         wire:click="destroy">
         <div class="space-y-3">

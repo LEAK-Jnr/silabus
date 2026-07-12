@@ -4,6 +4,7 @@ namespace App\Livewire\Prodi;
 
 use App\Livewire\Forms\Prodi\AjuanProdiForm;
 use App\Models\Ajuan;
+use App\Models\kelas;
 use App\Models\MataKuliah;
 use App\Models\User;
 use Flux\Flux;
@@ -17,7 +18,9 @@ class AjuanModalProdi extends Component
 {
     public bool $showMkDropdown = false;
     public bool $showDosenDropdown = false;
-
+    public bool $showKelasDropdown = false;
+    public $spesifikasiMK = '';
+    public $reg ='';
     public AjuanProdiForm $ajuanProdiForm;
 
     public function render()
@@ -31,6 +34,24 @@ class AjuanModalProdi extends Component
         $this->ajuanProdiForm->resetExcept('data');
         $this->ajuanProdiForm->data = collect();
         Flux::modal('add-ajuan-prodi')->show();
+    }
+
+    #[On('edit-ajuan-modal-prodi')]
+    public function showEditForm($id){
+        $this->ajuanProdiForm->resetExcept('data');
+        $ajuan = Ajuan::with(['mataKuliah', 'kelas', 'dosen'])->findOrFail($id);
+        $this->ajuanProdiForm->idEdit = $ajuan->id;
+        $this->ajuanProdiForm->kode_mk = $ajuan->kode_mk;
+        $this->ajuanProdiForm->mkSearch = $ajuan->mataKuliah?->nama_mk ?? '';
+        $this->ajuanProdiForm->kode_dosen = $ajuan->dosen?->id;
+        $this->ajuanProdiForm->dosenSearch = $ajuan->dosen?->name ?? '';
+        $this->ajuanProdiForm->ruangan_praktikum = $ajuan->ruangan_id;
+        $this->ajuanProdiForm->kelas = $ajuan->kelas?->kode_kelas ?? '';
+        $this->ajuanProdiForm->pekan = [$ajuan->pekan];
+        $this->ajuanProdiForm->idKelas = $ajuan->kelas?->id ?? '';
+        $this->spesifikasiMK = $ajuan->mataKuliah?->spesifikasi ?? '';
+        $this->reg = $ajuan->kelas?->reguler ?? '';
+        Flux::modal('edit-ajuan-prodi')->show();
     }
 
     #[Computed]
@@ -66,12 +87,41 @@ class AjuanModalProdi extends Component
             ->get();
     }
 
+    #[Computed]
+    public function kelas(){
+        if (blank($this->ajuanProdiForm->kelas)) {
+            return collect();
+        }
+        $idProdi = Auth::user()->prodi_id;
+        $semester = $this->matakuliahs()->firstWhere('id', $this->ajuanProdiForm->kode_mk)?->semester;
+        $prefixSemester = str_pad($semester, 2, '0', STR_PAD_LEFT);
+        return kelas::query()
+            ->where('prodi_id', $idProdi)
+            ->where('kode_kelas', 'like', $prefixSemester . '%')
+            ->when($this->ajuanProdiForm->kelas, function ($query) {
+                $query->where('kode_kelas', 'like', '%' . $this->ajuanProdiForm->kelas . '%');
+            })
+            ->orderBy('kode_kelas', 'asc')
+            ->get();
+        ;
+    }
     public function save()
     {   
         $this->ajuanProdiForm->validate();
         $this->generateData();
         Flux::modal('add-ajuan-prodi')->close();
         Flux::modal('konfirm-add-ajuan-prodi')->show();
+    }
+
+    public function updateAjuan(){
+        $this->ajuanProdiForm->validate();
+        try {
+            $this->ajuanProdiForm->update();
+            Flux::modal('edit-ajuan-modal')->close();
+            return redirect()->route('prodi.test')->with('success', "Berhasil update ajuan");
+        } catch (\Exception $e) {
+            $this->errorAddAjuan($e->getCode());
+        }
     }
 
     public function storeAjuan()
@@ -113,6 +163,13 @@ class AjuanModalProdi extends Component
         $this->ajuanProdiForm->kode_dosen = $id;
         $this->ajuanProdiForm->dosenSearch = $nama;
         $this->showDosenDropdown = false;
+    }
+
+    public function selectKelas(int $id, string $kode_kelas, string $reguler) : void {
+        $this->ajuanProdiForm->idKelas = $id;
+        $this->ajuanProdiForm->kelas = $kode_kelas;
+        $this->reg = $reguler;
+        $this->showKelasDropdown = false;
     }
 
     public function selectAllPekan(): void
@@ -196,7 +253,9 @@ class AjuanModalProdi extends Component
             for ($i = 0; $i < $this->ajuanProdiForm->jumlah_kelas; $i++) {
                 // $kelas = 'Kelas Reg' . $this->Reguler . '-' . ($this->suffix_kelas + $i);
                 $urutan = str_pad($this->ajuanProdiForm->suffix_kelas + $i, 3, '0', STR_PAD_LEFT);
-                $kelas = $prefixSemester . $mapProdi[$this->matakuliahs()->firstWhere('id', $this->ajuanProdiForm->kode_mk)?->prodi?->nama_prodi] . $regulers[$this->ajuanProdiForm->reguler] . $urutan;
+                $kodeProdi = $this->matakuliahs()->firstWhere('id', $this->ajuanProdiForm->kode_mk)?->prodi?->nama_prodi ?? '-';
+                $kdReg = $this->ajuanProdiForm?->reguler ?? "-";
+                $kelas = $prefixSemester . $mapProdi[$kodeProdi] . $regulers[$kdReg] . $urutan ?? "not selected properly";
                 $data->push([
                     'pekan' => $pekan,
                     'kelas' => $kelas,

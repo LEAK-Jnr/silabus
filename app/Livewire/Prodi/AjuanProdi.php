@@ -33,6 +33,10 @@ class AjuanProdi extends Component
         $this->dispatch('ajuan-modal-prodi');
     }
 
+    public function editAjuan($id){
+        $this->dispatch('edit-ajuan-modal-prodi', $id);
+    }
+
     #[Computed]
     public function ruangans(){
         return Ruangan::query()
