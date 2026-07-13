@@ -1,11 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="text-xl font-bold leading-tight text-blue-900">
-            {{
-    __(
-        "Jadwal Praktikum",
-    )
-            }}
+            Jadwal Praktikum
         </h2>
     </x-slot>
     <flux:heading size="xl" class="text-center py-5 text-black">Jadwal Praktikum</flux:heading>
@@ -55,12 +51,12 @@
             <div class="px-4 md:px-5">
                 <flux:table class="w-full text-sm md:text-base">
                     <flux:table.columns class="bg-gray-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200">
-                        <flux:table.column class="w-px whitespace-nowrap text-center">No.</flux:table.column>
+                        <flux:table.column class="w-8 whitespace-nowrap text-center">No.</flux:table.column>
                         <flux:table.column class="w-40 whitespace-nowrap">Ruangan / Lab</flux:table.column>
                         <flux:table.column class="w-44 whitespace-nowrap">Waktu Pelaksanaan</flux:table.column>
                         <flux:table.column class="min-w-56">Mata Kuliah</flux:table.column>
-                        <flux:table.column class="min-w-44">Dosen Pengampu</flux:table.column>
-                        <flux:table.column class="w-24 text-center whitespace-nowrap">Kelas</flux:table.column>
+                        <flux:table.column class="w-44">Dosen Pengampu</flux:table.column>
+                        <flux:table.column class="w-34 text-center whitespace-nowrap">Kelas</flux:table.column>
                         <flux:table.column class="min-w-44">Program Studi</flux:table.column>
                     </flux:table.columns>
 
@@ -98,18 +94,32 @@
                                 </flux:table.cell>
 
                                 <flux:table.cell class="text-xs md:text-sm text-zinc-900 dark:text-white font-medium">
-                                    {{ $ajuan->mataKuliah?->nama_mk }}
+                                    <div class="mb-1 flex items-center gap-2">
+                                        {{ $ajuan->mataKuliah?->nama_mk }}
+                                    </div>
+                                    <div class="mb-1 flex items-center gap-2">
+                                        <span class="text-zinc-400 text-xs">{{ $ajuan->matakuliah?->kode_mk }}</span> -
+                                        <span class="text-zinc-400 text-xs">{{ $ajuan->matakuliah?->sks }} SKS</span> -
+                                        <span class="text-zinc-400 text-xs">Semester
+                                            {{ $ajuan->matakuliah?->semester }}</span>
+                                    </div>
                                 </flux:table.cell>
 
                                 <flux:table.cell class="text-xs md:text-sm text-zinc-600 dark:text-zinc-400">
-                                    {{ $ajuan->dosen?->name ?? 'N/A' }}
+                                    <div class="mb-1 flex items-center gap-2">
+                                        {{ $ajuan->dosen?->name ?? 'N/A' }}
+                                    </div>
+                                    <span class="text-zinc-400 text-xs">({{ $ajuan->dosen?->username }})</span>
                                 </flux:table.cell>
 
                                 <flux:table.cell class="text-center whitespace-nowrap">
-                                    <span
-                                        class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
-                                        {{ $ajuan->kelas?->kode_kelas }}
-                                    </span>
+                                    <div class="mb-1 flex items-center justify-center gap-2">
+                                        <span
+                                            class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                                            {{ $ajuan->kelas?->kode_kelas }}
+                                        </span>
+                                    </div>
+                                    <span class="text-zinc-400 text-xs">{{ $ajuan->kelas?->reguler }}</span>
                                 </flux:table.cell>
 
                                 <flux:table.cell class="text-xs md:text-sm text-zinc-500 dark:text-zinc-400">

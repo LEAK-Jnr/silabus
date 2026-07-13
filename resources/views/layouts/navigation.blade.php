@@ -6,116 +6,94 @@
                 <!-- Logo -->
                 <div class="flex shrink-0 items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo
-                            class="block h-9 w-auto fill-current text-gray-800"
-                        />
+                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if (Auth::user()->role === "admin")
-                        <div
-                            class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
-                        >
-                            <x-nav-link
-                                :href="route('admin.prodi.index')"
-                                :active="request()->routeIs('admin.prodi.index')"
-                            >
-                                {{
-                                    __(
-                                        "Master Prodi",
-                                    )
-                                }}
-                            </x-nav-link>
-                            <x-nav-link
-                                :href="route('admin.ruangan.index')"
-                                :active="request()->routeIs('admin.ruangan.*')"
-                            >
-                                Master Ruangan
-                            </x-nav-link>
-                            <x-nav-link
-                                :href="route('admin.matakuliah.index')"
-                                :active="request()->routeIs('admin.matakuliah.index')"
-                            >
-                                {{
-                                    __(
-                                        "Master Mata Kuliah",
-                                    )
-                                }}
-                            </x-nav-link>
-                            <x-nav-link
-                                :href="route('admin.jadwal.index')"
-                                :active="request()->routeIs('admin.jadwal.*')"
-                            >
-                                {{
-                                    __(
-                                        "Penjadwalan",
-                                    )
-                                }}
-                            </x-nav-link>
-                        </div>
+                                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                        <x-nav-link :href="route('admin.prodi.index')"
+                                            :active="request()->routeIs('admin.prodi.index')">
+                                            {{
+                        __(
+                            "Master Prodi",
+                        )
+                                                }}
+                                        </x-nav-link>
+                                        <x-nav-link :href="route('admin.ruangan.index')"
+                                            :active="request()->routeIs('admin.ruangan.*')">
+                                            Master Ruangan
+                                        </x-nav-link>
+                                        <x-nav-link :href="route('admin.matakuliah.index')"
+                                            :active="request()->routeIs('admin.matakuliah.index')">
+                                            {{
+                        __(
+                            "Master Mata Kuliah",
+                        )
+                                                }}
+                                        </x-nav-link>
+                                        <x-nav-link :href="route('admin.jadwal.index')" :active="request()->routeIs('admin.jadwal.*')">
+                                            {{
+                        __(
+                            "Penjadwalan",
+                        )
+                                                }}
+                                        </x-nav-link>
+                                    </div>
                     @endif
 
                     @if (Auth::user()->role === "prodi")
-                        <x-nav-link
-                            :href="route('prodi.ajuan')"
-                            :active="request()->routeIs('prodi.ajuan')"
-                        >
+                        <x-nav-link :href="route('prodi')" :active="request()->routeIs('prodi')">
                             {{
-                                __(
-                                    "Input Ajuan MK",
-                                )
+                            __(
+                            "Home",
+                            )
                             }}
                         </x-nav-link>
-                        <x-nav-link
-                            :href="route('prodi.jadwal')"
-                            :active="request()->routeIs('prodi.jadwal')"
-                        >
+                        <x-nav-link :href="route('prodi.penugasan-dosen')" :active="request()->routeIs('prodi.penugasan-dosen')">
                             {{
-                                __(
-                                    "Jadwal Praktikum",
-                                )
+                            __(
+                            "Penugasan Dosen",
+                            )
                             }}
                         </x-nav-link>
-                        <x-nav-link
-                            :href="route('prodi.test')"
-                            :active="request()->routeIs('prodi.test')"
-                        >
-                            {{
-                                __(
-                                    "test Ajuan",
-                                )
-                            }}
-                        </x-nav-link>
+                                    <x-nav-link :href="route('prodi.ajuan')" :active="request()->routeIs('prodi.ajuan')">
+                                        {{
+                        __(
+                            "Ajuan Praktikum",
+                        )
+                                            }}
+                                    </x-nav-link>
+                                    <x-nav-link :href="route('prodi.jadwal')" :active="request()->routeIs('prodi.jadwal')">
+                                        {{
+                        __(
+                            "Jadwal Praktikum",
+                        )
+                                            }}
+                                    </x-nav-link>
+                                    
                     @endif
                     @if (Auth::user()->role === "dosen")
-                        <x-nav-link
-                            :href="route('dosen.jadwal')"
-                            :active="request()->routeIs('dosen.jadwal')"
-                        >
-                            {{
-                                __(
-                                    "Jadwal Praktikum",
-                                )
-                            }}
-                        </x-nav-link>
-                        <x-nav-link
-                            :href="route('dosen.presensi')"
-                            :active="request()->routeIs('dosen.presensi')"
-                        >
-                            {{ __("Presensi") }}
-                        </x-nav-link>
-                        <x-nav-link
-                            :href="route('dosen.laporan-kerusakan')"
-                            :active="request()->routeIs('dosen.laporan-kerusakan')"
-                        >
-                            {{
-                                __(
-                                    "Laporan Kerusakan",
-                                )
-                            }}
-                        </x-nav-link>
+                                    <x-nav-link :href="route('dosen.jadwal')" :active="request()->routeIs('dosen.jadwal')">
+                                        {{
+                        __(
+                            "Jadwal Praktikum",
+                        )
+                                            }}
+                                    </x-nav-link>
+                                    <x-nav-link :href="route('dosen.presensi')" :active="request()->routeIs('dosen.presensi')">
+                                        {{ __("Presensi") }}
+                                    </x-nav-link>
+                                    <x-nav-link :href="route('dosen.laporan-kerusakan')"
+                                        :active="request()->routeIs('dosen.laporan-kerusakan')">
+                                        {{
+                        __(
+                            "Laporan Kerusakan",
+                        )
+                                            }}
+                                    </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -125,18 +103,20 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-hidden"
-                        >
+                            class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-hidden">
                             <div>
                                 {{
-                                    Auth::user()
-                                        ->name
+    Auth::user()
+        ->name
                                 }}
                             </div>
 
                             <div class="ms-1">
-                                <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </div>
                         </button>
@@ -151,13 +131,10 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link
-                                :href="route('logout')"
-                                onclick="
+                            <x-dropdown-link :href="route('logout')" onclick="
                                     event.preventDefault();
                                     this.closest('form').submit();
-                                "
-                            >
+                                ">
                                 {{ __("Log Out") }}
                             </x-dropdown-link>
                         </form>
@@ -167,33 +144,19 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button
-                    @click="open = !open"
-                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-hidden"
-                >
+                <button @click="open = !open"
+                    class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-hidden">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path
-                            :class="{
+                        <path :class="{
                                 hidden: open,
                                 'inline-flex': !open,
-                            }"
-                            class="inline-flex"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
-                        <path
-                            :class="{
+                            }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{
                                 hidden: !open,
                                 'inline-flex': open,
-                            }"
-                            class="hidden"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                        />
+                            }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -203,14 +166,11 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{ block: open, hidden: !open }" class="hidden sm:hidden">
         <div class="space-y-1 pb-3 pt-2">
-            <x-responsive-nav-link
-                :href="route('dashboard')"
-                :active="request()->routeIs('dashboard')"
-            >
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{
-                    __(
-                        "Dashboard",
-                    )
+    __(
+        "Dashboard",
+    )
                 }}
             </x-responsive-nav-link>
         </div>
@@ -220,14 +180,14 @@
             <div class="px-4">
                 <div class="text-base font-medium text-gray-800">
                     {{
-                        Auth::user()
-                            ->name
+    Auth::user()
+        ->name
                     }}
                 </div>
                 <div class="text-sm font-medium text-gray-500">
                     {{
-                        Auth::user()
-                            ->email
+    Auth::user()
+        ->email
                     }}
                 </div>
             </div>
@@ -241,13 +201,10 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link
-                        :href="route('logout')"
-                        onclick="
+                    <x-responsive-nav-link :href="route('logout')" onclick="
                             event.preventDefault();
                             this.closest('form').submit();
-                        "
-                    >
+                        ">
                         {{ __("Log Out") }}
                     </x-responsive-nav-link>
                 </form>

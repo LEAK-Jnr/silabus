@@ -1,11 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="text-xl font-bold leading-tight text-blue-900">
-            {{
-    __(
-        "Panel Ajuan Program Studi",
-    )
-            }}
+            Ajuan Praktikum
         </h2>
     </x-slot>
     {{-- header --}}
@@ -13,7 +9,7 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white p-6 shadow-xs sm:rounded-lg">
                 <h3 class="mb-4 text-lg font-bold">
-                    Selamat Datang, Admin Prodi {{ Auth::user()->name }}
+                    Panel Ajuan Program Studi
                 </h3>
                 <p class="text-gray-600">Ini adalah halaman khusus untuk menginput ajuan mata kuliah dan jadwal
                     praktikum.
@@ -163,10 +159,10 @@
                             </flux:table.row>
                         @empty
                             <flux:table.row>
-                                <flux:table.cell colspan="9" class="text-center py-12">
+                                <flux:table.cell colspan="10" class="text-center py-12">
                                     <div class="flex flex-col items-center justify-center space-y-2 text-zinc-400">
                                         <flux:icon name="calendar" class="h-8 w-8 stroke-1" />
-                                        <flux:text size="lg" class="font-medium">Tidak ada ajuans yang ditemukan.
+                                        <flux:text size="lg" class="font-medium">Tidak ada Ajuan yang ditemukan.
                                         </flux:text>
                                     </div>
                                 </flux:table.cell>

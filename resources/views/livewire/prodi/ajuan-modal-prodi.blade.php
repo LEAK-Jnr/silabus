@@ -138,6 +138,9 @@
                 <flux:legend>Pekan</flux:legend>
                 <flux:separator />
                 <flux:text class="mt-2 text-center text-red-500">Silahkan masukan Mata Kuliah dengan benar</flux:text>
+                <div class="flex justify-center items-center w-full">
+                    <flux:icon.loading />
+                </div>
                 <flux:separator />
             @endif
 
