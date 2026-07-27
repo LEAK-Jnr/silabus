@@ -86,9 +86,9 @@ class AjuanProdi extends Component
     public function destroy(){
         try {
             $this->form->destroy($this->idHapus);
-            return redirect()->route('prodi.test')->with('success', 'data berhasil dihapus');
+            return redirect()->route('prodi.ajuan')->with('success', 'data berhasil dihapus');
         } catch (\Exception $e) {
-            return redirect()->route('prodi.test')->with('error', "Gagal Hapus | " . $e->getMessage() );
+            return redirect()->route('prodi.ajuan')->with('error', "Gagal Hapus | " . $e->getMessage() );
         }
     }
 

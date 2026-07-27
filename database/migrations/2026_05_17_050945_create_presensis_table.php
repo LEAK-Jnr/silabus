@@ -19,7 +19,8 @@ return new class extends Migration
             $table->date('tanggal'); 
             $table->time('jam_masuk')->nullable();
             $table->time('jam_keluar')->nullable();
-            $table->enum('status', ['hadir', 'terlambat', 'tidak_hadir'])->default('hadir');      
+            $table->enum('status', ['hadir', 'terlambat', 'tidak_hadir'])->default('hadir');    
+            $table->integer('keterlambatan_menit')->nullable()->default(0);  
             $table->timestamps();
         });
     }

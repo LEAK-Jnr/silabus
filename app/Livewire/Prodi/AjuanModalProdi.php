@@ -118,7 +118,7 @@ class AjuanModalProdi extends Component
         try {
             $this->ajuanProdiForm->update();
             Flux::modal('edit-ajuan-modal')->close();
-            return redirect()->route('prodi.test')->with('success', "Berhasil update ajuan");
+            return redirect()->route('prodi.ajuan')->with('success', "Berhasil update ajuan");
         } catch (\Exception $e) {
             $this->errorAddAjuan($e->getCode());
         }
@@ -147,13 +147,13 @@ class AjuanModalProdi extends Component
         if ($gagal > 0) {
             $message .= " Sebanyak {$gagal} data otomatis dilewati karena kode kelas tidak valid.";
         }
-        return redirect()->route('prodi.test')->with('success', $message);
+        return redirect()->route('prodi.ajuan')->with('success', $message);
     }
 
     public function errorAddAjuan($messages)
     {
-        // return redirect()->route('prodi.test')->with('error', $messages);
-        return redirect()->route('prodi.test')->with('error', "Terjadi kesalahan saat menyimpan ajuan | Error Code: $messages");
+        // return redirect()->route('prodi.ajuan')->with('error', $messages);
+        return redirect()->route('prodi.ajuan')->with('error', "Terjadi kesalahan saat menyimpan ajuan | Error Code: $messages");
     }
 
     public function selectMk(int $id, string $nama): void

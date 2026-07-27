@@ -23,7 +23,7 @@
         x-cloak
     >
         <div
-            class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            class="fixed inset-0 bg-black/20 transition-opacity"
             @click="openModal = false"
         ></div>
 

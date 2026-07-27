@@ -41,4 +41,9 @@ class Ajuan extends Model
     {
         return $this->belongsTo(Ruangan::class, 'ruangan_id');
     }
+
+    public function presensi()
+    {
+        return $this->hasOne(Presensi::class, 'ajuan_id');
+    }
 }

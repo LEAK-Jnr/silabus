@@ -16,7 +16,7 @@ class JadwalController extends Controller
     {
         $pekanAktif = $request->get('pekan', 1);
 
-        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan', 'presensi'])
             ->where('pekan', $pekanAktif)
             ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
             ->orderBy('jam_mulai', 'asc')
@@ -115,7 +115,7 @@ class JadwalController extends Controller
     public function exportPdf(Request $request) {
         $pekanAktif = $request->get('pekan', 1);
 
-        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan', 'presensi'])
             ->where('pekan', $pekanAktif)
             ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
             ->orderBy('jam_mulai', 'asc')
@@ -127,7 +127,7 @@ class JadwalController extends Controller
     }
     public function exportPdfAll() {
         // Ambil semua ajuan dan kelompokkan berdasarkan pekan
-        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
+        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan', 'presensi'])
             ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
             ->orderBy('jam_mulai', 'asc')
             ->get();
@@ -137,5 +137,74 @@ class JadwalController extends Controller
         $pdf = PDF::loadView('admin.jadwal.pdf-all', compact('ajuansGrouped'))->setPaper('a4', 'landscape');
 
         return $pdf->download("jadwal-kuliah-massal-pekan-1-14.pdf");
+    }
+
+    public function checkIn(Request $request, Ajuan $ajuan)
+    {
+        $now = now();
+        $currentTime = $now->format('H:i:s');
+        
+        $hariMap = [
+            'Senin' => 1,
+            'Selasa' => 2,
+            'Rabu' => 3,
+            'Kamis' => 4,
+            'Jumat' => 5,
+            'Sabtu' => 6,
+            'Minggu' => 7
+        ];
+        
+        if (isset($hariMap[$ajuan->hari]) && $now->format('N') != $hariMap[$ajuan->hari]) {
+            return back()->with('error', 'Gagal check-in. Jadwal ini hanya untuk hari ' . $ajuan->hari . '.');
+        }
+        
+        $jamMulai = \Carbon\Carbon::parse($ajuan->jam_mulai);
+        $earliestCheckIn = $jamMulai->copy()->subMinutes(15);
+        $currentCarbon = \Carbon\Carbon::parse($currentTime);
+        
+        if ($currentCarbon->lessThan($earliestCheckIn)) {
+            return back()->with('error', 'Terlalu cepat untuk check-in. Check-in bisa dilakukan mulai 15 menit sebelum jadwal.');
+        }
+        
+        $minutesLate = $jamMulai->diffInMinutes($currentCarbon, false);
+        
+        $status = 'hadir';
+        $keterlambatanMenit = 0;
+        
+        if ($minutesLate > 20) {
+            $status = 'terlambat';
+            $keterlambatanMenit = $minutesLate - 20;
+        }
+        
+        \App\Models\Presensi::updateOrCreate(
+            ['ajuan_id' => $ajuan->id, 'tanggal' => $now->toDateString()],
+            [
+                'user_username' => $ajuan->user_username,
+                'jam_masuk' => $currentTime,
+                'status' => $status,
+                'keterlambatan_menit' => $keterlambatanMenit
+            ]
+        );
+        
+        return back()->with('success', 'Berhasil Check-in.');
+    }
+
+    public function checkOut(Request $request, Ajuan $ajuan)
+    {
+        $now = now();
+        
+        $presensi = \App\Models\Presensi::where('ajuan_id', $ajuan->id)
+                                        ->where('tanggal', $now->toDateString())
+                                        ->first();
+                                        
+        if (!$presensi) {
+            return back()->with('error', 'Belum melakukan Check-in.');
+        }
+        
+        $presensi->update([
+            'jam_keluar' => $now->format('H:i:s')
+        ]);
+        
+        return back()->with('success', 'Berhasil Check-out.');
     }
 }

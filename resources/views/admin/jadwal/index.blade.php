@@ -119,7 +119,7 @@
                                 <th
                                     class="p-3 text-sm font-bold uppercase text-gray-700"
                                 >
-                                    Status
+                                    Aksi Presensi
                                 </th>
                             </tr>
                         </thead>
@@ -208,19 +208,94 @@
                                         >
                                     </td>
                                     <td class="border-b border-gray-100 p-3">
-                                        @php
-                                            $badgeColor =
-                                                [
-                                                    "menunggu" => "bg-amber-100 text-amber-800",
-                                                    "disetujui" => "bg-green-100 text-green-800",
-                                                    "ditolak" => "bg-red-100 text-red-800",
-                                                ][$j->status] ?? "bg-gray-100 text-gray-800";
-                                        @endphp
-                                        <span
-                                            class="inline-block rounded-full {{ $badgeColor }} px-3 py-1 text-[10px] font-bold uppercase"
-                                        >
-                                            {{ $j->status }}
-                                        </span>
+                                        @if($j->status === 'menunggu')
+                                            <span class="inline-block rounded-full bg-amber-100 px-3 py-1 text-[10px] font-bold uppercase text-amber-800">Menunggu Plotting</span>
+                                        @elseif($j->status === 'ditolak')
+                                            <span class="inline-block rounded-full bg-red-100 px-3 py-1 text-[10px] font-bold uppercase text-red-800">Ditolak</span>
+                                        @else
+                                            @php
+                                                $now = now();
+                                                $jamSelesaiCarbon = $j->jam_selesai ? \Carbon\Carbon::parse($j->jam_selesai) : null;
+                                                $isPast = $jamSelesaiCarbon ? $now->greaterThan($jamSelesaiCarbon) : false;
+                                                $isNoShow = $isPast && !$j->presensi;
+                                            @endphp
+
+                                            @if($isNoShow)
+                                                <span class="inline-block rounded-full bg-red-100 px-3 py-1 text-[10px] font-bold uppercase text-red-800">No Show</span>
+                                            @elseif(!$j->presensi)
+                                                <button
+                                                    x-data
+                                                    @click="$dispatch('open-modal-checkin-{{ $j->id }}')"
+                                                    class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                                                >
+                                                    Check-in
+                                                </button>
+
+                                                <x-dashboard.modal-confirm
+                                                    id="checkin-{{ $j->id }}"
+                                                    title="Check-in Dosen"
+                                                    btnColor="bg-blue-600 hover:bg-blue-700"
+                                                    confirmText="Ya, Check-in"
+                                                    action="{{ route('admin.jadwal.checkin', $j->id) }}"
+                                                    method="POST"
+                                                >
+                                                    <p>Lakukan check-in untuk dosen <strong>{{ $j->dosen->name }}</strong>?</p>
+                                                </x-dashboard.modal-confirm>
+                                            @else
+                                                <div x-data="{ openDetail: false }">
+                                                    <button @click="openDetail = true" class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-indigo-700">
+                                                        Detail
+                                                    </button>
+
+                                                    <div x-show="openDetail" x-cloak class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/20 text-left">
+                                                        <div @click.away="openDetail = false" class="z-10 m-4 w-full max-w-sm rounded-lg bg-white shadow-xl">
+                                                            <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3 rounded-t-lg">
+                                                                <h3 class="text-base font-bold text-gray-800">Detail Presensi</h3>
+                                                                <button @click="openDetail = false" class="text-xl font-bold text-gray-400 hover:text-gray-600">&times;</button>
+                                                            </div>
+                                                            <div class="p-4 text-sm text-gray-700">
+                                                                <p class="mb-2"><strong>Dosen:</strong> {{ $j->dosen->name }}</p>
+                                                                <p class="mb-2">
+                                                                    <strong>Waktu Masuk:</strong> {{ \Carbon\Carbon::parse($j->presensi->jam_masuk)->format('H:i') }}
+                                                                    @if($j->presensi->status === 'terlambat')
+                                                                        <span class="font-bold text-red-600">(Telat {{ $j->presensi->keterlambatan_menit }} mnt)</span>
+                                                                    @else
+                                                                        <span class="font-bold text-green-600">(Tepat)</span>
+                                                                    @endif
+                                                                </p>
+                                                                <p class="mb-2">
+                                                                    <strong>Waktu Keluar:</strong> 
+                                                                    @if($j->presensi->jam_keluar)
+                                                                        {{ \Carbon\Carbon::parse($j->presensi->jam_keluar)->format('H:i') }}
+                                                                    @else
+                                                                        <span class="italic text-gray-400">Belum check-out</span>
+                                                                    @endif
+                                                                </p>
+                                                            </div>
+                                                            <div class="flex justify-end border-t border-gray-200 bg-gray-50 px-4 py-3 rounded-b-lg">
+                                                                <button @click="openDetail = false" class="rounded bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-300">Tutup</button>
+                                                                @if(!$j->presensi->jam_keluar)
+                                                                    <button @click="openDetail = false; $dispatch('open-modal-checkout-{{ $j->id }}')" class="ml-2 rounded bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600">Check-out</button>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @if(!$j->presensi->jam_keluar)
+                                                <x-dashboard.modal-confirm
+                                                    id="checkout-{{ $j->id }}"
+                                                    title="Check-out Dosen"
+                                                    btnColor="bg-orange-500 hover:bg-orange-600"
+                                                    confirmText="Ya, Check-out"
+                                                    action="{{ route('admin.jadwal.checkout', $j->id) }}"
+                                                    method="POST"
+                                                >
+                                                    <p>Lakukan check-out untuk dosen <strong>{{ $j->dosen->name }}</strong>?</p>
+                                                </x-dashboard.modal-confirm>
+                                                @endif
+                                            @endif
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
