@@ -19,6 +19,10 @@ return new class extends Migration
             $table->foreignId('matakuliah_id')->constrained('mata_kuliahs')->onDelete('cascade');
             $table->foreignId('kelas_id')->constrained('kelas')->onDelete('cascade');
             $table->timestamps();
+
+            // Mencegah Matakuliah A di Kelas B diampu oleh Dosen X DAN Dosen Y secara bersamaan
+            // 1 Kelas + 1 Matakuliah HANYA Boleh Diampu oleh 1 Dosen
+            $table->unique(['matakuliah_id', 'kelas_id'], 'unique_mk_kelas');
         });
     }
 

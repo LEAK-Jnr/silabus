@@ -1,61 +1,44 @@
 <?php
 
-namespace App\Livewire\Prodi;
+namespace App\Livewire\Prodi\Jadwal;
 
 use App\Models\Ajuan;
-use App\Models\Ruangan;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
-class JadwalProdi extends Component
+class ProdiJadwalIndex extends Component
 {
     use WithPagination, WithoutUrlPagination;
-    public $pekan = '';
-    public $prodi = '';
-    public $ruangan = '';
+    public ?int $ruangan = null;
+    public ?int $pekan = null;
+    public ?int $prodi = null;
 
     public function render()
     {
-        return view('livewire.prodi.jadwal-prodi');
-    }
-
-
-    #[Computed]
-    public function user(){
-        return auth()->user();
+        return view('livewire.prodi.jadwal.prodi-jadwal-index');
     }
 
     #[Computed]
-    public function ruangans(){
-        return Ruangan::orderBy('nama_ruangan', 'asc')->get();
-    }
-
-    #[Computed]
-    public function jadwal(){
+    public function jadwal() {
         return Ajuan::query()
             ->with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
             ->where('status', 'disetujui')
-            ->when($this->pekan, function($query) {
-                $query->where('pekan', $this->pekan);
-            })
-            ->when($this->prodi, function($query) {
-                $query->whereHas('mataKuliah', function($q) {
-                    $q->where('prodi_id', $this->prodi);
-                });
-            })
-            ->when($this->ruangan, function($query) {
-                $query->where('ruangan_id', $this->ruangan);
+            ->when($this->ruangan, fn($q) => $q->where('ruangan_id', $this->ruangan))
+            ->when($this->pekan, fn($q) => $q->where('pekan', $this->pekan))
+            ->when($this->prodi, function ($query) {
+                $query->whereHas('mataKuliah', fn($q) => $q->where('prodi_id', $this->prodi));
             })
             ->orderBy('ruangan_id')
             ->orderBy('pekan')
-            ->paginate(5);
+            ->paginate(35)
+        ;
     }
 
     public function downloadPdf()
     {
-        $allJadwals = \App\Models\Ajuan::query()
+        $allJadwals = Ajuan::query()
             ->with(['mataKuliah', 'kelas', 'dosen', 'ruangan'])
             ->where('status', 'disetujui')
             ->when($this->pekan, function($query) {
@@ -84,7 +67,9 @@ class JadwalProdi extends Component
                 ->output();
         }, 'jadwal_praktikum.pdf');
     }
+
     public function updatedPekan() { $this->resetPage(); }
     public function updatedProdi() { $this->resetPage(); }
     public function updatedRuangan() { $this->resetPage(); }
+
 }

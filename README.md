@@ -1,34 +1,39 @@
 ## Whats' on this update ?
 
 ### Database
-Merubah struktur database, dengan menambahakan Table Baru: 'penugasan_dosen' sekaligus membuat Model nya juga
+Menambahkan constrait nullable pada field: user_username di table ajuans, penambahan Unique pada table penugasan dosens
 
-Table ini digunakan untuk fitur Penugasan Dosen, Dosen x akan mengampu Matakuliah y pada kelas z
-yang nanti akan digunakan pada form penambahan ajuan, akan binding ke table ini --> soon
+### Refaktor
+most common update is Refactoring
 
-### Routes
-Memperbaharui Daftar url untuk role Prodi, Menggunakan Prefix/Awalan Prodi lalu mengelompokan Prefix tersebut
+Refaktor struktur folder berdasarkan Fitur.
 
-Menambahkan index juga untuk Dashboard role Prodi, Penambahan URL untuk Fitur Penugasan Dosen.
+component field input nyg juga dinamis dan reusable
 
-semuanya url sudah menggunakan Class dari Livewire, bukan Native Controller lagi
+### Integrasi Fitur Penugasan Update dan Fitur Ajuan
 
-### Views
-Penambahan Navigation pada Role:Prodi.
+Pada Penugasan Dosen: CRUD data
 
-Nav Link pada Role Prodi: Home, Penugasan Dosen, Ajuan, Jadwal
+1 MK dan 1 Kelas diampu oleh 1 Dosen, 1 Dosen bisa mengampu banyak kelas dan mata kuliah
 
-Create a new blade: prodi-index dan penugasan-dosen, kedua blade menggunakan Livewire
-Drop blade: Prodi/Index. Don't worry! sudah ai Backup kok file nya.
+Integrasi pada Fitur ajuan: Pembuatan Ajuan bisa berdasarkan Penugasan Dosen atau Bulk Update, 
+pada Add Ajuan berdasarkan Penugasan, flow nya adalah memilih data nya terlebih dahulu, lalu input pekan dan ruangan
+untuk pekan bisa multiple choice, validasi nya adalah pekan => array min:1
 
-### App
-Membuat Model baru: Penugasan Dosen
+Bulk Update: Field Dosen bisa nullable, multiple kelas berdasarkan urutan suffix kelas nya, dan multiple pekan.
+can create nullabale dosen pada ajuans, dan di table akan keluar button untuk menambahkan dosen, yg nanti nya akan trigger modal form
 
-Model tersebut ber relasi ke 3 model lainnya; User, MataKuliah dan Kelas.
-Drop Controller Prodi/ProdiController. sama seperti view sudah ai backup kok
+jika matakuliah dan kelas yg di inputkan sudah ada di table penugasan dosen dan dosen yg di input berbeda dengan yg ada di table ataupun kosong maka proses bulk akan throw exception.
 
-## After Pull
-Jangan Lupa untuk migrate kembali!
-```
-php artisan migrate:fresh --seed
-```
+jika matakuliah, kelas dan dosen belum ada pada table penugasan maka data tersebut akan secara otomatis ditambahkan pada table penugasan
+
+Penugasan Edit: data yg diubah pada table penugasan akan mengalami perubahan juga di table ajuan
+
+Penugasan Delete: data yg dihapus pada table penugasan akan mengalami perubahan juga di table ajuan, Dosen => null
+
+# NOTE
+Pada Generate update tolong diubah, jika dosen nya null maka akan secara otomatis di tolak
+
+IF YOU FIND BUG, PLEASE GET ME KNOW, I'LL FIX IT SOON
+
+

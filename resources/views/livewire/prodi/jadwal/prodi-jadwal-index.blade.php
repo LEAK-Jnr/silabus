@@ -1,44 +1,27 @@
 <div>
+    {{-- header from Layout --}}
     <x-slot name="header">
         <h2 class="text-xl font-bold leading-tight text-blue-900">
             Jadwal Praktikum
         </h2>
     </x-slot>
+
+    {{-- heading title --}}
     <flux:heading size="xl" class="text-center py-5 text-black">Jadwal Praktikum</flux:heading>
 
+    {{-- filter section and download pdf button --}}
     <div
         class="flex flex-col md:flex-row md:items-end md:justify-between bg-white rounded-lg shadow-md mx-4 md:mx-10 p-4 md:p-5 mt-5 gap-3">
+        {{-- Filter Section --}}
         <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <div class="w-full sm:w-56">
-                <flux:select wire:model.live="ruangan" label="Ruangan / Lab">
-                    <flux:select.option value="">Semua Ruangan</flux:select.option>
-                    @foreach ($this->ruangans as $r)
-                        <flux:select.option value="{{ $r->id }}">
-                            {{ $r->nama_ruangan }}
-                        </flux:select.option>
-                    @endforeach
-                </flux:select>
-            </div>
-
-            <div class="w-full sm:w-40">
-                <flux:select wire:model.live="pekan" label="Pekan">
-                    <flux:select.option value="">Semua Pekan</flux:select.option>
-                    @for($i = 1; $i <= 14; $i++)
-                        <flux:select.option value="{{ $i }}">{{ $i }}</flux:select.option>
-                    @endfor
-                </flux:select>
-            </div>
-
-            <div class="w-full sm:w-56">
-                <flux:select wire:model.live="prodi" label="Prodi">
-                    <flux:select.option value="">Semua Prodi</flux:select.option>
-                    <flux:select.option value="{{ $this->user->prodi_id }}">
-                        {{ $this->user?->prodi->nama_prodi }}
-                    </flux:select.option>
-                </flux:select>
-            </div>
+            {{-- Filter ruangan --}}
+            <livewire:prodi.partials.filter-ruangan wire:model.live="ruangan" />
+            {{-- Filter Pekan --}}
+            <livewire:prodi.partials.filter-pekan wire:model.live="pekan" />
+            {{-- Filter User->Prodi --}}
+            <livewire:prodi.partials.filter-userprodi wire:model.live="prodi" />
         </div>
-
+        {{-- Download PDF Button --}}
         <div class="w-full sm:w-auto">
             <flux:button icon="document-arrow-down" variant="danger" class="w-full sm:w-auto" wire:click="downloadPdf">
                 Download PDF
@@ -46,6 +29,7 @@
         </div>
     </div>
 
+    {{-- Table Section --}}
     <div class="bg-white rounded-lg shadow-md mx-4 md:mx-10 py-4 md:py-5 px-4 md:px-5 mt-5 mb-5">
         <div class="overflow-x-auto -mx-4 md:-mx-5">
             <div class="px-4 md:px-5">
@@ -62,7 +46,8 @@
 
                     <flux:table.rows>
                         @forelse ($this->jadwal as $ajuan)
-                            <flux:table.row :key="$ajuan->id" class="align-middle">
+                            <flux:table.row :key="$ajuan->id"
+                                class="align-middle odd:bg-white even:bg-zinc-50/50 hover:bg-zinc-100/70 dark:odd:bg-zinc-900 dark:even:bg-zinc-800/30 dark:hover:bg-zinc-800/60">
 
                                 <flux:table.cell class="text-center whitespace-nowrap text-zinc-500 text-xs md:text-sm">
                                     {{ ($this->jadwal->currentPage() - 1) * $this->jadwal->perPage() + $loop->iteration }}
@@ -146,5 +131,4 @@
             {{ $this->jadwal->links() }}
         </div>
     </div>
-
 </div>

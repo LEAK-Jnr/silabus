@@ -16,8 +16,6 @@ use Livewire\Component;
 
 class AjuanModalProdi extends Component
 {
-    public bool $showMkDropdown = false;
-    public bool $showDosenDropdown = false;
     public bool $showKelasDropdown = false;
     public $spesifikasiMK = '';
     public $reg ='';
@@ -33,6 +31,7 @@ class AjuanModalProdi extends Component
     {
         $this->ajuanProdiForm->resetExcept('data');
         $this->ajuanProdiForm->data = collect();
+        $this->dispatch('reset-fieldSearchable');
         Flux::modal('add-ajuan-prodi')->show();
     }
 
@@ -40,51 +39,23 @@ class AjuanModalProdi extends Component
     public function showEditForm($id){
         $this->ajuanProdiForm->resetExcept('data');
         $ajuan = Ajuan::with(['mataKuliah', 'kelas', 'dosen'])->findOrFail($id);
-        $this->ajuanProdiForm->idEdit = $ajuan->id;
-        $this->ajuanProdiForm->kode_mk = $ajuan->kode_mk;
-        $this->ajuanProdiForm->mkSearch = $ajuan->mataKuliah?->nama_mk ?? '';
-        $this->ajuanProdiForm->kode_dosen = $ajuan->dosen?->id;
-        $this->ajuanProdiForm->dosenSearch = $ajuan->dosen?->name ?? '';
-        $this->ajuanProdiForm->ruangan_praktikum = $ajuan->ruangan_id;
-        $this->ajuanProdiForm->kelas = $ajuan->kelas?->kode_kelas ?? '';
-        $this->ajuanProdiForm->pekan = [$ajuan->pekan];
-        $this->ajuanProdiForm->idKelas = $ajuan->kelas?->id ?? '';
         $this->spesifikasiMK = $ajuan->mataKuliah?->spesifikasi ?? '';
         $this->reg = $ajuan->kelas?->reguler ?? '';
+        $this->ajuanProdiForm->setAjuan($id);
+        $this->dispatch('mkField-editMode', $ajuan->kode_mk);
+        $this->dispatch('dosenField-editMode', $ajuan->dosen?->id);
         Flux::modal('edit-ajuan-prodi')->show();
     }
 
     #[Computed]
     public function matakuliahs()
     {
-        if (blank($this->ajuanProdiForm->mkSearch)) {
-            return collect();
-        }
-
-        return MataKuliah::query()
-            ->with('prodi')
-            ->where('prodi_id', Auth::user()->prodi_id)
-            ->when($this->ajuanProdiForm->mkSearch, function ($query) {
-                $query->where('nama_mk', 'like', '%' . $this->ajuanProdiForm->mkSearch . '%');
-            })
-            ->orderBy('nama_mk', 'asc')
-            ->get();
+        return MataKuliah::query();
     }
 
     #[Computed]
     public function dosens(){
-        if (blank($this->ajuanProdiForm->dosenSearch)) {
-            return collect();
-        }
-
-        return User::query()
-            ->where('role', 'dosen')
-            ->where('prodi_id', Auth::user()->prodi_id)
-            ->when($this->ajuanProdiForm->dosenSearch, function ($query) {
-                $query->where('name', 'like', '%' . $this->ajuanProdiForm->dosenSearch . '%');
-            })
-            ->orderBy('name', 'asc')
-            ->get();
+        return User::query();
     }
 
     #[Computed]
@@ -147,27 +118,14 @@ class AjuanModalProdi extends Component
         if ($gagal > 0) {
             $message .= " Sebanyak {$gagal} data otomatis dilewati karena kode kelas tidak valid.";
         }
-        return redirect()->route('prodi.test')->with('success', $message);
+        $this->dispatch('toast', message: $message, type: 'success');
+        $this->dispatch('refreshAjuansTable');
     }
 
     public function errorAddAjuan($messages)
     {
         // return redirect()->route('prodi.test')->with('error', $messages);
-        return redirect()->route('prodi.test')->with('error', "Terjadi kesalahan saat menyimpan ajuan | Error Code: $messages");
-    }
-
-    public function selectMk(int $id, string $nama): void
-    {
-        $this->ajuanProdiForm->kode_mk = $id;
-        $this->ajuanProdiForm->mkSearch = $nama;
-        $this->showMkDropdown = false;
-    }
-
-    public function selectDosen(int $id, string $nama): void
-    {
-        $this->ajuanProdiForm->kode_dosen = $id;
-        $this->ajuanProdiForm->dosenSearch = $nama;
-        $this->showDosenDropdown = false;
+        $this->dispatch('toast', message: "Terjadi kesalahan saat menyimpan ajuan | Error Code: $messages", type: 'error');
     }
 
     public function selectKelas(int $id, string $kode_kelas, string $reguler) : void {
@@ -185,16 +143,6 @@ class AjuanModalProdi extends Component
     public function unselectAllPekan(): void
     {
         $this->ajuanProdiForm->pekan = [];
-    }
-
-    public function updatedDosenSearch(): void
-    {
-        $this->showDosenDropdown = true;
-    }
-
-    public function updatedMkSearch(): void
-    {
-        $this->showMkDropdown = true;
     }
 
     public function generateData(): Collection
@@ -287,5 +235,9 @@ class AjuanModalProdi extends Component
             ->where('ruangan_id', $ruanganId)
             ->where('status', 'disetujui')
             ->count();
+    }
+
+    public function closeModal() {
+        $this->ajuanProdiForm->resetExcept('data');
     }
 }
