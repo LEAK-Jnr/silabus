@@ -1,18 +1,18 @@
-# Stage 1: Build frontend assets
-FROM node:20-alpine as frontend
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-# Stage 2: Build vendor dependencies
+# Stage 1: Build vendor dependencies
 FROM composer:2.7 as vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --ignore-platform-reqs --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --ignore-platform-reqs --optimize-autoloader --no-scripts
 COPY . .
-
+# Stage 2: Build frontend assets
+FROM node:20 as frontend
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+COPY --from=vendor /app/vendor ./vendor
+RUN cp .env.production .env || true
+RUN npm run build
 # Stage 3: Final Production Image
 FROM php:8.2-fpm-alpine
 WORKDIR /var/www/html
