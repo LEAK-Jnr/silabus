@@ -7,6 +7,7 @@ use App\Models\Ajuan;
 use App\Models\Ruangan;
 use App\Models\User;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -96,4 +97,6 @@ class AjuanProdi extends Component
     public function updatedDosen() { $this->resetPage(); }
     public function updatedRuangan() { $this->resetPage(); }
     public function updatedStatus() { $this->resetPage(); }
+    #[On('refreshAjuansTable')]
+    public function refreshTable() {}
 }

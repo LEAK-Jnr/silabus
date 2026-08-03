@@ -8,67 +8,16 @@
             </div>
 
             {{-- field Mata Kuliah --}}
-            <div class="relative" x-data x-on:click.outside="$wire.showMkDropdown = false">
-                <flux:field>
-                    <flux:label>Mata Kuliah</flux:label>
-                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.mkSearch"
-                        wire:focus="showMkDropdown = true" placeholder="Cari Mata Kuliah..." autocomplete="off"
-                        clearable wire:clear="$set('ajuanProdiForm.kode_mk', null); showMkDropdown = false" />
-                    <flux:error name="ajuanProdiForm.kode_mk" />
-                </flux:field>
-
-                @if ($showMkDropdown && $this->matakuliahs->isNotEmpty())
-                    <div
-                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
-                        @foreach ($this->matakuliahs as $mk)
-                            <button type="button" wire:click="selectMk({{ $mk->id }}, '{{ addslashes($mk->nama_mk) }}')"
-                                class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                                {{ $mk->nama_mk }}
-                            </button>
-                        @endforeach
-                    </div>
-                @elseif ($showMkDropdown && filled($this->ajuanProdiForm->mkSearch))
-                    <div
-                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-500 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
-                        Tidak ditemukan.
-                    </div>
-                @endif
-            </div>
+            <livewire:prodi.partials.matakuliah-field-searchable wire:model.live="ajuanProdiForm.kode_mk" />
 
             {{-- field Dosen --}}
-            <div class="relative" x-data x-on:click.outside="$wire.showDosenDropdown = false">
-                <flux:field>
-                    <flux:label>Nama Dosen</flux:label>
-                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.dosenSearch"
-                        wire:focus="showDosenDropdown = true" placeholder="Cari Nama Dosen..." autocomplete="off"
-                        clearable />
-                    <flux:error name="ajuanProdiForm.kode_dosen" />
-                </flux:field>
-                @if ($showDosenDropdown && $this->dosens->isNotEmpty())
-                    <div
-                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
-                        @foreach ($this->dosens as $dosen)
-                            <button type="button" wire:click="selectDosen({{ $dosen->id }}, '{{ addslashes($dosen->name) }}')"
-                                class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                                {{ $dosen->name }}
-                                <span class="text-zinc-400 text-xs">({{ $dosen->username }})</span>
-                            </button>
-                        @endforeach
-                    </div>
-
-                @elseif ($showDosenDropdown && filled($this->ajuanProdiForm->dosenSearch))
-                    <div
-                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-500 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
-                        Tidak ditemukan.
-                    </div>
-                @endif
-            </div>
+            <livewire:prodi.partials.dosen-field-searchable wire:model.live="ajuanProdiForm.kode_dosen" />
 
             {{-- field jumlah kelas, prefix kelas, dan reguler --}}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+            <div class=" grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
                 {{-- field jumlah kelas --}}
                 <div>
-                    <flux:input label="Jumlah Kelas" type="number" min="1" wire:model="ajuanProdiForm.jumlah_kelas"
+                    <flux:input label="Jumlah Kelas" type="number" min="1" wire:model.live="ajuanProdiForm.jumlah_kelas"
                         placeholder="Masukkan Jumlah Kelas" class="w-full sm:w-auto" clearable />
                 </div>
                 {{-- field suffix kelas --}}
@@ -87,14 +36,14 @@
                                 </flux:tooltip.content>
                             </flux:tooltip>
                         </flux:heading>
-                        <flux:input name="suffix_kelas" wire:model='ajuanProdiForm.suffix_kelas' type="number" min="1"
-                            placeholder="Contoh: 001" clearable />
+                        <flux:input name="suffix_kelas" wire:model.live='ajuanProdiForm.suffix_kelas' type="number"
+                            min="1" placeholder="Contoh: 001" clearable />
                         <flux:error name="ajuanProdiForm.suffix_kelas" />
                     </flux:field>
                 </div>
                 {{-- field reguler --}}
                 <div>
-                    <flux:select label="Reguler" wire:model="ajuanProdiForm.reguler"
+                    <flux:select label="Reguler" wire:model.live="ajuanProdiForm.reguler"
                         placeholder="Silahkan pilih Reguler" class="w-full sm:w-auto">
                         <flux:select.option value="A">Reguler A</flux:select.option>
                         <flux:select.option value="B">Reguler B</flux:select.option>
@@ -103,7 +52,7 @@
                 </div>
             </div>
 
-            @if ($this->ajuanProdiForm->mkSearch && $this->ajuanProdiForm->kode_mk)
+            @if (isset($this->ajuanProdiForm->kode_mk, $this->ajuanProdiForm->kode_dosen, $this->ajuanProdiForm->jumlah_kelas, $this->ajuanProdiForm->suffix_kelas, $this->ajuanProdiForm->reguler))
                 {{-- field pekan --}}
                 <flux:fieldset>
                     <flux:legend>Pekan</flux:legend>
@@ -137,7 +86,8 @@
                 {{ $this->unselectAllPekan() }}
                 <flux:legend>Pekan</flux:legend>
                 <flux:separator />
-                <flux:text class="mt-2 text-center text-red-500">Silahkan masukan Mata Kuliah dengan benar</flux:text>
+                <flux:text class="mt-2 text-center text-red-500">Silahkan masukan Mata Kuliah sampai Reguler dengan benar
+                </flux:text>
                 <div class="flex justify-center items-center w-full">
                     <flux:icon.loading />
                 </div>
@@ -266,49 +216,10 @@
             </div>
 
             {{-- field Mata Kuliah (Sama seperti ADD) --}}
-            <div class="relative" x-data x-on:click.outside="$wire.showMkDropdown = false">
-                <flux:field>
-                    <flux:label>Mata Kuliah</flux:label>
-                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.mkSearch"
-                        wire:focus="showMkDropdown = true" placeholder="Cari Mata Kuliah..." autocomplete="off"
-                        clearable />
-                    <flux:error name="ajuanProdiForm.kode_mk" />
-                </flux:field>
-
-                @if ($showMkDropdown && $this->matakuliahs->isNotEmpty())
-                    <div
-                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
-                        @foreach ($this->matakuliahs as $mk)
-                            <button type="button" wire:click="selectMk({{ $mk->id }}, '{{ addslashes($mk->nama_mk) }}')"
-                                class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                                {{ $mk->nama_mk }}
-                            </button>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
+            <livewire:prodi.partials.matakuliah-field-searchable wire:model.live="ajuanProdiForm.kode_mk" />
 
             {{-- field Dosen (Sama seperti ADD) --}}
-            <div class="relative" x-data x-on:click.outside="$wire.showDosenDropdown = false">
-                <flux:field>
-                    <flux:label>Nama Dosen</flux:label>
-                    <flux:input wire:model.live.debounce.300ms="ajuanProdiForm.dosenSearch"
-                        wire:focus="showDosenDropdown = true" placeholder="Cari Nama Dosen..." autocomplete="off"
-                        clearable />
-                    <flux:error name="ajuanProdiForm.kode_dosen" />
-                </flux:field>
-                @if ($showDosenDropdown && $this->dosens->isNotEmpty())
-                    <div
-                        class="absolute z-10 mt-1 w-full rounded-md border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-800 max-h-56 overflow-y-auto">
-                        @foreach ($this->dosens as $dosen)
-                            <button type="button" wire:click="selectDosen({{ $dosen->id }}, '{{ addslashes($dosen->name) }}')"
-                                class="block w-full px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700">
-                                {{ $dosen->name }} <span class="text-zinc-400 text-xs">({{ $dosen->username }})</span>
-                            </button>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
+            <livewire:prodi.partials.dosen-field-searchable wire:model.live="ajuanProdiForm.kode_dosen" />
 
             {{-- Row untuk Kelas & Reguler --}}
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PenugasanDosen extends Model
 {
-    protected  $filable = [
+    protected  $fillable = [
         'prodi_id',
         'kd_dosen',
         'matakuliah_id',
@@ -19,7 +19,7 @@ class PenugasanDosen extends Model
     }
 
     public function dosen() : BelongsTo {
-        return $this->belongsTo(User::class, 'dosen', 'user_username');
+        return $this->belongsTo(User::class, 'kd_dosen', 'username');
     }
 
     public function mataKuliah() : BelongsTo {
