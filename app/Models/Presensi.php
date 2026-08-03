@@ -13,5 +13,6 @@ class Presensi extends Model
         'jam_masuk',
         'jam_keluar',
         'status',
+        'keterlambatan_menit',
     ];
 }

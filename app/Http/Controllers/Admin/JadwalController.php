@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller; 
 use Illuminate\Http\Request;
 use App\Models\Ajuan;
+use App\Models\Presensi;
 use PDF;
 
 class JadwalController extends Controller
@@ -166,6 +167,11 @@ class JadwalController extends Controller
             return back()->with('error', 'Terlalu cepat untuk check-in. Check-in bisa dilakukan mulai 15 menit sebelum jadwal.');
         }
         
+        $jamSelesai = \Carbon\Carbon::parse($ajuan->jam_selesai);
+        if ($currentCarbon->greaterThan($jamSelesai)) {
+            return back()->with('error', 'Gagal check-in. Jadwal perkuliahan sudah berakhir (Status: No-Show).');
+        }
+        
         $minutesLate = $jamMulai->diffInMinutes($currentCarbon, false);
         
         $status = 'hadir';
@@ -176,7 +182,7 @@ class JadwalController extends Controller
             $keterlambatanMenit = $minutesLate - 20;
         }
         
-        \App\Models\Presensi::updateOrCreate(
+        Presensi::updateOrCreate(
             ['ajuan_id' => $ajuan->id, 'tanggal' => $now->toDateString()],
             [
                 'user_username' => $ajuan->user_username,
