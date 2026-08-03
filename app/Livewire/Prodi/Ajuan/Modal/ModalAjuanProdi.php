@@ -4,7 +4,7 @@ namespace App\Livewire\Prodi\Ajuan\Modal;
 
 use App\Livewire\Forms\Prodi\AjuanProdiForm;
 use App\Models\Ajuan;
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\MataKuliah;
 use App\Models\PenugasanDosen;
 use Flux\Flux;
@@ -59,7 +59,7 @@ class ModalAjuanProdi extends Component
             ->when($this->form->idKelas, fn($q) => $q->where('kelas_id', $this->form->idKelas))
             ->orderBy('kd_dosen')
             ->orderBy(
-                kelas::select('kode_kelas')->whereColumn('kelas.id', 'penugasan_dosens.kelas_id')
+                Kelas::select('kode_kelas')->whereColumn('kelas.id', 'penugasan_dosens.kelas_id')
             )
             ->paginate(5);
     }  
