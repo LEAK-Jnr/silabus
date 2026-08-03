@@ -4,7 +4,7 @@ namespace App\Livewire\Prodi\PenugasanDosen\Modal;
 
 use App\Livewire\Forms\Prodi\PenugasanDosenForm;
 use App\Models\Ajuan;
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\MataKuliah;
 use App\Models\PenugasanDosen;
 use App\Models\User;
@@ -39,7 +39,7 @@ class ModalPenugasanDosen extends Component
         if (empty($this->form->idMatakuliah) || empty($this->form->reguler)) {
             return collect();
         }
-        return kelas::query()
+        return Kelas::query()
             ->where('prodi_id', Auth::user()->prodi_id)
             ->when($this->form->reguler, fn($q) => $q->where('reguler', $this->form->reguler))
             ->when($this->form->idMatakuliah, function ($query) {

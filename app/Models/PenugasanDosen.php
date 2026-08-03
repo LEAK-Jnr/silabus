@@ -27,6 +27,6 @@ class PenugasanDosen extends Model
     }
 
     public function kelas() : BelongsTo {
-        return $this->belongsTo(kelas::class, 'kelas_id');
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 }

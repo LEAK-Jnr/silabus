@@ -4,7 +4,7 @@ namespace App\Livewire\Prodi\Ajuan\Modal;
 
 use App\Livewire\Forms\Prodi\AjuanProdiForm;
 use App\Models\Ajuan;
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\MataKuliah;
 use App\Models\PenugasanDosen;
 use App\Models\Prodi;
@@ -153,7 +153,7 @@ class ModalAjuanKonfirmasi extends Component
         $this->form->reset();
         $mataKuliah = MataKuliah::findOrFail($data['id_matakuliah']);
         $spesifikasiMK = $mataKuliah->spesifikasi;
-        $kodeReg = substr(kelas::findOrFail($data['id_kelas'])->reguler, -1);
+        $kodeReg = substr(Kelas::findOrFail($data['id_kelas'])->reguler, -1);
         $idRuangan = $this->generateIdRuangan($spesifikasiMK, $data['id_pekan'], $kodeReg);
         $username = User::findOrFail($data['id_dosen'])->username;
         $dataUpdate = [
@@ -226,7 +226,7 @@ class ModalAjuanKonfirmasi extends Component
     }
 
     public function getIdKelas($kodeKelas) {
-        return kelas::where('kode_kelas', $kodeKelas)->first()?->id;
+        return Kelas::where('kode_kelas', $kodeKelas)->first()?->id;
     }
     public function destroy($id) {
         try {

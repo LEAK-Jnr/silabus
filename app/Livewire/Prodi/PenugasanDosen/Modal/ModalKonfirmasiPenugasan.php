@@ -3,7 +3,7 @@
 namespace App\Livewire\Prodi\PenugasanDosen\Modal;
 
 use App\Livewire\Forms\Prodi\PenugasanDosenForm;
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\PenugasanDosen;
 use Flux\Flux;
 use Illuminate\Support\Collection;
@@ -26,7 +26,7 @@ class ModalKonfirmasiPenugasan extends Component
     #[On('modal-konfirmasi-penugasan')]
     public function konfirmasiPenugasan($data) {
         $dataColection = collect();
-        $kelases = kelas::whereIn('id', $data['id_kelases'])->get()->keyBy('id');
+        $kelases = Kelas::whereIn('id', $data['id_kelases'])->get()->keyBy('id');
         $this->form->idMatakuliah = $data['matakuliah_id'];
         $this->form->kelasId = $data['id_kelases'];
         $this->form->idDosen = $data['id_dosen'];

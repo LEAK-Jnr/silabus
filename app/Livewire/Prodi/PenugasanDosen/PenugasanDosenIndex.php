@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Prodi\PenugasanDosen;
 
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\PenugasanDosen;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -47,7 +47,7 @@ class PenugasanDosenIndex extends Component
             ->when($this->idKelas, fn($q) => $q->where('kelas_id', $this->idKelas))
             ->orderBy('kd_dosen')
             ->orderBy(
-                kelas::select('kode_kelas')->whereColumn('kelas.id', 'penugasan_dosens.kelas_id')
+                Kelas::select('kode_kelas')->whereColumn('kelas.id', 'penugasan_dosens.kelas_id')
             )
             ->paginate(12)
         ;

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Prodi\Partials;
 
-use App\Models\kelas;
+use App\Models\Kelas;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Modelable;
@@ -23,7 +23,7 @@ class KelasFieldSearchable extends Component
 
     #[Computed]
     public function kelas() {
-        return kelas::query()
+        return Kelas::query()
             ->where('prodi_id', Auth::user()->prodi_id)
             ->when($this->kelasSearch, fn($q) => $q->where('kode_kelas', 'like', "%{$this->kelasSearch}%"))
             ->orderBy('reguler')
@@ -42,7 +42,7 @@ class KelasFieldSearchable extends Component
     public function editMode($id) {
         $this->reset(['idKelas', 'kelasSearch', 'showKelasDropdown']);
         $this->idKelas = $id;
-        $this->kelasSearch = $id ? (kelas::find($id)?->kode_kelas ?? '') : '';
+        $this->kelasSearch = $id ? (Kelas::find($id)?->kode_kelas ?? '') : '';
     }
 
     public function updateKelas() : void {

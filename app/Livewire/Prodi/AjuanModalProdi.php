@@ -4,7 +4,7 @@ namespace App\Livewire\Prodi;
 
 use App\Livewire\Forms\Prodi\AjuanProdiForm;
 use App\Models\Ajuan;
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\MataKuliah;
 use App\Models\User;
 use Flux\Flux;
@@ -66,7 +66,7 @@ class AjuanModalProdi extends Component
         $idProdi = Auth::user()->prodi_id;
         $semester = $this->matakuliahs()->firstWhere('id', $this->ajuanProdiForm->kode_mk)?->semester;
         $prefixSemester = str_pad($semester, 2, '0', STR_PAD_LEFT);
-        return kelas::query()
+        return Kelas::query()
             ->where('prodi_id', $idProdi)
             ->where('kode_kelas', 'like', $prefixSemester . '%')
             ->when($this->ajuanProdiForm->kelas, function ($query) {
