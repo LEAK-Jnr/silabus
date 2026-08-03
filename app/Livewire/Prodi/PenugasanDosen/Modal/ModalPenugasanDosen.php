@@ -99,7 +99,7 @@ class ModalPenugasanDosen extends Component
         $message = "Berhasil melakukan update!";
         $ajuanUpdated = $this->form->data['ajuanUpdated'];
         if ($ajuanUpdated > 0) {
-            $message .= " Ajuan terupdate: {$ajuanUpdated}";
+            $message .= " Ajuan/Jadwal terupdate: {$ajuanUpdated}";
         }
         Flux::modal('edit-penugasan-dosen')->close();
         $this->form->reset();
