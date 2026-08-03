@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: silabus-app
+    restart: unless-stopped
+    volumes:
+      - ./.env:/var/www/html/.env
+      - storage-data:/var/www/html/storage
+    depends_on:
+      - db
+    networks:
+      - silabus-network
+
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf
+      # We mount public so Nginx can serve static files directly
+      - ./public:/var/www/html/public
+    depends_on:
+      - app
+    networks:
+      - silabus-network
+
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-silabus_db}
+      MYSQL_USER: ${DB_USERNAME:-silabus_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - silabus-network
+
+  db-backup:
+    image: databack/mysql-backup
+    restart: unless-stopped
+    environment:
+      DB_SERVER: db
+      DB_USER: ${DB_USERNAME:-silabus_user}
+      DB_PASS: ${DB_PASSWORD:-secret}
+      DB_NAMES: ${DB_DATABASE:-silabus_db}
+      # Run backup every day at 02:00 AM
+      CRON_TIME: "0 2 * * *"
+      # Keep only the last 7 days of backups
+      MAX_BACKUPS: 7
+      INIT_BACKUP: "true"
+    volumes:
+      - ./backups:/db
+    depends_on:
+      - db
+    networks:
+      - silabus-network
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - silabus-network
+
+networks:
+  silabus-network:
+    driver: bridge
+
+volumes:
+  db-data:
+  storage-data:
