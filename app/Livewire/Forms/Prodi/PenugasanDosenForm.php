@@ -5,7 +5,6 @@ namespace App\Livewire\Forms\Prodi;
 use App\Models\Ajuan;
 use App\Models\PenugasanDosen;
 use App\Models\User;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Livewire\Form;
@@ -108,7 +107,7 @@ class PenugasanDosenForm extends Form
                     ->where([
                         'kode_mk' => $this->idMatakuliah,
                         'kode_kelas' => $item['id_kelas'],
-                        'status' => 'menunggu'
+                        // 'status' => 'menunggu'
                     ])
                 ->update(
                     [
@@ -134,34 +133,29 @@ class PenugasanDosenForm extends Form
         try {
             // 1. Ambil data penugasan lama SEBELUM di-update
             $penugasanLama = PenugasanDosen::findOrFail($this->idPenugasan);
-            
             $dosenLama = $penugasanLama->kd_dosen;
             $mkLama    = $penugasanLama->matakuliah_id;
             $kelasLama = $penugasanLama->kelas_id;
-
             // 2. Update record PenugasanDosen
             $penugasanLama->update([
                 'kd_dosen'      => $usernameBaru,
                 'matakuliah_id' => $this->idMatakuliah,
                 'kelas_id'      => $this->idKelas
             ]);
-
             // 3. Update tabel Ajuan (Mencari berdasarkan data LAMA -> Mengubah ke data BARU)
             $ajuanUpdated = Ajuan::query()
                 ->where([
                     'user_username' => $dosenLama,
                     'kode_mk' => $mkLama,
                     'kode_kelas' => $kelasLama,
-                    'status' => 'menunggu',
+                    // 'status' => 'menunggu',
                 ])
                 ->update([
                     'user_username' => $usernameBaru,
                     'kode_mk'       => $this->idMatakuliah,
                     'kode_kelas'    => $this->idKelas
                 ]);
-
             DB::commit();
-
             // 4. Simpan jumlah baris yang ter-update ke $this->data
             $this->data = ['ajuanUpdated' => $ajuanUpdated];
         } catch (\Throwable $th) {
@@ -174,18 +168,26 @@ class PenugasanDosenForm extends Form
         $this->reset(); 
         DB::beginTransaction();
         try {
-            PenugasanDosen::create([
+            $penugasanDosen = PenugasanDosen::query()->where([
                 'prodi_id' => $data['prodi_id'],
                 'kd_dosen' => $data['kode_dosen'],
                 'matakuliah_id' => $data['id_mk'],
                 'kelas_id' => $data['id_kelas']
-            ]);
+            ])->first();
+            if (!$penugasanDosen) {
+                PenugasanDosen::create([
+                    'prodi_id' => $data['prodi_id'],
+                    'kd_dosen' => $data['kode_dosen'],
+                    'matakuliah_id' => $data['id_mk'],
+                    'kelas_id' => $data['id_kelas']
+                ]);
+            }
             $ajuanUpdated = Ajuan::query()
                 ->where(
                     [
                         'kode_mk' => $data['id_mk'],
                         'kode_kelas' => $data['id_kelas'],
-                        'status' => 'menunggu'
+                        // 'status' => 'menunggu'
                     ]
                 )
             ->update([
@@ -213,7 +215,7 @@ class PenugasanDosenForm extends Form
                     [
                         'kode_kelas' => $penugasan->kelas_id,
                         'user_username' => $penugasan->kd_dosen,
-                        'status' => 'menunggu'
+                        // 'status' => 'menunggu'
                     ]
                 )
                 ->update([

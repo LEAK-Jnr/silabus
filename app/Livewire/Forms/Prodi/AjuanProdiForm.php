@@ -3,9 +3,7 @@
 namespace App\Livewire\Forms\Prodi;
 
 use App\Models\Ajuan;
-use App\Models\MataKuliah;
 use App\Models\PenugasanDosen;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
