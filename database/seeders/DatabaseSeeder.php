@@ -168,8 +168,8 @@ class DatabaseSeeder extends Seeder
             'role' => 'dosen',
         ]);
 
-        $this->call([
-            AjuanSeeder::class,
-        ]);
+        // $this->call([
+        //     AjuanSeeder::class,
+        // ]);
     }
 }
