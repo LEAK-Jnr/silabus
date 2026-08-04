@@ -22,6 +22,10 @@
                         )
                                                 }}
                                         </x-nav-link>
+                                        <x-nav-link :href="route('admin.dosen.index')"
+                                            :active="request()->routeIs('admin.dosen.index')">
+                                            Master Dosen
+                                        </x-nav-link>
                                         <x-nav-link :href="route('admin.ruangan.index')"
                                             :active="request()->routeIs('admin.ruangan.*')">
                                             Master Ruangan

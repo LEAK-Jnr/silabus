@@ -15,6 +15,12 @@ Route::middleware('auth')->group(function (){
         Route::put('/admin/prodi/{prodi}', [ProdiController::class, 'update'])->name('admin.prodi.update');
         Route::delete('/admin/prodi/{prodi}', [ProdiController::class, 'destroy'])->name('admin.prodi.destroy');
         
+        // Menu Dosen
+        Route::get('/admin/dosen', [App\Http\Controllers\Admin\DosenController::class, 'index'])->name('admin.dosen.index');
+        Route::post('/admin/dosen', [App\Http\Controllers\Admin\DosenController::class, 'store'])->name('admin.dosen.store');
+        Route::put('/admin/dosen/{dosen}', [App\Http\Controllers\Admin\DosenController::class, 'update'])->name('admin.dosen.update');
+        Route::delete('/admin/dosen/{dosen}', [App\Http\Controllers\Admin\DosenController::class, 'destroy'])->name('admin.dosen.destroy');
+        
         // Menu Mata Kuliah
         Route::get('/admin/matakuliah', [MataKuliahController::class, 'index'])->name('admin.matakuliah.index');
         Route::post('/admin/matakuliah', [MataKuliahController::class, 'store'])->name('admin.matakuliah.store');
