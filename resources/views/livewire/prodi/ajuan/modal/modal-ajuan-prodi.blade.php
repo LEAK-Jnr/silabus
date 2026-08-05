@@ -7,12 +7,11 @@
             {{-- Grid 2 Kolom untuk Kartu --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{-- Kartu Kiri --}}
-                <div
-                    class="flex flex-col items-center text-center p-6 border border-zinc-200 dark:border-zinc-700 rounded-2xl bg-zinc-50/50 dark:bg-zinc-800/50 hover:border-indigo-500 hover:bg-cyan-50/50 transition-all">
+                <div wire:click="addAjuanByDosen"
+                    class="flex flex-col items-center text-center p-6 border border-zinc-200 dark:border-zinc-700 rounded-2xl bg-zinc-50/50 dark:bg-zinc-800/50 hover:border-indigo-500 hover:bg-cyan-50/50 transition-all cursor-pointer select-none">
                     {{-- Button di Atas --}}
                     <div class="mb-4">
-                        <flux:button icon="user-plus" variant="primary" size="xs" color="cyan"
-                            wire:click="addAjuanByDosen">
+                        <flux:button icon="user-plus" class="cursor-pointer" variant="primary" size="xs" color="cyan">
                             Add Ajuan by Penugasan Dosen
                         </flux:button>
                     </div>
@@ -23,12 +22,12 @@
                     </p>
                 </div>
                 {{-- Kartu Kanan --}}
-                <div
-                    class="flex flex-col items-center text-center p-6 border border-zinc-200 dark:border-zinc-700 rounded-2xl bg-zinc-50/50 dark:bg-zinc-800/50 hover:border-indigo-500 hover:bg-cyan-50/50 transition-all">
+                <div wire:click="bulkAjuan"
+                    class="flex flex-col items-center text-center p-6 border border-zinc-200 dark:border-zinc-700 rounded-2xl bg-zinc-50/50 dark:bg-zinc-800/50 hover:border-indigo-500 hover:bg-cyan-50/50 transition-all cursor-pointer select-none">
                     {{-- Button di Atas --}}
                     <div class="mb-4">
-                        <flux:button variant="primary" color="cyan" icon="document-plus" size="xs"
-                            wire:click="bulkAjuan">
+                        <flux:button class="cursor-pointer" variant="primary" color="cyan" icon="document-plus"
+                            size="xs">
                             Bulk Ajuan
                         </flux:button>
                     </div>
