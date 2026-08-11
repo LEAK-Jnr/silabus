@@ -49,8 +49,8 @@ class KelasExtension extends Seeder
                     // Loop Tipe Reguler (P, S, K)
                     foreach ($regulers as $kodeReg => $namaReg) {
                         
-                        // Loop Urutan Kelas (001 - 012)
-                        for ($urutan = 12; $urutan <= 24; $urutan++) {
+                        // Loop Urutan Kelas (013 - 024)
+                        for ($urutan = 13; $urutan <= 24; $urutan++) {
                             $suffixUrutan = str_pad($urutan, 3, '0', STR_PAD_LEFT);
 
                             // Gabungkan: 01 + SIS + P + 001
