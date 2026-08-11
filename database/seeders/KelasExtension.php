@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\kelas;
+use App\Models\Kelas;
 use App\Models\Prodi;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
