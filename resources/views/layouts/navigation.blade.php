@@ -12,7 +12,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @if (Auth::user()->role === "admin")
+                    @if (Auth::user()?->role === "admin")
                                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                         <x-nav-link :href="route('admin.prodi.index')"
                                             :active="request()->routeIs('admin.prodi.index')">
@@ -48,7 +48,7 @@
                                     </div>
                     @endif
 
-                    @if (Auth::user()->role === "prodi")
+                    @if (Auth::user()?->role === "prodi")
                         <x-nav-link :href="route('prodi')" :active="request()->routeIs('prodi')">
                             {{
                             __(
@@ -79,7 +79,7 @@
                                     </x-nav-link>
                                     
                     @endif
-                    @if (Auth::user()->role === "dosen")
+                    @if (Auth::user()?->role === "dosen")
                                     <x-nav-link :href="route('dosen.jadwal')" :active="request()->routeIs('dosen.jadwal')">
                                         {{
                         __(
@@ -110,8 +110,8 @@
                             class="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-hidden">
                             <div>
                                 {{
-    Auth::user()
-        ->name
+    Auth::user()?
+        ->name ?? 'Tamu'
                                 }}
                             </div>
 
@@ -184,14 +184,12 @@
             <div class="px-4">
                 <div class="text-base font-medium text-gray-800">
                     {{
-    Auth::user()
-        ->name
+    Auth::user()?->name ?? 'Tamu'
                     }}
                 </div>
                 <div class="text-sm font-medium text-gray-500">
                     {{
-    Auth::user()
-        ->email
+    Auth::user()?->email ?? ''
                     }}
                 </div>
             </div>
