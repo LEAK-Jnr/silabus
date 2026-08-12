@@ -187,7 +187,7 @@
                                         >
                                             {{
                                                 $j->dosen
-                                                    ->name
+                                                    ?->name ?? 'Dosen Dihapus'
                                             }}
                                         </div>
                                     </td>
@@ -239,7 +239,7 @@
                                                     action="{{ route('admin.jadwal.checkin', $j->id) }}"
                                                     method="POST"
                                                 >
-                                                    <p>Lakukan check-in untuk dosen <strong>{{ $j->dosen->name }}</strong>?</p>
+                                                    <p>Lakukan check-in untuk dosen <strong>{{ $j->dosen?->name ?? 'Dosen Dihapus' }}</strong>?</p>
                                                 </x-dashboard.modal-confirm>
                                             @else
                                                 <div x-data="{ openDetail: false }">
@@ -254,7 +254,7 @@
                                                                 <button @click="openDetail = false" class="text-xl font-bold text-gray-400 hover:text-gray-600">&times;</button>
                                                             </div>
                                                             <div class="p-4 text-sm text-gray-700">
-                                                                <p class="mb-2"><strong>Dosen:</strong> {{ $j->dosen->name }}</p>
+                                                                <p class="mb-2"><strong>Dosen:</strong> {{ $j->dosen?->name ?? 'Dosen Dihapus' }}</p>
                                                                 <p class="mb-2">
                                                                     <strong>Waktu Masuk:</strong> {{ \Carbon\Carbon::parse($j->presensi->jam_masuk)->format('H:i') }}
                                                                     @if($j->presensi->status === 'terlambat')
@@ -291,7 +291,7 @@
                                                     action="{{ route('admin.jadwal.checkout', $j->id) }}"
                                                     method="POST"
                                                 >
-                                                    <p>Lakukan check-out untuk dosen <strong>{{ $j->dosen->name }}</strong>?</p>
+                                                    <p>Lakukan check-out untuk dosen <strong>{{ $j->dosen?->name ?? 'Dosen Dihapus' }}</strong>?</p>
                                                 </x-dashboard.modal-confirm>
                                                 @endif
                                             @endif
