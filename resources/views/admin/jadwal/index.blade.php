@@ -157,7 +157,7 @@
                                                         <path fill="#f52323" d="M6 .5A4.5 4.5 0 0 1 10.5 5c0 1.863-1.42 3.815-4.2 5.9a.5.5 0 0 1-.6 0C2.92 8.815 1.5 6.863 1.5 5A4.5 4.5 0 0 1 6 .5m0 3a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3" />
                                                     </svg> </span
                                                 >{{
-                                                    $j->ruangan->nama_ruangan ??
+                                                    $j->ruangan?->nama_ruangan ??
                                                         "N/A"
                                                 }}
                                             </div>
@@ -174,11 +174,11 @@
                                         <div class="text-sm font-bold">
                                             {{
                                                 $j->mataKuliah
-                                                    ->nama_mk
+                                                    ?->nama_mk ?? 'MK Dihapus'
                                             }}
                                         </div>
                                         <div class="text-xs text-gray-400">
-                                            {{ $j->mataKuliah->kode_mk }} ({{ $j->mataKuliah->sks }} SKS)
+                                            {{ $j->mataKuliah?->kode_mk ?? '-' }} ({{ $j->mataKuliah?->sks ?? 0 }} SKS)
                                         </div>
                                     </td>
                                     <td class="border-b border-gray-100 p-3">
@@ -196,13 +196,13 @@
                                     >
                                         <span class="font-bold">{{
                                             $j->kelas
-                                                ->kode_kelas
+                                                ?->kode_kelas ?? 'Kelas Dihapus'
                                         }}</span>
                                         <br />
                                         <span class="text-[10px] text-gray-500"
                                             >Reg {{
                                                 strtoupper(
-                                                    $j->kelas->reguler,
+                                                    $j->kelas?->reguler ?? '-',
                                                 )
                                             }}</span
                                         >
