@@ -16,14 +16,26 @@ class JadwalController extends Controller
     public function index(Request $request)
     {
         $pekanAktif = $request->get('pekan', 1);
+        $ruanganId = $request->get('ruangan_id');
 
-        $ajuans = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan', 'presensi'])
+        $query = Ajuan::with(['mataKuliah', 'kelas', 'dosen', 'ruangan', 'presensi'])
             ->where('pekan', $pekanAktif)
-            ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
+            ->where('status', '!=', 'ditolak');
+
+        if ($ruanganId) {
+            $query->where('ruangan_id', $ruanganId);
+        }
+
+        $ajuans = $query->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
             ->orderBy('jam_mulai', 'asc')
             ->get();
+            
+        $ruangans = \App\Models\Ruangan::all();
 
-        return view('admin.jadwal.index', compact('ajuans', 'pekanAktif'));
+        // Force clear view cache to ensure the null-safe operators are applied
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+
+        return view('admin.jadwal.index', compact('ajuans', 'pekanAktif', 'ruangans', 'ruanganId'));
     }
 
     /**
@@ -59,6 +71,12 @@ class JadwalController extends Controller
         $countTolak = 0;
 
         foreach ($ajuans as $ajuan) {
+            if (!$ajuan->kelas) {
+                // Lewati ajuan jika data kelas tidak valid/terhapus
+                $ajuan->update(['status' => 'ditolak']);
+                $countTolak++;
+                continue;
+            }
             $regulerRaw = strtoupper($ajuan->kelas->reguler); 
             $reguler = trim(str_replace('REGULER', '', $regulerRaw));
             $foundSlot = false;
@@ -168,9 +186,10 @@ class JadwalController extends Controller
         }
         
         $jamSelesai = \Carbon\Carbon::parse($ajuan->jam_selesai);
-        if ($currentCarbon->greaterThan($jamSelesai)) {
-            return back()->with('error', 'Gagal check-in. Jadwal perkuliahan sudah berakhir (Status: No-Show).');
-        }
+        // Hapus batasan No-Show backend agar Admin bisa melakukan check-in terlambat sekalipun
+        // if ($currentCarbon->greaterThan($jamSelesai)) {
+        //     return back()->with('error', 'Gagal check-in. Jadwal perkuliahan sudah berakhir (Status: No-Show).');
+        // }
         
         $minutesLate = $jamMulai->diffInMinutes($currentCarbon, false);
         
@@ -193,6 +212,25 @@ class JadwalController extends Controller
         );
         
         return back()->with('success', 'Berhasil Check-in.');
+    }
+
+    public function updatePlot(Request $request, Ajuan $ajuan)
+    {
+        $request->validate([
+            'hari' => 'required|string',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'ruangan_id' => 'nullable|exists:ruangans,id',
+        ]);
+
+        $ajuan->update([
+            'hari' => $request->hari,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+            'ruangan_id' => $request->ruangan_id,
+        ]);
+
+        return back()->with('success', 'Jadwal plot berhasil diubah.');
     }
 
     public function checkOut(Request $request, Ajuan $ajuan)

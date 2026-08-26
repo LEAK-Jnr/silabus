@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function (){
         Route::get('/admin/jadwal/export-pdf', [JadwalController::class, 'exportPdf'])->name('admin.jadwal.export-pdf');
         Route::get('/admin/jadwal', [JadwalController::class, 'index'])->name('admin.jadwal.index');
         Route::post('/admin/jadwal/generate', [JadwalController::class, 'generate'])->name('admin.jadwal.generate');
+        Route::put('/admin/jadwal/{ajuan}/update-plot', [JadwalController::class, 'updatePlot'])->name('admin.jadwal.update-plot');
         Route::post('/admin/jadwal/{ajuan}/checkin', [JadwalController::class, 'checkIn'])->name('admin.jadwal.checkin');
         Route::post('/admin/jadwal/{ajuan}/checkout', [JadwalController::class, 'checkOut'])->name('admin.jadwal.checkout');
     });

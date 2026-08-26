@@ -70,22 +70,39 @@
                     </x-dashboard.modal-confirm>
                 </div>
 
-                {{-- Bagian Filter Pekan --}}
+                {{-- Bagian Filter Pekan & Ruangan --}}
                 <div
-                    class="mb-6 flex items-center space-x-4 rounded-xl border border-gray-100 bg-gray-50 p-4"
+                    class="mb-6 flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 rounded-xl border border-gray-100 bg-gray-50 p-4"
                 >
-                    <label class="text-sm font-medium text-gray-700"
-                        >Pilih Pekan:</label
-                    >
-                    <div class="flex flex-wrap gap-2">
-                        @foreach (range(1, 14) as $p)
-                            <a
-                                href="{{ route('admin.jadwal.index', ['pekan' => $p]) }}"
-                                class="rounded-lg px-3 py-1 text-sm font-semibold transition {{ $pekanAktif == $p ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100' }}"
-                            >
-                                {{ $p }}
-                            </a>
-                        @endforeach
+                    <div class="flex items-center space-x-4 w-full sm:w-auto">
+                        <label class="text-sm font-medium text-gray-700"
+                            >Pilih Pekan:</label
+                        >
+                        <div class="flex flex-wrap gap-2">
+                            @foreach (range(1, 14) as $p)
+                                <a
+                                    href="{{ route('admin.jadwal.index', ['pekan' => $p, 'ruangan_id' => request('ruangan_id')]) }}"
+                                    class="rounded-lg px-3 py-1 text-sm font-semibold transition {{ $pekanAktif == $p ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-100' }}"
+                                >
+                                    {{ $p }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4 w-full sm:w-auto sm:border-l border-gray-200 sm:pl-6">
+                        <label class="text-sm font-medium text-gray-700"
+                            >Filter Ruangan:</label
+                        >
+                        <form method="GET" action="{{ route('admin.jadwal.index') }}" class="flex items-center gap-2">
+                            <input type="hidden" name="pekan" value="{{ $pekanAktif }}">
+                            <select name="ruangan_id" onchange="this.form.submit()" class="rounded-lg border border-gray-300 bg-white py-1.5 px-3 text-sm font-semibold text-gray-700 shadow-xs focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                                <option value="">Semua Ruangan</option>
+                                @foreach($ruangans as $r)
+                                    <option value="{{ $r->id }}" {{ (isset($ruanganId) && $ruanganId == $r->id) ? 'selected' : '' }}>{{ $r->nama_ruangan }}</option>
+                                @endforeach
+                            </select>
+                        </form>
                     </div>
                 </div>
 
@@ -119,7 +136,7 @@
                                 <th
                                     class="p-3 text-sm font-bold uppercase text-gray-700"
                                 >
-                                    Aksi Presensi
+                                    Aksi
                                 </th>
                             </tr>
                         </thead>
@@ -213,88 +230,138 @@
                                         @elseif($j->status === 'ditolak')
                                             <span class="inline-block rounded-full bg-red-100 px-3 py-1 text-[10px] font-bold uppercase text-red-800">Ditolak</span>
                                         @else
-                                            @php
-                                                $now = now();
-                                                $jamSelesaiCarbon = $j->jam_selesai ? \Carbon\Carbon::parse($j->jam_selesai) : null;
-                                                $isPast = $jamSelesaiCarbon ? $now->greaterThan($jamSelesaiCarbon) : false;
-                                                $isNoShow = $isPast && !$j->presensi;
-                                            @endphp
-
-                                            @if($isNoShow)
-                                                <span class="inline-block rounded-full bg-red-100 px-3 py-1 text-[10px] font-bold uppercase text-red-800">No Show</span>
-                                            @elseif(!$j->presensi)
-                                                <button
-                                                    x-data
-                                                    @click="$dispatch('open-modal-checkin-{{ $j->id }}')"
-                                                    class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
-                                                >
-                                                    Check-in
-                                                </button>
-
-                                                <x-dashboard.modal-confirm
-                                                    id="checkin-{{ $j->id }}"
-                                                    title="Check-in Dosen"
-                                                    btnColor="bg-blue-600 hover:bg-blue-700"
-                                                    confirmText="Ya, Check-in"
-                                                    action="{{ route('admin.jadwal.checkin', $j->id) }}"
-                                                    method="POST"
-                                                >
-                                                    <p>Lakukan check-in untuk dosen <strong>{{ $j->dosen?->name ?? 'Dosen Dihapus' }}</strong>?</p>
-                                                </x-dashboard.modal-confirm>
-                                            @else
-                                                <div x-data="{ openDetail: false }">
-                                                    <button @click="openDetail = true" class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-indigo-700">
-                                                        Detail
+                                            <div class="flex items-center justify-center gap-2 flex-wrap">
+                                                @if(!$j->presensi)
+                                                    <button
+                                                        x-data
+                                                        @click="$dispatch('open-modal-checkin-{{ $j->id }}')"
+                                                        class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-blue-700"
+                                                    >
+                                                        Check-in
                                                     </button>
-
-                                                    <div x-show="openDetail" x-cloak class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/20 text-left">
-                                                        <div @click.away="openDetail = false" class="z-10 m-4 w-full max-w-sm rounded-lg bg-white shadow-xl">
-                                                            <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3 rounded-t-lg">
-                                                                <h3 class="text-base font-bold text-gray-800">Detail Presensi</h3>
-                                                                <button @click="openDetail = false" class="text-xl font-bold text-gray-400 hover:text-gray-600">&times;</button>
-                                                            </div>
-                                                            <div class="p-4 text-sm text-gray-700">
-                                                                <p class="mb-2"><strong>Dosen:</strong> {{ $j->dosen?->name ?? 'Dosen Dihapus' }}</p>
-                                                                <p class="mb-2">
-                                                                    <strong>Waktu Masuk:</strong> {{ \Carbon\Carbon::parse($j->presensi->jam_masuk)->format('H:i') }}
-                                                                    @if($j->presensi->status === 'terlambat')
-                                                                        <span class="font-bold text-red-600">(Telat {{ $j->presensi->keterlambatan_menit }} mnt)</span>
-                                                                    @else
-                                                                        <span class="font-bold text-green-600">(Tepat)</span>
+    
+                                                    <x-dashboard.modal-confirm
+                                                        id="checkin-{{ $j->id }}"
+                                                        title="Check-in Dosen"
+                                                        btnColor="bg-blue-600 hover:bg-blue-700"
+                                                        confirmText="Ya, Check-in"
+                                                        action="{{ route('admin.jadwal.checkin', $j->id) }}"
+                                                        method="POST"
+                                                    >
+                                                        <p>Lakukan check-in untuk dosen <strong>{{ $j->dosen?->name ?? 'Dosen Dihapus' }}</strong>?</p>
+                                                    </x-dashboard.modal-confirm>
+                                                @else
+                                                    <div x-data="{ openDetail: false }">
+                                                        <button @click="openDetail = true" class="inline-flex items-center rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-indigo-700">
+                                                            Detail
+                                                        </button>
+    
+                                                        <div x-show="openDetail" x-cloak class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/20 text-left">
+                                                            <div @click.away="openDetail = false" class="z-10 m-4 w-full max-w-sm rounded-lg bg-white shadow-xl">
+                                                                <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-3 rounded-t-lg">
+                                                                    <h3 class="text-base font-bold text-gray-800">Detail Presensi</h3>
+                                                                    <button @click="openDetail = false" class="text-xl font-bold text-gray-400 hover:text-gray-600">&times;</button>
+                                                                </div>
+                                                                <div class="p-4 text-sm text-gray-700">
+                                                                    <p class="mb-2"><strong>Dosen:</strong> {{ $j->dosen?->name ?? 'Dosen Dihapus' }}</p>
+                                                                    <p class="mb-2">
+                                                                        <strong>Waktu Masuk:</strong> {{ \Carbon\Carbon::parse($j->presensi->jam_masuk)->format('H:i') }}
+                                                                        @if($j->presensi->status === 'terlambat')
+                                                                            <span class="font-bold text-red-600">(Telat {{ $j->presensi->keterlambatan_menit }} mnt)</span>
+                                                                        @else
+                                                                            <span class="font-bold text-green-600">(Tepat)</span>
+                                                                        @endif
+                                                                    </p>
+                                                                    <p class="mb-2">
+                                                                        <strong>Waktu Keluar:</strong> 
+                                                                        @if($j->presensi->jam_keluar)
+                                                                            {{ \Carbon\Carbon::parse($j->presensi->jam_keluar)->format('H:i') }}
+                                                                        @else
+                                                                            <span class="italic text-gray-400">Belum check-out</span>
+                                                                        @endif
+                                                                    </p>
+                                                                </div>
+                                                                <div class="flex justify-end border-t border-gray-200 bg-gray-50 px-4 py-3 rounded-b-lg">
+                                                                    <button @click="openDetail = false" class="rounded bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-300">Tutup</button>
+                                                                    @if(!$j->presensi->jam_keluar)
+                                                                        <button @click="openDetail = false; $dispatch('open-modal-checkout-{{ $j->id }}')" class="ml-2 rounded bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600">Check-out</button>
                                                                     @endif
-                                                                </p>
-                                                                <p class="mb-2">
-                                                                    <strong>Waktu Keluar:</strong> 
-                                                                    @if($j->presensi->jam_keluar)
-                                                                        {{ \Carbon\Carbon::parse($j->presensi->jam_keluar)->format('H:i') }}
-                                                                    @else
-                                                                        <span class="italic text-gray-400">Belum check-out</span>
-                                                                    @endif
-                                                                </p>
-                                                            </div>
-                                                            <div class="flex justify-end border-t border-gray-200 bg-gray-50 px-4 py-3 rounded-b-lg">
-                                                                <button @click="openDetail = false" class="rounded bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-300">Tutup</button>
-                                                                @if(!$j->presensi->jam_keluar)
-                                                                    <button @click="openDetail = false; $dispatch('open-modal-checkout-{{ $j->id }}')" class="ml-2 rounded bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600">Check-out</button>
-                                                                @endif
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                @if(!$j->presensi->jam_keluar)
-                                                <x-dashboard.modal-confirm
-                                                    id="checkout-{{ $j->id }}"
-                                                    title="Check-out Dosen"
-                                                    btnColor="bg-orange-500 hover:bg-orange-600"
-                                                    confirmText="Ya, Check-out"
-                                                    action="{{ route('admin.jadwal.checkout', $j->id) }}"
-                                                    method="POST"
-                                                >
-                                                    <p>Lakukan check-out untuk dosen <strong>{{ $j->dosen?->name ?? 'Dosen Dihapus' }}</strong>?</p>
-                                                </x-dashboard.modal-confirm>
+    
+                                                    @if(!$j->presensi->jam_keluar)
+                                                    <x-dashboard.modal-confirm
+                                                        id="checkout-{{ $j->id }}"
+                                                        title="Check-out Dosen"
+                                                        btnColor="bg-orange-500 hover:bg-orange-600"
+                                                        confirmText="Ya, Check-out"
+                                                        action="{{ route('admin.jadwal.checkout', $j->id) }}"
+                                                        method="POST"
+                                                    >
+                                                        <p>Lakukan check-out untuk dosen <strong>{{ $j->dosen?->name ?? 'Dosen Dihapus' }}</strong>?</p>
+                                                    </x-dashboard.modal-confirm>
+                                                    @endif
                                                 @endif
-                                            @endif
+                                                
+                                                <button
+                                                    x-data
+                                                    @click="$dispatch('open-modal-editplot-{{ $j->id }}')"
+                                                    class="inline-flex items-center rounded-lg bg-yellow-500 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-yellow-600"
+                                                >
+                                                    Edit Plot
+                                                </button>
+                                                
+                                                <div x-data="{ openEdit: false }" @open-modal-editplot-{{ $j->id }}.window="openEdit = true">
+                                                    <div x-show="openEdit" x-cloak class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 text-left">
+                                                        <div @click.away="openEdit = false" class="z-10 m-4 w-full max-w-md rounded-xl bg-white shadow-2xl">
+                                                            <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-6 py-4 rounded-t-xl">
+                                                                <h3 class="text-lg font-bold text-gray-800">Edit Plot Jadwal</h3>
+                                                                <button type="button" @click="openEdit = false" class="text-2xl font-bold text-gray-400 hover:text-gray-600">&times;</button>
+                                                            </div>
+                                                            
+                                                            <form action="{{ route('admin.jadwal.update-plot', $j->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <div class="p-6 space-y-4 text-sm text-gray-700">
+                                                                    <div>
+                                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Hari</label>
+                                                                        <select name="hari" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                                            @foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'] as $h)
+                                                                                <option value="{{ $h }}" {{ $j->hari == $h ? 'selected' : '' }}>{{ $h }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="grid grid-cols-2 gap-4">
+                                                                        <div>
+                                                                            <label class="block text-sm font-medium text-gray-700 mb-1">Jam Mulai</label>
+                                                                            <input type="time" name="jam_mulai" value="{{ $j->jam_mulai ? \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') : '' }}" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                                        </div>
+                                                                        <div>
+                                                                            <label class="block text-sm font-medium text-gray-700 mb-1">Jam Selesai</label>
+                                                                            <input type="time" name="jam_selesai" value="{{ $j->jam_selesai ? \Carbon\Carbon::parse($j->jam_selesai)->format('H:i') : '' }}" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Ruangan</label>
+                                                                        <select name="ruangan_id" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                                                            <option value="">Pilih Ruangan</option>
+                                                                            @foreach($ruangans as $r)
+                                                                                <option value="{{ $r->id }}" {{ $j->ruangan_id == $r->id ? 'selected' : '' }}>{{ $r->nama_ruangan }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="flex justify-end gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4 rounded-b-xl">
+                                                                    <button type="button" @click="openEdit = false" class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-300 transition">Batal</button>
+                                                                    <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition">Simpan Perubahan</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>
