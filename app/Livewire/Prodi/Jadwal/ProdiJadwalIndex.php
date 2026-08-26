@@ -68,12 +68,6 @@ class ProdiJadwalIndex extends Component
         }, 'jadwal_praktikum.pdf');
     }
 
-    public function addPenugasanDosen($id) {
-        return redirect()->route('prodi.penugasan-dosen', [
-            'action' => 'addPenugasan',
-            'ajuan_id' => $id
-        ]);
-    }
 
     public function updatedPekan() { $this->resetPage(); }
     public function updatedProdi() { $this->resetPage(); }

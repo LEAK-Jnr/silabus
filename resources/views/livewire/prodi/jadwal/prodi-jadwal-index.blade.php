@@ -97,10 +97,7 @@
                                         </div>
                                         <span class="text-zinc-400 text-xs">({{ $ajuan->dosen?->username }})</span>
                                     @else
-                                        <flux:button size="xs" variant="primary" color="green" icon="user-plus"
-                                            wire:click="addPenugasanDosen({{ $ajuan->id }})">
-                                            Tambah Penugasan Dosen
-                                        </flux:button>
+                                        <span class="text-zinc-400 italic">Belum ada dosen</span>
                                     @endif
                                 </flux:table.cell>
 
