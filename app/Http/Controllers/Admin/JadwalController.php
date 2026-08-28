@@ -59,7 +59,7 @@ class JadwalController extends Controller
             ]
         ];
 
-        $ajuans = Ajuan::with('kelas')
+        $ajuans = Ajuan::with(['kelas', 'mataKuliah'])
             ->where('ajuans.status', 'menunggu')
             ->join('mata_kuliahs', 'ajuans.kode_mk', '=', 'mata_kuliahs.id')
             ->join('prodis', 'mata_kuliahs.prodi_id', '=', 'prodis.id')
@@ -86,36 +86,42 @@ class JadwalController extends Controller
                 continue;
             }
 
-            foreach ($slotWaktu[$reguler]['hari'] as $hari) {
-                foreach ($slotWaktu[$reguler]['jam'] as $jam) {
-                    [$start, $end] = $jam;
+            // Tentukan ruangan yang diizinkan berdasarkan spesifikasi MK
+            $spesifikasi = $ajuan->mataKuliah ? $ajuan->mataKuliah->spesifikasi : 'sedang';
+            $allowedRooms = ($spesifikasi === 'tinggi') ? [3] : [1, 2];
 
-                    // Cek ketersediaan/bentrok pada slot waktu
-                    $isOccupied = Ajuan::where('pekan', $ajuan->pekan)
-                        ->where('hari', $hari)
-                        ->where('jam_mulai', $start)
-                        ->where('status', 'disetujui')
-                        ->where(function($q) use ($ajuan) {
-                            $q->where('user_username', $ajuan->user_username)
-                              ->orWhere('kode_kelas', $ajuan->kode_kelas);
-                            if ($ajuan->ruangan_id) {
-                                $q->orWhere('ruangan_id', $ajuan->ruangan_id);
-                            }
-                        })->exists();
+            foreach ($allowedRooms as $ruanganId) {
+                foreach ($slotWaktu[$reguler]['hari'] as $hari) {
+                    foreach ($slotWaktu[$reguler]['jam'] as $jam) {
+                        [$start, $end] = $jam;
 
-                    if (!$isOccupied) {
-                        // REFAKTOR: Menggunakan Eloquent untuk mengaktifkan properti mutator & casts
-                        $ajuan->update([
-                            'hari'        => $hari,
-                            'jam_mulai'   => $start,
-                            'jam_selesai' => $end,
-                            'status'      => 'disetujui'
-                        ]);
+                        // Cek ketersediaan/bentrok pada slot waktu
+                        $isOccupied = Ajuan::where('pekan', $ajuan->pekan)
+                            ->where('hari', $hari)
+                            ->where('jam_mulai', $start)
+                            ->where('status', 'disetujui')
+                            ->where(function($q) use ($ajuan, $ruanganId) {
+                                $q->where('user_username', $ajuan->user_username)
+                                  ->orWhere('kode_kelas', $ajuan->kode_kelas)
+                                  ->orWhere('ruangan_id', $ruanganId);
+                            })->exists();
 
-                        $foundSlot = true;
-                        $countSetuju++;
-                        break;
+                        if (!$isOccupied) {
+                            // REFAKTOR: Menggunakan Eloquent untuk mengaktifkan properti mutator & casts
+                            $ajuan->update([
+                                'hari'        => $hari,
+                                'jam_mulai'   => $start,
+                                'jam_selesai' => $end,
+                                'ruangan_id'  => $ruanganId,
+                                'status'      => 'disetujui'
+                            ]);
+
+                            $foundSlot = true;
+                            $countSetuju++;
+                            break;
+                        }
                     }
+                    if ($foundSlot) break;
                 }
                 if ($foundSlot) break;
             }
