@@ -41,5 +41,6 @@ Route::middleware('auth')->group(function (){
         Route::put('/admin/jadwal/{ajuan}/update-plot', [JadwalController::class, 'updatePlot'])->name('admin.jadwal.update-plot');
         Route::post('/admin/jadwal/{ajuan}/checkin', [JadwalController::class, 'checkIn'])->name('admin.jadwal.checkin');
         Route::post('/admin/jadwal/{ajuan}/checkout', [JadwalController::class, 'checkOut'])->name('admin.jadwal.checkout');
+        Route::put('/admin/jadwal/rollback', [JadwalController::class, 'rollback'])->name('rollback-ajuan');
     });
 });

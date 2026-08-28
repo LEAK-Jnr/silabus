@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ajuan;
 use App\Models\Presensi;
+use Illuminate\Support\Facades\DB;
 use PDF;
 
 class JadwalController extends Controller
@@ -250,5 +251,21 @@ class JadwalController extends Controller
         ]);
         
         return back()->with('success', 'Berhasil Check-out.');
+    }
+
+    public function rollback(){
+        // dd("Function Rollback is called");
+        DB::beginTransaction();
+        try {
+            Ajuan::query()
+            ->where('status', 'disetujui')
+            ->orWhere('status', 'ditolak')
+            ->update(['status' => 'menunggu']);
+            DB::commit();
+            return back()->with('success', 'Semua ajuan berhasil di-rollback ke status menunggu.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return back()->with('error', 'Terjadi kesalahan saat melakukan rollback. | Error: ' . $th->getMessage());
+        }
     }
 }

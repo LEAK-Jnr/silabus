@@ -56,6 +56,11 @@
                             </svg>
                             Generate Jadwal Otomatis
                         </button>
+                        <form action="{{ route('rollback-ajuan') }}" method="post">
+                            @csrf
+                            @method('PUT')
+                            <flux:button icon="arrow-path" variant="primary" color="amber" type="submit">rollback</flux:button>
+                        </form>
                     </div>
 
                     <x-dashboard.modal-confirm
