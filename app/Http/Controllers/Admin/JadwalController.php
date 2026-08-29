@@ -266,7 +266,13 @@ class JadwalController extends Controller
             Ajuan::query()
             ->where('status', 'disetujui')
             ->orWhere('status', 'ditolak')
-            ->update(['status' => 'menunggu']);
+            ->update([
+                'status' => 'menunggu',
+                'hari' => null,
+                'jam_mulai' => null,
+                'jam_selesai' => null,
+                'ruangan_id' => null
+            ]);
             DB::commit();
             return back()->with('success', 'Semua ajuan berhasil di-rollback ke status menunggu.');
         } catch (\Throwable $th) {
