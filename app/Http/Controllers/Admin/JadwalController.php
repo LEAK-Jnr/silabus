@@ -90,11 +90,11 @@ class JadwalController extends Controller
             $spesifikasi = $ajuan->mataKuliah ? $ajuan->mataKuliah->spesifikasi : 'sedang';
             $allowedRooms = ($spesifikasi === 'tinggi') ? [3] : [1, 2];
 
-            foreach ($allowedRooms as $ruanganId) {
-                foreach ($slotWaktu[$reguler]['hari'] as $hari) {
-                    foreach ($slotWaktu[$reguler]['jam'] as $jam) {
-                        [$start, $end] = $jam;
+            foreach ($slotWaktu[$reguler]['hari'] as $hari) {
+                foreach ($slotWaktu[$reguler]['jam'] as $jam) {
+                    [$start, $end] = $jam;
 
+                    foreach ($allowedRooms as $ruanganId) {
                         // Cek ketersediaan/bentrok pada slot waktu
                         $isOccupied = Ajuan::where('pekan', $ajuan->pekan)
                             ->where('hari', $hari)

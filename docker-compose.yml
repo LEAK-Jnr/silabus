@@ -29,8 +29,8 @@ services:
         image: 'mariadb:10.11'
         restart: unless-stopped
         environment:
-            MYSQL_DATABASE: '${DB_DATABASE:-silabus_db}'
-            MYSQL_USER: '${DB_USERNAME:-silabus_user}'
+            MYSQL_DATABASE: '${DB_DATABASE:-silabussss_db}'
+            MYSQL_USER: '${DB_USERNAME:-silabussss_user}'
             MYSQL_PASSWORD: '${DB_PASSWORD:-secret}'
             MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD:-rootsecret}'
         volumes:
