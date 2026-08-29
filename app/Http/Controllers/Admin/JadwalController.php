@@ -101,8 +101,10 @@ class JadwalController extends Controller
                             ->where('jam_mulai', $start)
                             ->where('status', 'disetujui')
                             ->where(function($q) use ($ajuan, $ruanganId) {
-                                $q->where('user_username', $ajuan->user_username)
-                                  ->orWhere('kode_kelas', $ajuan->kode_kelas)
+                                if (!empty($ajuan->user_username)) {
+                                    $q->where('user_username', $ajuan->user_username);
+                                }
+                                $q->orWhere('kode_kelas', $ajuan->kode_kelas)
                                   ->orWhere('ruangan_id', $ruanganId);
                             })->exists();
 
